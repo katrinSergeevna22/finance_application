@@ -87,36 +87,6 @@ class GoalViewModel : ViewModel() {
     fun deleteGoal(){
         dataRepository.deleteGoal(selectedGoal.value!!)
     }
-/*
-
-private var editText = false
-
-private val _selectedCategory = MutableLiveData<String>()
-val selectedCategory: LiveData<String> get() = _selectedCategory
-
-private var _goalsByCategory = MutableLiveData<List<Goal>>()
-val goalsByCategory: LiveData<List<Goal>> get() = _goalsByCategory
-
-init {
-    _selectedCategory.value = "Active" // Устанавливаем активную категорию по умолчанию
-    loadGoalsByCategory("Active")
-}
-
-fun selectCategory(category: String) {
-    _selectedCategory.value = category
-    loadGoalsByCategory(category)
-}
-
-private fun loadGoalsByCategory(category: String) {
-    var loadGoal = dataRepository.getGoals().value
-    loadGoal?.filter { it.status == category }
-    _goalsByCategory.value = loadGoal
-
-    // Обновление _goalsByCategory
-}
-
-
- */
 
     private val _selectedGoal = MutableLiveData<Goal>()
     val selectedGoal: LiveData<Goal> get() = _selectedGoal

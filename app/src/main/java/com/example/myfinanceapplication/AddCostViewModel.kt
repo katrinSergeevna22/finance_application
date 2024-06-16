@@ -134,13 +134,7 @@ class AddCostViewModel  : ViewModel() {
         Log.d("Balance2", newCost.moneyCost.toString())
         Log.d("Balance3", (newCost.moneyCost.toDouble() + balance).toString())
         dataRepository.updateUserBalance(balance - newCost.moneyCost.toDouble())
-        /*
-        val costRef = database.getReference("users").child(userId).child("income").push()
-        val costId = costRef.key
-        newCost.costId = costId.toString()
-        costRef.setValue(newCost)
 
-         */
     }
     fun checkIsNumber(sum : String) : Boolean{
         return sum.matches(Regex("[0-9.]+"))
@@ -148,34 +142,5 @@ class AddCostViewModel  : ViewModel() {
     fun checkIsTitle(sum : String) : Boolean{
         return sum.matches(Regex("[a-zA-Zа-яА-Я0-9.,\\s]+"))
     }
-    fun loadActiveGoals() {
-        dataRepository.getGoals().observeForever { goalsItems ->
-            Log.d("goalForSpinner-2", goalsItems.toString())
-            goalsList = goalsItems
-            Log.d("goalForSpinner-1", goalsItems.filter { it.status == "Active" }.toString())
-            goalsListLiveData.value = goalsItems
-            Log.d("goalForSpinner-1", goalsListLiveData.value.toString())
-        }
-    }
-    fun getGoalsLivaData() : MutableLiveData<List<Goal>>{
-        return goalsListLiveData
-    }
-    fun getListOfGoal() : List<Goal> {
-        val goalList = goalsListLiveData.value?.filter { it.status == "Active" } ?: listOf<Goal>()
-        Log.d("goalForSpinner0", goalList.toString())
-        return goalList
-    }
-    fun getListOfGoal1() : MutableList<Goal> {
-        val goalMutableList = mutableListOf<Goal>()
-        val goalLiveData = dataRepository.getGoals()
-        goalLiveData.observeForever { goalsItems ->
-            Log.d("goalForSpinner-2", goalsItems.toString())
-            Log.d("goalForSpinner-1", goalsItems.filter { it.status == "Active" }.toString())
 
-            goalMutableList.addAll(goalsItems.filter { it.status == "Active" })
-
-            Log.d("goalForSpinner0", goalMutableList.toString())
-        }
-        return goalMutableList
-    }
 }

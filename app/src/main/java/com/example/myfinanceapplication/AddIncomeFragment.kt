@@ -22,32 +22,7 @@ class AddIncomeFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(CostViewModel::class.java)
         addCostViewModel = ViewModelProvider(this).get(AddCostViewModel::class.java)
         setupUI()
-        //Log.d("EditIncomeFr2", (activity as IncomeActivity).itsEdit.toString())
 
-        /*
-        if ((activity as IncomeActivity).itsEdit){
-            Log.d("EditIncomeFr3", viewModel.selectedCost.value.toString())
-            viewModel.selectedCost.observe(viewLifecycleOwner) {
-                selectIncome = it
-                Log.d("EditIncomeFr3", (activity as IncomeActivity).itsEdit.toString())
-                Log.d("EditIncomeFr3", selectIncome.toString())
-                Log.d("EditIncomeFr3 It", it.toString())
-                binding.apply {
-                    etTitle.setText(selectIncome!!.titleOfCost.toString())
-                    etSum.setText(selectIncome!!.moneyCost.toString())
-                    etMultyLineComment.setText(selectIncome!!.comment)
-
-                    val categoriesArray = resources.getStringArray(R.array.categoriesIncome)
-                    val categoryToSet = selectIncome.category
-
-                    val categoryIndex = categoriesArray.indexOf(categoryToSet)
-                    if (categoryIndex != -1) {
-                        spinnerCategory.setSelection(categoryIndex)
-                    }
-                }
-            }
-        }
-         */
         return binding.root
     }
 

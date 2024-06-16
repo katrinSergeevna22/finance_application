@@ -77,21 +77,7 @@ class InfoGoalFragment : Fragment() {
                         .commit()
                 }
             }
-            /*
-            ibAddMoney.setOnClickListener {
-                /*
-                val intent = Intent((activity as GoalsActivity), ExpensesActivity::class.java)
-                intent.putExtra("AddExpense", viewModel.selectedGoal.value!!.titleOfGoal)
-                startActivity(intent)
 
-                 */
-                requireFragmentManager().beginTransaction()
-                    .replace(R.id.place_holder_addFragment, AddExpenseFragment.newInstance())
-                    .addToBackStack(null)
-                    .commit()
-            }
-
-             */
             ibDelete.setOnClickListener {
                 val selectGoal = viewModel.selectedGoal.value
                 var newStatus = ""
@@ -122,34 +108,10 @@ class InfoGoalFragment : Fragment() {
                 (activity as GoalsActivity).closeFragments()
             }
             ibClose.setOnClickListener {
-                //viewModel.fragmentIsOpen = false
-                //(activity as GoalsActivity).binding.backgroundFragment.visibility = View.GONE
-
                 (activity as GoalsActivity).closeFragments()
-                //(activity as GoalsActivity).backgroundFragment.closeBackgroundFragment()
-                //closeInfoFragment()
             }
         }
-        /*
-        (activity as GoalsActivity).binding.backgroundFragment.setOnClickListener { Log.d("Click", "")
-            parentFragmentManager.popBackStack() }
 
-         */
-        /*
-        (activity as GoalsActivity).binding.backgroundFragment. .placeHolderInfoFragment.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                val rect = Rect()
-                this.view?.getGlobalVisibleRect(rect)
-                if (!rect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                    // Касание произошло за пределами фрагмента
-                    fragmentManager?.beginTransaction()?.remove(this)?.commit()
-
-                }
-            }
-            true
-        }
-
-         */
         return binding.root
 
     }

@@ -127,32 +127,7 @@ class CostViewModel : ViewModel() {
         Log.d("Balance3", (newCost.moneyCost.toDouble() + balance).toString())
         dataRepository.updateUserBalance(newCost.moneyCost.toDouble() + balance)
     }
-    /*
-    fun getBalance() : Double{
-        dataRepository.getUserBalance().observeForever {
-            balance = it
-            Log.d("GetBalanceInFun", balance.toString())
-            //binding.tvBalanceIncome.text = balance.toString()
-        }
-        return balance
-    }
-    fun getBalance2() : Double {
-        Log.d("GetBalance2", (balanceLiveData.value ?: 0.0).toString())
-        return balanceLiveData.value ?: 0.0
-    }
-    fun getBalanceLiveData(): LiveData<Double> {
-        Log.d("BalanceLiveData", balanceLiveData.value.toString())
-        return balanceLiveData
-    }
-    fun loadBalance(){
-        dataRepository.getUserBalance().observeForever {
-            balanceLiveData.value = it
-            balance = it
-            Log.d("loadBalance", it.toString())
-        }
-    }
 
-     */
     fun editIncomeToBase(newIncome: Map<String, Any>, selectIncome: Cost) {
         val newSum = newIncome.get("moneyCost")
         if (newSum != selectIncome.moneyCost) {

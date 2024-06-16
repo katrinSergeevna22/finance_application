@@ -212,17 +212,6 @@ class EditCostViewModel : ViewModel() {
         //viewModel.setSelectedCost(selectExpense!!)
         dataRepository.editExpenseToBase(newExpense, selectExpense)
 
-        /*
-        database.getReference("users").child(userId).child("income").child(selectIncome.costId)
-            .updateChildren(newIncome)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Данные обновлены", Toast.LENGTH_SHORT).show()
 
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Ошибка обновления данных", Toast.LENGTH_SHORT).show()
-            }
-
-         */
     }
 }
