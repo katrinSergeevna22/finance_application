@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Finance Application</string>
+    <string name="greeting">Добро пожаловать!</string>
+    <string name="balance">Баланс</string>
+    <string name="home_page">Главная</string>
+    <string name="income">Доходы</string>
+    <string name="expense">Расходы</string>
+    <string name="goals">Цели</string>
+    <string name="tips">Советы</string>
+    <string name="exit">Выход</string>
+    <string name="active">Активные</string>
+    <string name="achieved">Достигнутые</string>
+    <string name="deleted">Архивные</string>
+    <string name="title">Название</string>
+    <string name="category">Категория</string>
+    <string name="goal">Цель</string>
+    <string name="cost">Сумма</string>
+    <string name="comment">Комментарий</string>
+    <string name="date">Дата</string>
+    <string name="done">Готово</string>
+    <string name="edit">Изменить</string>
+    <string name="arсhive">В архив</string>
+    <string name="delete">Удалить</string>
+    <string name="addMoney">Изменить прогресс</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="logIn">Войти</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="categoriesGoals">
+        <item>Другое</item>
+        <item>Жилье</item>
+        <item>Транспорт</item>
+        <item>Еда и напитки</item>
+        <item>Развлечения</item>
+        <item>Техника</item>
+        <item>Образование</item>
+        <item>Покупки</item>
+    </string-array>
+
+    <string-array name="categoriesIncome">
+        <item>Другое</item>
+        <item>Заработная плата</item>
+        <item>Премия</item>
+        <item>Инвестиции</item>
+        <item>Подарок</item>
+        <item>Гос. выплаты</item>
+    </string-array>
+
+    <string-array name="categoriesExpense">
+        <item>Цель</item>
+        <item>Другое</item>
+        <item>Жилье</item>
+        <item>Транспорт</item>
+        <item>Еда и напитки</item>
+        <item>Развлечения</item>
+        <item>Техника</item>
+        <item>Образование</item>
+        <item>Покупки</item>
+    </string-array>
+</resources>

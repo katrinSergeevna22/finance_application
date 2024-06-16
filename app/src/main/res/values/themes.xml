@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <!--<style name="Base.Theme.MyFinanceApplication" parent="Theme.AppCompat.Light.NoActionBar"> -->
+    <!--<style name="Base.Theme.MyFinanceApplication" parent="Theme.Material3.DayNight.NoActionBar"> -->
+    <style name="Base.Theme.MyFinanceApplication" parent="Theme.Material3.DayNight.NoActionBar">
+            <!-- Customize your light theme here. -->
+        <item name="android:actionOverflowButtonStyle">@style/MyActionButtonOverflow</item>
+    </style>
+
+    <style name="MyActionButtonOverflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@android:color/white</item>
+    </style>
+
+    <style name="Toolbar">
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:layout_height">?attr/actionBarSize</item>-->
+        <item name="theme">@style/Theme.MaterialComponents.DayNight.DarkActionBar</item>
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryVariant">@color/green</item>
+        <item name="android:background">@color/dark_violet</item>
+    </style>
+
+    <style name="PopupMenuText">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+
+    <style name="Theme.MyFinanceApplication" parent="Base.Theme.MyFinanceApplication" />
+</resources>

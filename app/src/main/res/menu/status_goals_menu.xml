@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/active" android:id="@+id/item_active" android:textColor="@color/black"/>
+    <item android:title="@string/achieved" android:id="@+id/item_achieved" android:textColor="@color/black"/>
+    <item android:title="@string/deleted" android:id="@+id/item_deleted" android:textColor="@color/black"/>
+</menu>

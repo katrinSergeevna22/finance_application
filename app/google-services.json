@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "336469798673",
+    "firebase_url": "https://financialapplication-bdccb-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "financialapplication-bdccb",
+    "storage_bucket": "financialapplication-bdccb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336469798673:android:d9113f4f9549679c58e6b0",
+        "android_client_info": {
+          "package_name": "com.example.myfinanceapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBipwI4yECSc4xm-ekCjWnd5PEHqytxuvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
