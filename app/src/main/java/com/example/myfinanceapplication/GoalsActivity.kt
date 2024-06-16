@@ -41,6 +41,7 @@ class GoalsActivity : AppCompatActivity() {
     val backgroundFragment = BackgroundFragment.newInstance()
     val infoGoalFragment = InfoGoalFragment.newInstance()
     val newAddGoalFragment = AddGoalFragment.newInstance()
+    var mainTip = Tip()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +110,7 @@ class GoalsActivity : AppCompatActivity() {
         }
         binding.svTextAdvice.setOnClickListener { navigateTo("TipsActivity") }
         binding.ibMainTip.setOnClickListener {
-            navigateTo("TipsActivity")
+            navigateTo("TipsActivityWithSelect")
         }
 
         binding.navigationView.setNavigationItemSelectedListener {
@@ -176,10 +177,25 @@ class GoalsActivity : AppCompatActivity() {
             binding.tvCount.text = goalList.size.toString()
             binding.tvTitleGoals.text = viewModel.getTitleOfCategory()
             adapter.submitList(goalList)
+
+            val selectedItem = intent.getStringExtra("selectedItem")
+            var selectPosition = 0
+            Log.d("1ST", selectedItem.toString())
+            for ((index, item) in goalList.withIndex()){
+                if (item.titleOfGoal == selectedItem){
+                    Log.d("2ST", index.toString())
+                    selectPosition = index
+                    break
+                }
+            }
+            Log.d("3ST", selectPosition.toString())
+            (binding.rcView.layoutManager as LinearLayoutManager).scrollToPosition(selectPosition)
+
             adapter.notifyDataSetChanged()
         }
 
         viewModel.getOneRandomTipLiveData().observe(this) { tip ->
+            mainTip = tip
             binding.tvTitleTip.text = tip.title
             binding.tvAdvice.text = tip.text
         }
@@ -195,7 +211,11 @@ class GoalsActivity : AppCompatActivity() {
                 intent = Intent(this@GoalsActivity, TipsActivity::class.java)
                 startActivity(intent)
             }
-
+            "TipsActivityWithSelect" -> {
+                intent = Intent(this@GoalsActivity, TipsActivity::class.java)
+                intent.putExtra("selectedItem", mainTip.title)
+                startActivity(intent)
+            }
             "IncomeActivity" -> {
                 intent = Intent(this@GoalsActivity, IncomeActivity::class.java)
                 startActivity(intent)

@@ -3,6 +3,7 @@ package com.example.myfinanceapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -34,45 +35,71 @@ class TipsActivity : AppCompatActivity() {
         setupUI()
         observeViewModel()
 
-        binding.navigationView.setNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.menu_goals -> {
-                    navigateTo("GoalsActivity")
-                }
-                R.id.menu_home -> {
-                    navigateTo("MainActivity")
-                }
-                R.id.menu_income -> {
-                    navigateTo("IncomeActivity")
-                }
-                R.id.menu_expense -> {
-                    navigateTo("ExpenseActivity")
-                }
-                R.id.menu_exit -> {
-                    navigateTo("AuthActivity")
-                }
-            }
-            true
-        }
     }
 
     private fun setupUI() {
-        binding.toolbarGoal.setNavigationOnClickListener {
-            binding.drawerGoal.openDrawer(GravityCompat.START)
-        }
+        binding.apply {
+            toolbarGoal.setNavigationOnClickListener {
+                drawerGoal.openDrawer(GravityCompat.START)
+            }
 
-        adapter = TipAdapter()
-        binding.rcView.layoutManager = LinearLayoutManager(this)
-        binding.rcView.adapter = adapter
-        val itemDecoration = DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
-        itemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.shape_indent_rcview)!!)
-        binding.rcView.addItemDecoration(itemDecoration)
+            adapter = TipAdapter()
+            rcView.layoutManager = LinearLayoutManager(this@TipsActivity)
+            rcView.adapter = adapter
+            val itemDecoration = DividerItemDecoration(this@TipsActivity, LinearLayoutManager.VERTICAL)
+            itemDecoration.setDrawable(
+                ContextCompat.getDrawable(
+                    this@TipsActivity,
+                    R.drawable.shape_indent_rcview
+                )!!
+            )
+            rcView.addItemDecoration(itemDecoration)
+
+            navigationView.setNavigationItemSelectedListener {
+                when (it.itemId) {
+                    R.id.menu_goals -> {
+                        navigateTo("GoalsActivity")
+                    }
+
+                    R.id.menu_home -> {
+                        navigateTo("MainActivity")
+                    }
+
+                    R.id.menu_income -> {
+                        navigateTo("IncomeActivity")
+                    }
+
+                    R.id.menu_expense -> {
+                        navigateTo("ExpenseActivity")
+                    }
+
+                    R.id.menu_exit -> {
+                        navigateTo("AuthActivity")
+                    }
+                }
+                true
+            }
+        }
     }
 
     private fun observeViewModel() {
         viewModel.getTipsLiveData().observe(this) { tipsList ->
             adapter.submitList(tipsList)
             binding.tvNumberTips.text = tipsList.size.toString()
+
+            val selectedItem = intent.getStringExtra("selectedItem")
+            var selectPosition = 0
+            Log.d("1ST", selectedItem.toString())
+            for ((index, item) in tipsList.withIndex()){
+                if (item.title == selectedItem){
+                    Log.d("2ST", index.toString())
+                    selectPosition = index
+                    break
+                }
+            }
+            Log.d("3ST", selectPosition.toString())
+            (binding.rcView.layoutManager as LinearLayoutManager).scrollToPosition(selectPosition)
+
             adapter.notifyDataSetChanged()
         }
     }

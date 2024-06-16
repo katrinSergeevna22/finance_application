@@ -4,22 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.databinding.ActivityMainBinding
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.database.database
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainViewModel
+    var mainTip = Tip()
+    var mainGoal = Goal()
     private val dataRepository = DataRepository()
     private var balanceIncome = 0.00
     private var balanceExpense = 0.00
@@ -38,6 +32,9 @@ class MainActivity : AppCompatActivity() {
             tvGreeting.text = ContextCompat.getString(this@MainActivity, R.string.greeting)
             tvTitleMoney.text = "Последняя неделя"
 
+            toolbarMain.setNavigationOnClickListener {
+                binding.drawerMain.openDrawer(GravityCompat.START)
+            }
             ibGoals.setOnClickListener {
                 navigateTo("GoalsActivity")
             }
@@ -50,7 +47,12 @@ class MainActivity : AppCompatActivity() {
             ibExpense.setOnClickListener {
                 navigateTo("ExpenseActivity")
             }
-
+            ibMainTip.setOnClickListener {
+                navigateTo("TipsActivityWithSelect")
+            }
+            ibMainGoal.setOnClickListener {
+                navigateTo("GoalsActivityWithSelect")
+            }
             navigationView.setNavigationItemSelectedListener {
                 when (it.itemId) {
                     R.id.menu_home -> {
@@ -83,12 +85,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     fun observeViewModel() {
         binding.apply {
             viewModel.getBalance().observe(this@MainActivity) { balance ->
                 tvBalance.text = balance.toString()
             }
             viewModel.getOneRandomGoal().observe(this@MainActivity) { goal ->
+                mainGoal = goal
                 tvTitleGoal.text = goal.titleOfGoal
                 if (goal.date == "") {
                     tvMoneyGoal.text = ""
@@ -110,12 +114,13 @@ class MainActivity : AppCompatActivity() {
             viewModel.getOneRandomTip().observe(this@MainActivity) { tip ->
                 tvTitleTip.text = tip.title
                 tvAdvice.text = tip.text
+                mainTip = tip
             }
             viewModel.getSumIncome().observe(this@MainActivity) {sumIncome ->
-                binding.tvBalanceIncome.text = "+ " + String.format("%.2f", sumIncome)
+                tvBalanceIncome.text = "+ " + String.format("%.2f", sumIncome)
             }
             viewModel.getSumExpense().observe(this@MainActivity) {sumExpense ->
-                binding.tvBalanceExpense.text = "- " + String.format("%.2f", sumExpense)
+                tvBalanceExpense.text = "- " + String.format("%.2f", sumExpense)
             }
         }
     }
@@ -126,12 +131,20 @@ class MainActivity : AppCompatActivity() {
                 intent = Intent(this@MainActivity, GoalsActivity::class.java)
                 startActivity(intent)
             }
-
+            "GoalsActivityWithSelect" -> {
+                intent = Intent(this@MainActivity, GoalsActivity::class.java)
+                intent.putExtra("selectedItem", mainGoal.titleOfGoal)
+                startActivity(intent)
+            }
             "TipsActivity" -> {
                 intent = Intent(this@MainActivity, TipsActivity::class.java)
                 startActivity(intent)
             }
-
+            "TipsActivityWithSelect" -> {
+                intent = Intent(this@MainActivity, TipsActivity::class.java)
+                intent.putExtra("selectedItem", mainTip.title)
+                startActivity(intent)
+            }
             "IncomeActivity" -> {
                 intent = Intent(this@MainActivity, IncomeActivity::class.java)
                 startActivity(intent)
@@ -147,6 +160,7 @@ class MainActivity : AppCompatActivity() {
                 intent = Intent(this@MainActivity, AuthActivity::class.java)
                 startActivity(intent)
             }
+
         }
 
     }
