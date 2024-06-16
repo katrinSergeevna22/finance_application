@@ -94,7 +94,8 @@ class TipsActivity : AppCompatActivity() {
                 intent = Intent(this@TipsActivity, ExpensesActivity::class.java)
                 startActivity(intent)
             }
-            "AuthActivity"-> {
+            "AuthActivity" -> {
+                AuthViewModel().exit()
                 intent = Intent(this@TipsActivity, AuthActivity::class.java)
                 startActivity(intent)
             }

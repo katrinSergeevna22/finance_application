@@ -204,6 +204,7 @@ class ExpensesActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             "AuthActivity" -> {
+                AuthViewModel().exit()
                 intent = Intent(this@ExpensesActivity, AuthActivity::class.java)
                 startActivity(intent)
             }

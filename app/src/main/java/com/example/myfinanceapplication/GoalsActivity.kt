@@ -206,6 +206,7 @@ class GoalsActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             "AuthActivity"-> {
+                AuthViewModel().exit()
                 intent = Intent(this@GoalsActivity, AuthActivity::class.java)
                 startActivity(intent)
             }

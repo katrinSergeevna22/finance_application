@@ -196,6 +196,7 @@ class IncomeActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             "AuthActivity" -> {
+                AuthViewModel().exit()
                 intent = Intent(this@IncomeActivity, AuthActivity::class.java)
                 startActivity(intent)
             }
