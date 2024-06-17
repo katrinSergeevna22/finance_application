@@ -81,7 +81,7 @@ class EditCostViewModel : ViewModel() {
         dataRepository.editIncomeToBase(newIncome, selectIncome)
     }
     fun checkIsNumber(sum : String) : Boolean{
-        return sum.matches(Regex("[0-9.]+"))
+        return sum.matches(Regex("[0-9]+"))
     }
     fun checkIsTitle(sum : String) : Boolean{
         return sum.matches(Regex("[a-zA-Zа-яА-Я0-9.,\\s]+"))
