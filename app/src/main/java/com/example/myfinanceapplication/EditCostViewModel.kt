@@ -149,7 +149,7 @@ class EditCostViewModel : ViewModel() {
                                 selectCost.moneyCost - sum
                             )
                         } else if (selectCost.moneyCost < sum) {
-                            if (goalNew.moneyGoal < sum + goalNew.progressOfMoneyGoal){
+                            if (goalNew.moneyGoal < sum + goalNew.progressOfMoneyGoal - selectCost.moneyCost){
                                 answerException = "Сумма больше, чем нужно для достижения цели"
 
                                 //etSum.setText((selectGoal.moneyGoal - selectGoal.progressOfMoneyGoal).toString())

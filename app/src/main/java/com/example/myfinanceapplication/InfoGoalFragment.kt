@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.databinding.FragmentInfoGoalBinding
 
@@ -63,8 +64,17 @@ class InfoGoalFragment : Fragment() {
 
             ibEdit.setOnClickListener {
                 if (viewModel.getSelectedCategory().value == "Deleted"){
-                    viewModel.deleteGoal()
-                    (activity as GoalsActivity).closeFragments()
+                    if (viewModel.selectedGoal.value!!.progressOfMoneyGoal != 0L){
+                        Toast.makeText(
+                            (activity as GoalsActivity),
+                            "Нельзя удалить цель, по которой у тебя есть прогресс! Продолжайте двигаться к своей цели!",
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    }
+                    else {
+                        viewModel.deleteGoal()
+                        (activity as GoalsActivity).closeFragments()
+                    }
                 }
                 else {
                     requireFragmentManager().beginTransaction()
