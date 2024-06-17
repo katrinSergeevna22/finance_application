@@ -40,15 +40,22 @@ class AuthActivity : AppCompatActivity() {
             ibRegister.setOnClickListener {
                 val email = binding.etLogin.text.toString()
                 val password = binding.etPassword.text.toString()
-                viewModel.register(email, password).observe(this@AuthActivity, Observer{text ->
-                    if (text != "") {
-                        Toast.makeText(
-                            this@AuthActivity,
-                            text,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                })
+
+                if (!password.matches(Regex("^(?=.*[A-Za-z]+|[\\d]+)[A-Za-z\\d!@#\$%^&*()-+=]{8,}\$"))){
+                    Toast.makeText(this@AuthActivity, "Ненадежный пароль", Toast.LENGTH_LONG).show()
+                }
+                else {
+                    viewModel.register(email, password)
+                        .observe(this@AuthActivity, Observer { text ->
+                            if (text != "") {
+                                Toast.makeText(
+                                    this@AuthActivity,
+                                    text,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        })
+                }
 
             }
             ibLogIn.setOnClickListener {
