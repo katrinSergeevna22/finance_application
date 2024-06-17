@@ -168,8 +168,13 @@ class EditCostViewModel : ViewModel() {
                         selectCost.moneyCost
                     )
                 }
+            } else if (category == "Цель") {
+                val goalNew = goalsMutableList.filter { it.titleOfGoal == titleOfGoal }[0]
+                viewModel.addProgressGoal(
+                    goalNew,
+                    sum
+                )
             }
-
             val newExpense = mapOf(
                 "costId" to selectCost!!.costId,
                 "titleOfCost" to title,
@@ -209,6 +214,7 @@ class EditCostViewModel : ViewModel() {
         selectExpense!!.moneyCost = newExpense["moneyCost"].toString().toLong()
         selectExpense!!.category = newExpense["category"].toString()
         selectExpense.comment = newExpense["comment"].toString()
+        if (selectExpense.category == "Цель") selectExpense.goal = newExpense["goal"].toString()
         //viewModel.setSelectedCost(selectExpense!!)
         dataRepository.editExpenseToBase(newExpense, selectExpense)
 

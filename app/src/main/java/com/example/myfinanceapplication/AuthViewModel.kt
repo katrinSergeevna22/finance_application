@@ -41,14 +41,7 @@ class AuthViewModel: ViewModel() {
         }
         return exceptionForRegister
     }
-    fun create(){
-        Log.d("Auth4", auth.currentUser!!.uid)
 
-        val authRef = database.reference.child("users").child(auth.currentUser!!.uid)
-
-        val authId = authRef.key
-        Log.d("Auth4", authId.toString())
-    }
     fun logIn(email : String, password: String) : LiveData<String> {
         //Log.d("Auth1", auth.currentUser!!.uid)
         //create()
@@ -67,15 +60,11 @@ class AuthViewModel: ViewModel() {
             //CoroutineScope(Dispatchers.Main).launch {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-                    //Log.d("Auth2", password.toString())
-
-                    //create()
 
                     if (task.isSuccessful) {
                         // Вход выполнен успешно, переход на MainActivity
                         //database.getReference("users").child(auth.currentUser!!.uid)
                         exceptionForLogIn.value = "Добро пожаловать!"
-                        //Log.d("Auth3", auth.currentUser!!.uid)
                     } else {
                         // Ошибка при входе
                         exceptionForLogIn.value = "Неверный логин или пароль"

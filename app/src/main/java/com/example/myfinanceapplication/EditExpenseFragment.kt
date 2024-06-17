@@ -65,6 +65,7 @@ class EditExpenseFragment : Fragment() {
                             tvGoalExpense.visibility = View.VISIBLE
 
                             Log.d("categoryIndex", spinnerGoal.selectedItem.toString())
+                                /*
                             spinnerGoal.visibility = View.VISIBLE
                             tvGoalExpense.visibility = View.VISIBLE
                             if (!goalForSpinner.contains(selectExpense.goal)){
@@ -72,13 +73,15 @@ class EditExpenseFragment : Fragment() {
                                 adapter.notifyDataSetChanged()
                             }
 
+
+                                 */
                             Log.d("categoryIndex1", selectExpense.goal.toString())
 
                             val categoriesGoalArray = goalForSpinner
                             val categoryGoalToSet = selectExpense.goal
 
                             Log.d("categoryIndex2", goalForSpinner.toString())
-                            Log.d("categoryIndex3", categoryGoalToSet)
+                            Log.d("categoryIndex3", goalList.toString())
                             val categoryGoalIndex = categoriesGoalArray.indexOf(categoryGoalToSet)
                             Log.d("categoryIndex4", categoryGoalIndex.toString())
                             if (categoryGoalIndex != -1) {

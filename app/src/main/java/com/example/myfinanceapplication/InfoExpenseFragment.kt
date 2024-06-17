@@ -73,12 +73,15 @@ class InfoExpenseFragment : Fragment() {
             val selectExpense = viewModel.selectedCost.value!!
             Log.d("DeleteInfo", selectExpense.goal)
             if (selectExpense.category == "Цель"){
-                val goal =
-                    goalMutableList.filter { it.titleOfGoal == selectExpense.goal }[0]
-                viewModel.minusProgressGoal(
-                    goal,
-                    selectExpense.moneyCost
-                )
+                val goalList =
+                    goalMutableList.filter { it.titleOfGoal == selectExpense.goal }
+                if (goalList.isNotEmpty()) {
+                    val goal = goalList[0]
+                    viewModel.minusProgressGoal(
+                        goal,
+                        selectExpense.moneyCost
+                    )
+                }
             }
             viewModel.deleteExpense()
             (activity as ExpensesActivity).closeFragments()

@@ -48,7 +48,12 @@ class MainActivity : AppCompatActivity() {
                 navigateTo("TipsActivityWithSelect")
             }
             ibMainGoal.setOnClickListener {
-                navigateTo("GoalsActivityWithSelect")
+                if (mainGoal == Goal()){
+                    navigateTo("GoalsActivity")
+                }
+                else {
+                    navigateTo("GoalsActivityWithSelect")
+                }
             }
             navigationView.setNavigationItemSelectedListener {
                 when (it.itemId) {
@@ -89,13 +94,14 @@ class MainActivity : AppCompatActivity() {
                 tvBalance.text = balance.toString()
             }
             viewModel.getOneRandomGoal().observe(this@MainActivity) { goal ->
-                mainGoal = goal
+
                 tvTitleGoal.text = goal.titleOfGoal
                 if (goal.date == "") {
                     tvMoneyGoal.text = ""
                     tvProgressMoney.text = ""
                     tvDate.text = ""
                 } else {
+                    mainGoal = goal
                     tvMoneyGoal.text = goal.moneyGoal.toString()
                     tvProgressMoney.text =
                         goal.progressOfMoneyGoal.toString() + " из " + goal.moneyGoal.toString()
