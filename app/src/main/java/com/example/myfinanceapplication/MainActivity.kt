@@ -1,5 +1,6 @@
 package com.example.myfinanceapplication
 
+import CalendarFragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,17 @@ class MainActivity : AppCompatActivity() {
 
     fun setupUI() {
         binding.apply {
+            /*
+            ibBalance.setOnClickListener {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.place_holder_infoFragment, CalendarFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+             */
+
             tvGreeting.text = ContextCompat.getString(this@MainActivity, R.string.greeting)
             tvTitleMoney.text = "Последняя неделя"
 
