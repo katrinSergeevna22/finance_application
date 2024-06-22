@@ -35,6 +35,10 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
 
 class GoalsActivity : AppCompatActivity() {
+
+
+
+
     lateinit var binding: ActivityGoalsBinding
     private lateinit var viewModel: GoalViewModel
     private lateinit var adapter: GoalAdapter
