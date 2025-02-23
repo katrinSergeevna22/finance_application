@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Finance Application</string>
+    <string name="app_name">Финапп</string>
     <string name="greeting">Добро пожаловать!</string>
     <string name="balance">Баланс</string>
     <string name="home_page">Главная</string>
@@ -28,6 +28,7 @@
     <string name="logIn">Войти</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_of_fragment_categores">Категории</string>
 
     <string-array name="categoriesGoals">
         <item>Другое</item>

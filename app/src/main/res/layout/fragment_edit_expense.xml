@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".EditExpenseFragment">
+    tools:context=".view.cost.EditExpenseFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -95,7 +95,7 @@
 
 
             <Spinner
-                android:id="@+id/spinnerCategory"
+                android:id="@+id/ibtnCategory"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -121,7 +121,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinnerCategory" />
+                app:layout_constraintTop_toBottomOf="@+id/ibtnCategory" />
 
 
             <Spinner

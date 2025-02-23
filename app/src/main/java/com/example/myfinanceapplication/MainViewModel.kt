@@ -1,10 +1,11 @@
 package com.example.myfinanceapplication
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.example.myfinanceapplication.model.DataRepository
+import com.example.myfinanceapplication.model.Goal
+import com.example.myfinanceapplication.model.Tip
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

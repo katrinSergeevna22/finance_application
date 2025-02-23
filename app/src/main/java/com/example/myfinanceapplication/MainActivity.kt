@@ -8,12 +8,21 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.databinding.ActivityMainBinding
+import com.example.myfinanceapplication.model.Goal
+import com.example.myfinanceapplication.model.Tip
+import com.example.myfinanceapplication.view.AuthActivity
+import com.example.myfinanceapplication.view.cost.ExpensesActivity
+import com.example.myfinanceapplication.view.goals.GoalsActivity
+import com.example.myfinanceapplication.view.cost.IncomeActivity
+import com.example.myfinanceapplication.view.tips.TipsActivity
+import com.example.myfinanceapplication.view_model.AuthViewModel
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainViewModel
-    var mainTip = Tip()
-    var mainGoal = Goal()
+    private lateinit var mainTip: Tip
+    private lateinit var mainGoal: Goal
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

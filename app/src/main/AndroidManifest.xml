@@ -13,22 +13,22 @@
         android:theme="@style/Theme.MyFinanceApplication"
         tools:targetApi="31">
         <activity
-            android:name=".ExpensesActivity"
+            android:name=".view.cost.ExpensesActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".IncomeActivity"
+            android:name=".view.cost.IncomeActivity"
             android:exported="false" />
         <activity
-            android:name=".TipsActivity"
+            android:name=".view.tips.TipsActivity"
             android:exported="false" />
         <activity
-            android:name=".GoalsActivity"
+            android:name=".view.goals.GoalsActivity"
             android:exported="false" />
         <activity
-            android:name=".AuthActivity"
+            android:name=".view.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

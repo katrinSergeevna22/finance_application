@@ -4,7 +4,7 @@
     android:id="@+id/drawerGoal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GoalsActivity">
+    tools:context=".view.goals.GoalsActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content_main"

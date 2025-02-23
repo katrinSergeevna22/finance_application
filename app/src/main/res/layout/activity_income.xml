@@ -4,7 +4,7 @@
     android:id="@+id/drawerGoal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".IncomeActivity">
+    tools:context=".view.cost.IncomeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content_main"
@@ -211,7 +211,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/open_sans_bold"
             android:maxLength="15"
-            android:text="Сумма"
+            android:text="0.00"
             android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/wTips"

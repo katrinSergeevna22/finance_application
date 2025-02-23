@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".AddExpenseFragment">
+    tools:context=".view.cost.AddExpenseFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
+        android:id="@+id/sv_add_expense"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -94,8 +95,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etSum" />
 
+            <ImageButton
+                android:id="@+id/ibtnCategory"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:background="@color/white"
+                android:foregroundGravity="center"
+                android:src="@drawable/shape_rectangle_contur_violet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_category" />
 
-            <Spinner
+            <!--Spinner
                 android:id="@+id/spinnerCategory"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -106,7 +120,23 @@
                 android:spinnerMode="dropdown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_category" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_category" /-->
+            <TextView
+                android:id="@+id/tv_btn_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_bold"
+                android:textColor="@color/dark_violet"
+                android:textSize="20sp"
+                android:ellipsize="end"
+                android:maxEms="25"
+                android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@+id/ibtnCategory"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ibtnCategory"
+                tools:text="Выберите категорию" />
 
             <TextView
                 android:id="@+id/tv_goalExpense"
@@ -122,7 +152,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinnerCategory" />
+                app:layout_constraintTop_toBottomOf="@+id/ibtnCategory" />
 
 
             <Spinner
@@ -179,9 +209,9 @@
                 android:foregroundGravity="center"
                 android:src="@drawable/shape_rectangle_violet"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/spinnerCategory"
+                app:layout_constraintEnd_toEndOf="@+id/ibtnCategory"
                 app:layout_constraintHorizontal_bias="0.496"
-                app:layout_constraintStart_toStartOf="@+id/spinnerCategory"
+                app:layout_constraintStart_toStartOf="@+id/ibtnCategory"
                 app:layout_constraintTop_toBottomOf="@+id/etMultyLineComment"
                 app:layout_constraintVertical_bias="0.158" />
 
@@ -214,5 +244,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/categoryFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </FrameLayout>

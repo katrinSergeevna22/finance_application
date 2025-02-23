@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddGoalFragment">
+    tools:context=".view.goals.AddGoalFragment">
 
   <ScrollView
       android:layout_width="match_parent"
@@ -120,7 +120,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinnerCategory" />
+                app:layout_constraintTop_toBottomOf="@+id/ibtnCategory" />
 
               <EditText
                   android:id="@+id/etMultyLineComment"
@@ -148,9 +148,9 @@
                 android:foregroundGravity="center"
                 android:src="@drawable/shape_rectangle_violet"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/spinnerCategory"
+                app:layout_constraintEnd_toEndOf="@+id/ibtnCategory"
                 app:layout_constraintHorizontal_bias="0.496"
-                app:layout_constraintStart_toStartOf="@+id/spinnerCategory"
+                app:layout_constraintStart_toStartOf="@+id/ibtnCategory"
                 app:layout_constraintTop_toBottomOf="@+id/etMultyLineComment"
                 app:layout_constraintVertical_bias="1.0" />
 
