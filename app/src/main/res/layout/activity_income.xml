@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wTips" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_balance" />
 
         <ImageButton
             android:id="@+id/ibAddIncome"
@@ -178,7 +178,7 @@
             tools:ignore="MissingConstraints" />
 
         <ImageView
-            android:id="@+id/wTips"
+            android:id="@+id/iv_balance"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
@@ -199,9 +199,9 @@
             android:text="@string/balance"
             android:textColor="@color/white"
             android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="@+id/wTips"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_balance"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/wTips" />
+            app:layout_constraintTop_toTopOf="@+id/iv_balance" />
 
         <TextView
             android:id="@+id/tv_balance_income"
@@ -214,9 +214,9 @@
             android:text="0.00"
             android:textColor="@color/white"
             android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="@+id/wTips"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_balance"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/wTips" />
+            app:layout_constraintTop_toTopOf="@+id/iv_balance" />
 
         <FrameLayout
             android:id="@+id/backgroundFragment"
@@ -241,7 +241,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wTips"
+            app:layout_constraintTop_toBottomOf="@+id/iv_balance"
             app:layout_constraintVertical_bias="0.0">
 
         </FrameLayout>
@@ -258,7 +258,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wTips"
+            app:layout_constraintTop_toBottomOf="@+id/iv_balance"
             app:layout_constraintVertical_bias="0.0">
 
         </FrameLayout>

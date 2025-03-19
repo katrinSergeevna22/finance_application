@@ -133,9 +133,16 @@ class CategoriesFragment : Fragment() {
 //                        newCategory
 //                    else selectingCategory
                 (targetFragment as? AddExpenseFragment)?.receiveData(
-                    if (selectingCategory == categoriesArray[1])
+                    if (selectingCategory == categoriesArray[1] && newCategory.isEmpty())
                         newCategory
                     else selectingCategory
+                )
+                //(activity as ExpensesActivity).closeFragments()
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+            ibSelectGoal.setOnClickListener {
+                (targetFragment as? AddExpenseFragment)?.receiveData(
+                    categoriesArray[0]
                 )
                 //(activity as ExpensesActivity).closeFragments()
                 requireActivity().supportFragmentManager.popBackStack()

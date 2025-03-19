@@ -52,6 +52,8 @@ class AddExpenseFragment : Fragment() {
         binding.apply {
             val categoriesArray =
                 resources.getStringArray(R.array.categoriesExpense)
+            tvGoalExpense.visibility = View.GONE
+            spinnerGoal.visibility = View.GONE
             tvBtnCategory?.text = "Выберите категорию"
 //            addViewModel.category.observe(requireActivity()) {
 //                Log.d("Выбрана", it)
@@ -105,8 +107,10 @@ class AddExpenseFragment : Fragment() {
                         position: Int,
                         id: Long
                     ) {
-                        selectGoal = goalList[position]
-                        titleOfGoal = selectGoal.titleOfGoal.toString()
+                        if (position > goalList.size) {
+                            selectGoal = goalList[position]
+                            titleOfGoal = selectGoal.titleOfGoal.toString()
+                        }
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -164,9 +168,20 @@ class AddExpenseFragment : Fragment() {
     fun receiveData(data: String) {
         category = data
         Log.d("Select", data)
-        if (data != "") binding.tvBtnCategory?.text =
-            "Выбрана: $data" else binding.tvBtnCategory?.text =
-            "Выберите категорию"
+        binding.apply {
+            binding.tvBtnCategory?.text = if (data != "")
+                "Выбрана: $data"
+            else
+                "Выберите категорию"
+
+            if (resources.getStringArray(R.array.categoriesExpense)[0] == data) {
+                tvGoalExpense.visibility = View.VISIBLE
+                spinnerGoal.visibility = View.VISIBLE
+            }else {
+                tvGoalExpense.visibility = View.GONE
+                spinnerGoal.visibility = View.GONE
+            }
+        }
     }
 
     private fun observeViewModel() {

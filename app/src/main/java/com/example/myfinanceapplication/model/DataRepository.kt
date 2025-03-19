@@ -1,6 +1,7 @@
 package com.example.myfinanceapplication.model
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -12,6 +13,9 @@ class DataRepository {
     private val database = FirebaseDatabase.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
+    companion object{
+        private const val TAG = "DataRepository"
+    }
     // Получение ID текущего пользователя
     private val userId = auth.currentUser!!.uid
 
@@ -60,6 +64,7 @@ class DataRepository {
 
             override fun onCancelled(error: DatabaseError) {
                 // Обработка ошибок при чтении данных из базы данных
+                Log.e(TAG, "Failed to read value.", error.toException())
             }
         })
         return incomeLiveData
@@ -82,7 +87,7 @@ class DataRepository {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Обработка ошибок при чтении данных из базы данных
+                Log.e(TAG, "Failed to read value.", error.toException())
             }
         })
         return expenseLiveData
@@ -105,7 +110,7 @@ class DataRepository {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Log.d("DataRepository", "Failed to read value.", error.toException())
+                    Log.e(TAG, "Failed to read value.", error.toException())
                 }
             })
             return financeItemsLiveData
@@ -134,7 +139,7 @@ class DataRepository {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("GoalActivity", "Failed to read value.", error.toException())
+                Log.d(TAG, "Failed to read value.", error.toException())
             }
         })
         return oneGoalLiveData
@@ -157,7 +162,7 @@ class DataRepository {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("TipActivity", "Failed to read value.", error.toException())
+                Log.d(TAG, "Failed to read value.", error.toException())
             }
         })
         return tipLiveData
@@ -181,7 +186,7 @@ class DataRepository {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("TipActivity", "Failed to read value.", error.toException())
+                Log.d(TAG, "Failed to read value.", error.toException())
             }
         })
         return oneTipLiveData
@@ -202,6 +207,7 @@ class DataRepository {
         newCost.costId = costId.toString()
         costRef.setValue(newCost)
     }
+
     fun editIncomeToBase(newIncome: Map<String, Any>, selectIncome: Cost) {
 
         database.getReference("users").child(userId).child("income").child(selectIncome.costId)

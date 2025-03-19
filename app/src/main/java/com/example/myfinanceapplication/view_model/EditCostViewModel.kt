@@ -9,12 +9,18 @@ import com.example.myfinanceapplication.model.DataRepository
 class EditCostViewModel : ViewModel() {
     private val dataRepository = DataRepository()
     val viewModel = CostViewModel()
-    lateinit var selectCost : Cost
+    lateinit var selectCost: Cost
     var balance = 0.0
     lateinit var goalsMutableList: List<Goal>
     var answerException = ""
 
-    fun checkIncomeData(title : String, sumCost : String, category: String, comment: String, balanceNow : Double) : Boolean{
+    fun checkIncomeData(
+        title: String,
+        sumCost: String,
+        category: String,
+        comment: String,
+        balanceNow: Double
+    ): Boolean {
         if (title.isNotEmpty() && sumCost.isNotEmpty() && category.isNotEmpty()) {
             balance = balanceNow
             if (!checkIsTitle(title)) {
@@ -60,20 +66,20 @@ class EditCostViewModel : ViewModel() {
         answerException = "Заполните все поля"
         return false
     }
+
     fun editIncomeToBase(newIncome: Map<String, Any>, selectIncome: Cost) {
         val newSum = newIncome.get("moneyCost")
         if (newSum != selectIncome.moneyCost) {
             var diff =
-            if (newSum.toString().toDouble() > selectIncome.moneyCost.toString().toDouble() ) {
-                val diff =
-                    newSum.toString().toDouble() - selectIncome.moneyCost.toString().toDouble()
-                dataRepository.updateUserBalance(balance + diff)
-            }
-            else{
-                val diff =
-                    selectIncome.moneyCost.toString().toDouble() - newSum.toString().toDouble()
-                dataRepository.updateUserBalance(balance - diff)
-            }
+                if (newSum.toString().toDouble() > selectIncome.moneyCost.toString().toDouble()) {
+                    val diff =
+                        newSum.toString().toDouble() - selectIncome.moneyCost.toString().toDouble()
+                    dataRepository.updateUserBalance(balance + diff)
+                } else {
+                    val diff =
+                        selectIncome.moneyCost.toString().toDouble() - newSum.toString().toDouble()
+                    dataRepository.updateUserBalance(balance - diff)
+                }
         }
         selectIncome.titleOfCost = newIncome["titleOfCost"].toString()
         selectIncome.moneyCost = newIncome["moneyCost"].toString().toLong()
@@ -82,19 +88,23 @@ class EditCostViewModel : ViewModel() {
         //setSelectedCost(selectIncome)
         dataRepository.editIncomeToBase(newIncome, selectIncome)
     }
-    fun checkIsNumber(sum : String) : Boolean{
+
+    fun checkIsNumber(sum: String): Boolean {
         return sum.matches(Regex("[0-9]+"))
     }
-    fun checkIsTitle(sum : String) : Boolean{
+
+    fun checkIsTitle(sum: String): Boolean {
         return sum.matches(Regex("[a-zA-Zа-яА-Я0-9.,\\s]+"))
     }
+
     fun checkExpenseData(
-        title : String,
+        title: String,
         sumCost: String,
         category: String,
         comment: String,
         titleOfGoal: String,
-        balanceNow : Double) : Boolean {
+        balanceNow: Double
+    ): Boolean {
 
         if (title.isNotEmpty() && sumCost.isNotEmpty() && category.isNotEmpty()) {
             balance = balanceNow
@@ -106,21 +116,21 @@ class EditCostViewModel : ViewModel() {
                 answerException = "Некорректный ввод суммы!"
                 return false
             }
-            if (title.length > 25){
+            if (title.length > 25) {
                 answerException = "Слишком длинное название!"
                 return false
             }
             val sum = sumCost.toLong()
-            if (sum > 1000000000000L){
+            if (sum > 1000000000000L) {
                 answerException = "Укажите реальную сумму"
                 return false
             }
-            if (comment.length > 240){
+            if (comment.length > 240) {
                 answerException = "Слишком длинный комментарий"
                 return false
             }
 
-            if (sum > selectCost.moneyCost && sum - selectCost.moneyCost > balance){
+            if (sum > selectCost.moneyCost && sum - selectCost.moneyCost > balance) {
                 answerException = "Недостаочно средст на балансе"
                 return false
                 //Toast.makeText((activity as ExpensesActivity), "Недостаочно средст", Toast.LENGTH_SHORT).show()
@@ -151,7 +161,7 @@ class EditCostViewModel : ViewModel() {
                                 selectCost.moneyCost - sum
                             )
                         } else if (selectCost.moneyCost < sum) {
-                            if (goalNew.moneyGoal < sum + goalNew.progressOfMoneyGoal - selectCost.moneyCost){
+                            if (goalNew.moneyGoal < sum + goalNew.progressOfMoneyGoal - selectCost.moneyCost) {
                                 answerException = "Сумма больше, чем нужно для достижения цели"
 
                                 //etSum.setText((selectGoal.moneyGoal - selectGoal.progressOfMoneyGoal).toString())
@@ -163,8 +173,7 @@ class EditCostViewModel : ViewModel() {
                             )
                         }
                     }
-                }
-                else {
+                } else {
                     viewModel.minusProgressGoal(
                         goalOld,
                         selectCost.moneyCost
@@ -207,8 +216,7 @@ class EditCostViewModel : ViewModel() {
 
         if (newSum > pastSum) {
             dataRepository.updateUserBalance(balance - (newSum - pastSum))
-        }
-        else{
+        } else {
             dataRepository.updateUserBalance(balance + (pastSum - newSum))
         }
 

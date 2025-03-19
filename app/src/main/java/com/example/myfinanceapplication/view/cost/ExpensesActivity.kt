@@ -7,8 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.SpinnerAdapter
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -16,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.Visibility
 import com.example.myapplication.adapter.CostAdapter
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.MainActivity
@@ -62,24 +67,24 @@ class ExpensesActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        binding.toolbarGoal.setNavigationOnClickListener {
-            binding.drawerGoal.openDrawer(GravityCompat.START)
-        }
-        adapter = CostAdapter {
-            viewModel.setSelectedCost(it)
-
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.backgroundFragment, newBackgroundFragment)
-                .addToBackStack(null)
-                .commit()
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.place_holder_infoExpenseFragment, infoExpenseFragment)
-                .addToBackStack(null)
-                .commit()
-        }
-
         binding.apply {
+            toolbarGoal.setNavigationOnClickListener {
+                drawerGoal.openDrawer(GravityCompat.START)
+            }
+            adapter = CostAdapter {
+                viewModel.setSelectedCost(it)
+
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.backgroundFragment, newBackgroundFragment)
+                    .addToBackStack(null)
+                    .commit()
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.place_holder_infoExpenseFragment, infoExpenseFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+
             rcView.layoutManager = LinearLayoutManager(this@ExpensesActivity)
             rcView.adapter = adapter
 
@@ -94,6 +99,7 @@ class ExpensesActivity : AppCompatActivity() {
             rcView.addItemDecoration(itemDecoration)
 
             ibAddExpense.setOnClickListener {
+                visibilityFilter(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -111,6 +117,44 @@ class ExpensesActivity : AppCompatActivity() {
             }
             ibMainTip.setOnClickListener {
                 navigateTo("TipsActivityWithSelect")
+            }
+
+            toolbarGoal.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.item_filter_category -> {
+                        item.isChecked = !item.isChecked
+                        if (!item.isChecked){
+                            visibilityFilter(View.GONE)
+                        } else {
+                            visibilityFilter(View.VISIBLE)
+                        }
+                    }
+                }
+                true
+            }
+
+//            val categoriesList = viewModel.getExpenseCategory()
+//            Log.d("katrin_category", categoriesList.toString())
+//            val adapter =
+//                ArrayAdapter(this@ExpensesActivity, android.R.layout.simple_spinner_item, categoriesList)
+//            //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//            spinnerCategory?.adapter = adapter
+
+            ibClose?.setOnClickListener {
+                visibilityFilter(View.GONE)
+            }
+
+            ibSaveCategory?.setOnClickListener {
+                val selectedItem = spinnerCategory?.selectedItem?.toString()
+                if (selectedItem != null) {
+                    viewModel.filterByCategory(selectedItem)
+                } else {
+                    Toast.makeText(
+                        this@ExpensesActivity,
+                        "Выберите категорию фильтрации или если хотите закрыть - нажмите крестик",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
 
             navigationView.setNavigationItemSelectedListener {
@@ -144,6 +188,18 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
+    private fun visibilityFilter(visibility: Int){
+        binding.apply {
+            ivFilterCategory?.visibility = visibility
+            tvTitleCategory?.visibility = visibility
+            spinnerCategory?.visibility = visibility
+            ibClose?.visibility = visibility
+            ibSaveCategory?.visibility = visibility
+            tvSave?.visibility = visibility
+           // toolbarGoal.menu.getItem(0).isChecked = visibility == View.VISIBLE
+        }
+    }
+
     private fun observeViewModel() {
         viewModel.balanceLiveData.observe(this, Observer { balance ->
             binding.tvBalanceExpense.text = balance.toString()
@@ -154,13 +210,13 @@ class ExpensesActivity : AppCompatActivity() {
             adapter.submitList(expenseList)
             adapter.notifyDataSetChanged()
         }
-        viewModel.getOneRandomGoalLiveData().observe(this) {goal ->
+        viewModel.getOneRandomGoalLiveData().observe(this) { goal ->
             mainGoal = goal
             binding.apply {
                 tvTitleGoal.text = goal.titleOfGoal
                 if (goal.date == "") {
                     tvMoneyGoal.text = ""
-                }else {
+                } else {
                     tvMoneyGoal.text = goal.moneyGoal.toString()
                     val totalAmountToSave = goal.moneyGoal
                     val currentAmountSaved = goal.progressOfMoneyGoal
@@ -171,35 +227,41 @@ class ExpensesActivity : AppCompatActivity() {
                 }
             }
         }
-        viewModel.getOneRandomTipLiveData().observe(this) {tip->
+        viewModel.getOneRandomTipLiveData().observe(this) { tip ->
             mainTip = tip
             binding.tvTitleTip.text = tip.title
         }
     }
-    fun closeFragments(){
+
+    fun closeFragments() {
         supportFragmentManager.popBackStack()
         supportFragmentManager.popBackStack()
     }
+
     fun navigateTo(nameActivity: String) {
         when (nameActivity) {
             "GoalsActivity" -> {
                 intent = Intent(this@ExpensesActivity, GoalsActivity::class.java)
                 startActivity(intent)
             }
+
             "GoalsActivityWithSelect" -> {
                 intent = Intent(this@ExpensesActivity, GoalsActivity::class.java)
                 intent.putExtra("selectedItem", mainGoal.titleOfGoal)
                 startActivity(intent)
             }
+
             "TipsActivity" -> {
                 intent = Intent(this@ExpensesActivity, TipsActivity::class.java)
                 startActivity(intent)
             }
+
             "TipsActivityWithSelect" -> {
                 intent = Intent(this@ExpensesActivity, TipsActivity::class.java)
                 intent.putExtra("selectedItem", mainTip.title)
                 startActivity(intent)
             }
+
             "MainActivity" -> {
                 intent = Intent(this@ExpensesActivity, MainActivity::class.java)
                 startActivity(intent)
@@ -216,6 +278,7 @@ class ExpensesActivity : AppCompatActivity() {
 
                 startActivity(intent)
             }
+
             "AuthActivity" -> {
                 AuthViewModel().exit()
                 intent = Intent(this@ExpensesActivity, AuthActivity::class.java)
@@ -223,6 +286,7 @@ class ExpensesActivity : AppCompatActivity() {
             }
         }
     }
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
