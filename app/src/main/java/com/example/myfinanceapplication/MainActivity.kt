@@ -1,21 +1,17 @@
 package com.example.myfinanceapplication
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.databinding.ActivityMainBinding
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip
-import com.example.myfinanceapplication.view.AuthActivity
-import com.example.myfinanceapplication.view.cost.ExpensesActivity
-import com.example.myfinanceapplication.view.goals.GoalsActivity
-import com.example.myfinanceapplication.view.cost.IncomeActivity
-import com.example.myfinanceapplication.view.tips.TipsActivity
-import com.example.myfinanceapplication.view_model.AuthViewModel
+import com.example.myfinanceapplication.model.utils.NavigationTitle
+import com.example.myfinanceapplication.model.utils.getIntentForNavigation
+import com.example.myfinanceapplication.model.utils.navigationForNavigationView
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -36,67 +32,47 @@ class MainActivity : AppCompatActivity() {
     fun setupUI() {
         binding.apply {
             tvGreeting.text = ContextCompat.getString(this@MainActivity, R.string.greeting)
-            tvTitleMoney.text = "Последняя неделя"
+            tvTitleMoney.text = getString(R.string.title_last_week)
 
             toolbarMain.setNavigationOnClickListener {
                 binding.drawerMain.openDrawer(GravityCompat.START)
             }
             ibGoals.setOnClickListener {
-                navigateTo("GoalsActivity")
+                navigateTo(NavigationTitle.GOALS)
             }
             ibTips.setOnClickListener {
-                navigateTo("TipsActivity")
+                navigateTo(NavigationTitle.TIPS)
             }
             ibIncome.setOnClickListener {
-                navigateTo("IncomeActivity")
+                navigateTo(NavigationTitle.INCOME)
             }
             ibExpense.setOnClickListener {
-                navigateTo("ExpenseActivity")
+                navigateTo(NavigationTitle.EXPENSE)
             }
             ibMainTip.setOnClickListener {
-                navigateTo("TipsActivityWithSelect")
+                navigateTo(NavigationTitle.TIPS_WITH_SELECT, tvTitleTip.text.toString())
             }
             ibMainGoal.setOnClickListener {
-                if (mainGoal == Goal()){
-                    navigateTo("GoalsActivity")
-                }
-                else {
-                    navigateTo("GoalsActivityWithSelect")
+                if (mainGoal == Goal()) {
+                    navigateTo(NavigationTitle.GOALS)
+                } else {
+                    navigateTo(NavigationTitle.GOALS_WITH_SELECT, mainGoal.titleOfGoal.toString())
                 }
             }
             navigationView.setNavigationItemSelectedListener {
-                when (it.itemId) {
-                    R.id.menu_home -> {
-                        navigateTo("MainActivity")
-                    }
-
-                    R.id.menu_tips -> {
-                        navigateTo("TipsActivity")
-                    }
-
-                    R.id.menu_income -> {
-                        navigateTo("IncomeActivity")
-                    }
-
-                    R.id.menu_expense -> {
-                        navigateTo("ExpenseActivity")
-                    }
-
-                    R.id.menu_goals -> {
-                        navigateTo("GoalsActivity")
-                    }
-
-                    R.id.menu_exit -> {
-                        navigateTo("AuthActivity")
-                    }
-                }
+                startActivity(
+                    navigationForNavigationView(
+                        context = this@MainActivity,
+                        itemId = it.itemId
+                    )
+                )
                 true
             }
         }
 
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "DefaultLocale")
     fun observeViewModel() {
         binding.apply {
             viewModel.getBalance().observe(this@MainActivity) { balance ->
@@ -128,52 +104,22 @@ class MainActivity : AppCompatActivity() {
                 tvAdvice.text = tip.text
                 mainTip = tip
             }
-            viewModel.getSumIncome().observe(this@MainActivity) {sumIncome ->
+            viewModel.getSumIncome().observe(this@MainActivity) { sumIncome ->
                 tvBalanceIncome.text = "+ " + String.format("%.2f", sumIncome)
             }
-            viewModel.getSumExpense().observe(this@MainActivity) {sumExpense ->
+            viewModel.getSumExpense().observe(this@MainActivity) { sumExpense ->
                 tvBalanceExpense.text = "- " + String.format("%.2f", sumExpense)
             }
         }
     }
 
-    fun navigateTo(nameActivity: String) {
-        when (nameActivity) {
-            "GoalsActivity" -> {
-                intent = Intent(this@MainActivity, GoalsActivity::class.java)
-                startActivity(intent)
-            }
-            "GoalsActivityWithSelect" -> {
-                intent = Intent(this@MainActivity, GoalsActivity::class.java)
-                intent.putExtra("selectedItem", mainGoal.titleOfGoal)
-                startActivity(intent)
-            }
-            "TipsActivity" -> {
-                intent = Intent(this@MainActivity, TipsActivity::class.java)
-                startActivity(intent)
-            }
-            "TipsActivityWithSelect" -> {
-                intent = Intent(this@MainActivity, TipsActivity::class.java)
-                intent.putExtra("selectedItem", mainTip.title)
-                startActivity(intent)
-            }
-            "IncomeActivity" -> {
-                intent = Intent(this@MainActivity, IncomeActivity::class.java)
-                startActivity(intent)
-            }
-
-            "ExpenseActivity" -> {
-                intent = Intent(this@MainActivity, ExpensesActivity::class.java)
-                startActivity(intent)
-            }
-
-            "AuthActivity" -> {
-                AuthViewModel().exit()
-                intent = Intent(this@MainActivity, AuthActivity::class.java)
-                startActivity(intent)
-            }
-
-        }
-
+    private fun navigateTo(nameActivity: NavigationTitle, titleOfGoalsOrTips: String = "") {
+        startActivity(
+            getIntentForNavigation(
+                context = this,
+                nameActivity = nameActivity,
+                titleOfGoalsOrTips = titleOfGoalsOrTips
+            )
+        )
     }
 }

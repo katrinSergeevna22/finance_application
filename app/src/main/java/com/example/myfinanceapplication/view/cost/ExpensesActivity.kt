@@ -1,18 +1,16 @@
 package com.example.myfinanceapplication.view.cost
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.graphics.Rect
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.SpinnerAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -20,18 +18,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.Visibility
 import com.example.myapplication.adapter.CostAdapter
-import com.example.myfinanceapplication.model.Goal
-import com.example.myfinanceapplication.MainActivity
 import com.example.myfinanceapplication.R
-import com.example.myfinanceapplication.model.Tip
 import com.example.myfinanceapplication.databinding.ActivityExpensesBinding
-import com.example.myfinanceapplication.view.AuthActivity
+import com.example.myfinanceapplication.model.Goal
+import com.example.myfinanceapplication.model.Tip
+import com.example.myfinanceapplication.model.utils.NavigationTitle
+import com.example.myfinanceapplication.model.utils.getIntentForNavigation
+import com.example.myfinanceapplication.model.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view.goals.GoalsActivity
-import com.example.myfinanceapplication.view.tips.TipsActivity
-import com.example.myfinanceapplication.view_model.AuthViewModel
 import com.example.myfinanceapplication.view_model.CostViewModel
 import kotlinx.coroutines.launch
 
@@ -39,11 +34,9 @@ class ExpensesActivity : AppCompatActivity() {
     lateinit var binding: ActivityExpensesBinding
     private lateinit var adapter: CostAdapter
     lateinit var viewModel: CostViewModel
-    val newBackgroundFragment = BackgroundFragment.newInstance()
-    val infoExpenseFragment = InfoExpenseFragment.newInstance()
-    val newAddExpenseFragment = AddExpenseFragment.newInstance()
-    var mainTip = Tip()
-    var mainGoal = Goal()
+
+    private var mainTip = Tip()
+    private var mainGoal = Goal()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +47,6 @@ class ExpensesActivity : AppCompatActivity() {
 
         lifecycle.coroutineScope.launch {
             viewModel.apply {
-                //loadBalance().join()
                 loadGoals()
                 loadExpenses()
                 loadOneRandomTipLiveData("Expenses")
@@ -63,10 +55,13 @@ class ExpensesActivity : AppCompatActivity() {
         }
         setupUI()
         observeViewModel()
-
     }
 
     private fun setupUI() {
+        val newBackgroundFragment = BackgroundFragment()
+        val infoExpenseFragment = InfoExpenseFragment()
+        val newAddExpenseFragment = AddExpenseFragment()
+
         binding.apply {
             toolbarGoal.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
@@ -90,12 +85,14 @@ class ExpensesActivity : AppCompatActivity() {
 
             val itemDecoration =
                 DividerItemDecoration(this@ExpensesActivity, LinearLayoutManager.VERTICAL)
-            itemDecoration.setDrawable(
-                ContextCompat.getDrawable(
-                    this@ExpensesActivity,
-                    R.drawable.shape_indent_rcview
-                )!!
-            )
+            ContextCompat.getDrawable(
+                this@ExpensesActivity,
+                R.drawable.shape_indent_rcview
+            )?.let {
+                itemDecoration.setDrawable(
+                    it
+                )
+            }
             rcView.addItemDecoration(itemDecoration)
 
             ibAddExpense.setOnClickListener {
@@ -113,17 +110,29 @@ class ExpensesActivity : AppCompatActivity() {
             }
 
             ibMainGoal.setOnClickListener {
-                navigateTo("GoalsActivityWithSelect")
+                startActivity(
+                    getIntentForNavigation(
+                        context = this@ExpensesActivity,
+                        nameActivity = NavigationTitle.GOALS_WITH_SELECT,
+                        titleOfGoalsOrTips = mainGoal.titleOfGoal.toString()
+                    )
+                )
             }
             ibMainTip.setOnClickListener {
-                navigateTo("TipsActivityWithSelect")
+                startActivity(
+                    getIntentForNavigation(
+                        context = this@ExpensesActivity,
+                        nameActivity = NavigationTitle.TIPS_WITH_SELECT,
+                        titleOfGoalsOrTips = mainTip.title.toString()
+                    )
+                )
             }
 
             toolbarGoal.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.item_filter_category -> {
                         item.isChecked = !item.isChecked
-                        if (!item.isChecked){
+                        if (!item.isChecked) {
                             visibilityFilter(View.GONE)
                         } else {
                             visibilityFilter(View.VISIBLE)
@@ -158,37 +167,18 @@ class ExpensesActivity : AppCompatActivity() {
             }
 
             navigationView.setNavigationItemSelectedListener {
-                when (it.itemId) {
-                    R.id.menu_goals -> {
-                        navigateTo("GoalsActivity")
-                    }
-
-                    R.id.menu_tips -> {
-                        navigateTo("TipsActivity")
-                    }
-
-                    R.id.menu_home -> {
-                        navigateTo("MainActivity")
-                    }
-
-                    R.id.menu_expense -> {
-                        navigateTo("ExpenseActivity")
-                    }
-
-                    R.id.menu_income -> {
-                        navigateTo("IncomeActivity")
-                    }
-
-                    R.id.menu_exit -> {
-                        navigateTo("AuthActivity")
-                    }
-                }
+                startActivity(
+                    navigationForNavigationView(
+                        context = this@ExpensesActivity,
+                        itemId = it.itemId
+                    )
+                )
                 true
             }
         }
     }
 
-    private fun visibilityFilter(visibility: Int){
+    private fun visibilityFilter(visibility: Int) {
         binding.apply {
             ivFilterCategory?.visibility = visibility
             tvTitleCategory?.visibility = visibility
@@ -196,10 +186,11 @@ class ExpensesActivity : AppCompatActivity() {
             ibClose?.visibility = visibility
             ibSaveCategory?.visibility = visibility
             tvSave?.visibility = visibility
-           // toolbarGoal.menu.getItem(0).isChecked = visibility == View.VISIBLE
+            // toolbarGoal.menu.getItem(0).isChecked = visibility == View.VISIBLE
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
         viewModel.balanceLiveData.observe(this, Observer { balance ->
             binding.tvBalanceExpense.text = balance.toString()
@@ -236,55 +227,6 @@ class ExpensesActivity : AppCompatActivity() {
     fun closeFragments() {
         supportFragmentManager.popBackStack()
         supportFragmentManager.popBackStack()
-    }
-
-    fun navigateTo(nameActivity: String) {
-        when (nameActivity) {
-            "GoalsActivity" -> {
-                intent = Intent(this@ExpensesActivity, GoalsActivity::class.java)
-                startActivity(intent)
-            }
-
-            "GoalsActivityWithSelect" -> {
-                intent = Intent(this@ExpensesActivity, GoalsActivity::class.java)
-                intent.putExtra("selectedItem", mainGoal.titleOfGoal)
-                startActivity(intent)
-            }
-
-            "TipsActivity" -> {
-                intent = Intent(this@ExpensesActivity, TipsActivity::class.java)
-                startActivity(intent)
-            }
-
-            "TipsActivityWithSelect" -> {
-                intent = Intent(this@ExpensesActivity, TipsActivity::class.java)
-                intent.putExtra("selectedItem", mainTip.title)
-                startActivity(intent)
-            }
-
-            "MainActivity" -> {
-                intent = Intent(this@ExpensesActivity, MainActivity::class.java)
-                startActivity(intent)
-            }
-
-            "IncomeActivity" -> {
-                intent = Intent(this@ExpensesActivity, IncomeActivity::class.java)
-
-                startActivity(intent)
-            }
-
-            "ExpenseActivity" -> {
-                intent = Intent(this@ExpensesActivity, ExpensesActivity::class.java)
-
-                startActivity(intent)
-            }
-
-            "AuthActivity" -> {
-                AuthViewModel().exit()
-                intent = Intent(this@ExpensesActivity, AuthActivity::class.java)
-                startActivity(intent)
-            }
-        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
