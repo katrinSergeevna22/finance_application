@@ -47,7 +47,7 @@ class CostViewModel : ViewModel() {
         return balance
     }
 
-    fun updateBalance(newBalance: Double) {
+    private fun updateBalance(newBalance: Double) {
         dataRepository.updateUserBalance(newBalance)
     }
 
@@ -120,7 +120,7 @@ class CostViewModel : ViewModel() {
 
     fun filterByCategory(category: String) {
         val expensesListByCategory =
-            expensesList?.toList()?.filter { it.category == category } ?: listOf()
+            expensesList.toList().filter { it.category == category } ?: listOf()
         expensesLiveData.value = expensesListByCategory
     }
 

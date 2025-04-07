@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
@@ -27,6 +30,7 @@ class CategoriesFragment : Fragment() {
 
         binding.apply {
             val categoriesArray = resources.getStringArray(R.array.categoriesExpense)
+            fetchNewCategories(categoriesArray)
             var selectingCategory = categoriesArray[1]
             llHome.setOnClickListener {
                 etNewCategory.visibility = View.INVISIBLE
@@ -38,6 +42,14 @@ class CategoriesFragment : Fragment() {
                 llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
 
                 selectingCategory = categoriesArray[2]
             }
@@ -45,13 +57,22 @@ class CategoriesFragment : Fragment() {
                 selectingCategory = categoriesArray[3]
                 etNewCategory.visibility = View.INVISIBLE
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
-                llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llTransport.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
                 llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llHobby.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTecnic.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llFood.setOnClickListener {
                 selectingCategory = categoriesArray[4]
@@ -64,6 +85,14 @@ class CategoriesFragment : Fragment() {
                 llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llHobby.setOnClickListener {
                 selectingCategory = categoriesArray[5]
@@ -76,6 +105,14 @@ class CategoriesFragment : Fragment() {
                 llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llTecnic.setOnClickListener {
                 selectingCategory = categoriesArray[6]
@@ -84,10 +121,19 @@ class CategoriesFragment : Fragment() {
                 llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llHobby.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
-                llTecnic.background = resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llTecnic.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
                 llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llEducation.setOnClickListener {
                 selectingCategory = categoriesArray[7]
@@ -97,9 +143,18 @@ class CategoriesFragment : Fragment() {
                 llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llHobby.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTecnic.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
-                llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llEducation.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
                 llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llShopping.setOnClickListener {
                 selectingCategory = categoriesArray[8]
@@ -110,8 +165,17 @@ class CategoriesFragment : Fragment() {
                 llHobby.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTecnic.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
-                llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llShopping.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
                 llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llOther.setOnClickListener {
                 selectingCategory = categoriesArray[1]
@@ -124,6 +188,94 @@ class CategoriesFragment : Fragment() {
                 llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llOther.background = resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+            }
+            llNewCategory1.setOnClickListener {
+                selectingCategory = tvNewCategory1.text.toString()
+                etNewCategory.visibility = View.VISIBLE
+                llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llHobby.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llTecnic.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+            }
+            llNewCategory2.setOnClickListener {
+                selectingCategory = tvNewCategory2.text.toString()
+                etNewCategory.visibility = View.VISIBLE
+                llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llHobby.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llTecnic.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+            }
+            llNewCategory3.setOnClickListener {
+                selectingCategory = tvNewCategory3.text.toString()
+                etNewCategory.visibility = View.VISIBLE
+                llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llHobby.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llTecnic.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+            }
+            llNewCategory4.setOnClickListener {
+                selectingCategory = tvNewCategory4.text.toString()
+                etNewCategory.visibility = View.VISIBLE
+                llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llHobby.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llTecnic.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llEducation.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llShopping.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llOther.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
+                llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             ibSave.setOnClickListener {
                 Log.d("btnSave", selectingCategory)
@@ -133,12 +285,12 @@ class CategoriesFragment : Fragment() {
 //                        newCategory
 //                    else selectingCategory
                 (targetFragment as? AddExpenseFragment)?.receiveData(
-                    if (selectingCategory == categoriesArray[1] && newCategory.isEmpty())
+                    if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
                         newCategory
                     else selectingCategory
                 )
-                //(activity as ExpensesActivity).closeFragments()
-                requireActivity().supportFragmentManager.popBackStack()
+                (activity as ExpensesActivity).closeFragments()
+                //requireActivity().supportFragmentManager.popBackStack()
             }
             ibSelectGoal.setOnClickListener {
                 (targetFragment as? AddExpenseFragment)?.receiveData(
@@ -150,5 +302,40 @@ class CategoriesFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun fetchNewCategories(categoriesArray: Array<String>) {
+        val newCategories = (activity as ExpensesActivity).categoriesList.toSet()
+            .filter { !categoriesArray.contains(it) }
+        if (newCategories.isNotEmpty()) {
+            binding.apply {
+                tvNewCategory1.text = newCategories[0]
+                switchVisibleNewCategories(llNewCategory1, ivCategoryImage1, tvNewCategory1)
+                if (newCategories.size > 1) {
+                    tvNewCategory2.text = newCategories[1]
+                    switchVisibleNewCategories(llNewCategory2, ivCategoryImage2, tvNewCategory2)
+                }
+                if (newCategories.size > 2) {
+                    tvNewCategory3.text = newCategories[2]
+                    switchVisibleNewCategories(llNewCategory3, ivCategoryImage3, tvNewCategory3)
+                }
+                if (newCategories.size > 3) {
+                    tvNewCategory4.text = newCategories[3]
+                    switchVisibleNewCategories(llNewCategory4, ivCategoryImage4, tvNewCategory4)
+                }
+            }
+        }
+    }
+
+    private fun switchVisibleNewCategories(
+        linearLayout: LinearLayout,
+        imageView: ImageView,
+        textView: TextView
+    ) {
+        binding.apply {
+            linearLayout.visibility = View.VISIBLE
+            imageView.visibility = View.VISIBLE
+            textView.visibility = View.VISIBLE
+        }
     }
 }

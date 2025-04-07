@@ -190,6 +190,7 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
+    lateinit var categoriesList: List<String>
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
         viewModel.balanceLiveData.observe(this, Observer { balance ->
@@ -198,6 +199,7 @@ class ExpensesActivity : AppCompatActivity() {
             Log.d("ShowBalance4", balance.toString())
         })
         viewModel.getExpenseLiveData().observe(this) { expenseList ->
+            categoriesList = expenseList.mapNotNull { it.category }
             adapter.submitList(expenseList)
             adapter.notifyDataSetChanged()
         }

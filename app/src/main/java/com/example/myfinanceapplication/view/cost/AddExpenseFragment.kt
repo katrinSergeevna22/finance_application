@@ -15,6 +15,7 @@ import com.example.myfinanceapplication.view_model.CostViewModel
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentAddExpenseBinding
+import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.view_model.AddCostViewModel
 
 class AddExpenseFragment : Fragment() {
@@ -63,10 +64,11 @@ class AddExpenseFragment : Fragment() {
 
             ibtnCategory.setOnClickListener {
                 //parentFragment?.view?.visibility = View.INVISIBLE
-//                requireActivity().supportFragmentManager.beginTransaction()
-//                    .replace(R.id.backgroundFragment, BackgroundFragment())
-//                    .addToBackStack(null)
-//                    .commit()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.backgroundFragment, BackgroundFragment())
+                    .addToBackStack(null)
+                    .commit()
+
                 val categoriesFragment = CategoriesFragment()
                 categoriesFragment.setTargetFragment(this@AddExpenseFragment, 1)
                 requireActivity().supportFragmentManager
@@ -177,7 +179,7 @@ class AddExpenseFragment : Fragment() {
             if (resources.getStringArray(R.array.categoriesExpense)[0] == data) {
                 tvGoalExpense.visibility = View.VISIBLE
                 spinnerGoal.visibility = View.VISIBLE
-            }else {
+            } else {
                 tvGoalExpense.visibility = View.GONE
                 spinnerGoal.visibility = View.GONE
             }
