@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -68,7 +69,7 @@ class ExpensesActivity : AppCompatActivity() {
             }
             adapter = CostAdapter {
                 viewModel.setSelectedCost(it)
-
+                visibilityFilter(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -136,18 +137,12 @@ class ExpensesActivity : AppCompatActivity() {
                             visibilityFilter(View.GONE)
                         } else {
                             visibilityFilter(View.VISIBLE)
+                            fetchSpinnerCategory()
                         }
                     }
                 }
                 true
             }
-
-//            val categoriesList = viewModel.getExpenseCategory()
-//            Log.d("katrin_category", categoriesList.toString())
-//            val adapter =
-//                ArrayAdapter(this@ExpensesActivity, android.R.layout.simple_spinner_item, categoriesList)
-//            //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//            spinnerCategory?.adapter = adapter
 
             ibClose?.setOnClickListener {
                 visibilityFilter(View.GONE)
@@ -178,6 +173,25 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
+    private fun fetchSpinnerCategory() {
+        val categoriesList =
+            resources.getStringArray(R.array.categoriesExpense).toMutableList()
+        categoriesList.addAll(
+            viewModel.getExpenseCategory()?.filter { !categoriesList.contains(it) }
+                ?.subList(0, 5) ?: listOf()
+        )
+
+        Log.d("katrin_category", categoriesList.toString())
+        val adapter =
+            ArrayAdapter(
+                this@ExpensesActivity,
+                android.R.layout.simple_spinner_item,
+                categoriesList
+            )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerCategory?.adapter = adapter
+    }
+
     private fun visibilityFilter(visibility: Int) {
         binding.apply {
             ivFilterCategory?.visibility = visibility
@@ -191,6 +205,7 @@ class ExpensesActivity : AppCompatActivity() {
     }
 
     lateinit var categoriesList: List<String>
+
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
         viewModel.balanceLiveData.observe(this, Observer { balance ->

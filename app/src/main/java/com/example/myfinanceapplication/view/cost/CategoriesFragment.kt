@@ -27,10 +27,10 @@ class CategoriesFragment : Fragment() {
     ): View? {
         binding = FragmentCategoriesBinding.inflate(inflater)
         viewModel = ViewModelProvider(requireActivity())[AddCostViewModel::class.java]
-
         binding.apply {
             val categoriesArray = resources.getStringArray(R.array.categoriesExpense)
             fetchNewCategories(categoriesArray)
+            selectedCategory()
             var selectingCategory = categoriesArray[1]
             llHome.setOnClickListener {
                 etNewCategory.visibility = View.INVISIBLE
@@ -180,6 +180,7 @@ class CategoriesFragment : Fragment() {
             llOther.setOnClickListener {
                 selectingCategory = categoriesArray[1]
                 etNewCategory.visibility = View.VISIBLE
+                etNewCategory.setText(categoriesArray[1])
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
@@ -289,6 +290,11 @@ class CategoriesFragment : Fragment() {
                         newCategory
                     else selectingCategory
                 )
+                (targetFragment as? EditExpenseFragment)?.receiveData(
+                    if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
+                        newCategory
+                    else selectingCategory
+                )
                 (activity as ExpensesActivity).closeFragments()
                 //requireActivity().supportFragmentManager.popBackStack()
             }
@@ -296,12 +302,67 @@ class CategoriesFragment : Fragment() {
                 (targetFragment as? AddExpenseFragment)?.receiveData(
                     categoriesArray[0]
                 )
-                //(activity as ExpensesActivity).closeFragments()
-                requireActivity().supportFragmentManager.popBackStack()
+                (targetFragment as? EditExpenseFragment)?.receiveData(
+                    categoriesArray[0]
+                )
+                (activity as ExpensesActivity).closeFragments()
             }
         }
 
         return binding.root
+    }
+
+    private fun selectedCategory() {
+        val selectingCategory = (targetFragment as? EditExpenseFragment)?.selectingCategory
+        Log.d("katrin_selectedCategory", selectingCategory.toString())
+        Log.d("katrin_selectedCategory_tv1", binding.tvCategoryText1.text.toString())
+        binding.apply {
+            when (selectingCategory) {
+                tvCategoryText1.text -> llHome.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvCategoryText2.text -> llTransport.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvCategoryText3.text -> llFood.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvCategoryText4.text -> llHobby.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvCategoryText5.text -> llTecnic.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvCategoryText6.text -> llEducation.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvCategoryText7.text -> llShopping.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvCategoryText8.text -> llOther.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvNewCategory1.text -> llNewCategory1.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvNewCategory2.text -> llNewCategory2.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvNewCategory3.text -> llNewCategory3.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                tvNewCategory4.text -> llNewCategory4.background =
+                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                "Цель" -> {
+//                    ibSelectGoal.background =
+//                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+//                    tvSelectGoal.setTextColor(resources.getColor(R.color.dark_violet))
+                }
+                else -> {
+                    etNewCategory.setText(selectingCategory)
+                }
+            }
+        }
     }
 
     private fun fetchNewCategories(categoriesArray: Array<String>) {

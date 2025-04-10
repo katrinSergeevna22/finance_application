@@ -109,7 +109,7 @@ class AddExpenseFragment : Fragment() {
                         position: Int,
                         id: Long
                     ) {
-                        if (position > goalList.size) {
+                        if (position < goalList.size) {
                             selectGoal = goalList[position]
                             titleOfGoal = selectGoal.titleOfGoal.toString()
                         }
@@ -169,9 +169,8 @@ class AddExpenseFragment : Fragment() {
 
     fun receiveData(data: String) {
         category = data
-        Log.d("Select", data)
         binding.apply {
-            binding.tvBtnCategory?.text = if (data != "")
+            tvBtnCategory?.text = if (data != "")
                 "Выбрана: $data"
             else
                 "Выберите категорию"

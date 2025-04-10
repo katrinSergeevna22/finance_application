@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip
@@ -29,8 +30,8 @@ class CostViewModel : ViewModel() {
     var itsEdit: Boolean = false
     val balanceLiveData = MutableLiveData<Double>()
 
-    val goalsListLiveData = MutableLiveData<List<Goal>>()
-    var goalsList = listOf<Goal>()
+    private val goalsListLiveData = MutableLiveData<List<Goal>>()
+    private var goalsList = listOf<Goal>()
 
     init {
         getBalanceNow()
@@ -113,14 +114,16 @@ class CostViewModel : ViewModel() {
         }
     }
 
-    fun getExpenseCategory(): List<String> {
-        val set = expensesList.mapNotNull { it.category }
-        return set.toList()
+    fun getExpenseCategory(): List<String>? {
+        val set = expensesList.mapNotNull { it.category }.toSet()
+        Log.d("katrin_getExpense", expensesList.toString())
+        Log.d("katrin_getExpense_category", set.toString())
+        return if (set.isNotEmpty()) set.toList() else null
     }
 
     fun filterByCategory(category: String) {
         val expensesListByCategory =
-            expensesList.toList().filter { it.category == category } ?: listOf()
+            expensesList.toList().filter { it.category == category }
         expensesLiveData.value = expensesListByCategory
     }
 

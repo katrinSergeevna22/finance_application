@@ -70,7 +70,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:ems="10"
-                android:hint="Сумма расхода"
+                android:hint="@string/edit_expense_title_sum_of_expense"
                 android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.059"
@@ -94,18 +94,36 @@
                 app:layout_constraintTop_toBottomOf="@+id/etSum" />
 
 
-            <Spinner
+            <ImageButton
                 android:id="@+id/ibtnCategory"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:entries="@array/categoriesExpense"
-                android:spinnerMode="dropdown"
+                android:background="@color/white"
+                android:foregroundGravity="center"
+                android:src="@drawable/shape_rectangle_contur_violet"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_category" />
+
+            <TextView
+                android:id="@+id/tv_btn_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_bold"
+                android:textColor="@color/dark_violet"
+                android:textSize="20sp"
+                android:ellipsize="end"
+                android:maxEms="25"
+                android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@+id/ibtnCategory"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ibtnCategory"
+                tools:text="Выберите категорию" />
 
             <TextView
                 android:id="@+id/tv_goalExpense"

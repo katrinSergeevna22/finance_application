@@ -30,6 +30,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_of_fragment_categores">Категории</string>
     <string name="title_last_week">Последняя неделя</string>
+    <string name="edit_expense_title_sum_of_expense">Сумма расхода</string>
 
     <string-array name="categoriesGoals">
         <item>Другое</item>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_last_week">Последняя неделя</string>
+    <string name="edit_expense_title_sum_of_expense">Сумма расхода</string>
 </resources>
