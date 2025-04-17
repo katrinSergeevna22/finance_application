@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip
@@ -23,16 +24,20 @@ class CostViewModel : ViewModel() {
 
     private var oneRandomTipLiveData = MutableLiveData<Tip>()
     private var oneRandomGoalLiveData = MutableLiveData<Goal>()
+
     //private var balanceLiveData = MutableLiveData<Double>()
     var balance = 0.0
     var itsEdit: Boolean = false
     val balanceLiveData = MutableLiveData<Double>()
 
-    val goalsListLiveData = MutableLiveData<List<Goal>>()
-    var goalsList = listOf<Goal>()
+    private val goalsListLiveData = MutableLiveData<List<Goal>>()
+    private var goalsList = listOf<Goal>()
 
-    init{getBalanceNow()}
-    fun getBalanceNow() : Double{
+    init {
+        getBalanceNow()
+    }
+
+    fun getBalanceNow(): Double {
         dataRepository.getUserBalance().observeForever() {
             balance = it
             balanceLiveData.value = it
@@ -43,7 +48,7 @@ class CostViewModel : ViewModel() {
         return balance
     }
 
-    fun updateBalance(newBalance: Double) {
+    private fun updateBalance(newBalance: Double) {
         dataRepository.updateUserBalance(newBalance)
     }
 
@@ -73,7 +78,7 @@ class CostViewModel : ViewModel() {
 
     fun deleteIncomeNew() {
         val currentBalance = balanceLiveData.value ?: 0.0
-        val sum : Double = selectedCost.value?.moneyCost?.toDouble() ?: 0.0
+        val sum: Double = selectedCost.value?.moneyCost?.toDouble() ?: 0.0
 
         val newBalance = currentBalance - sum
         updateBalance(newBalance)
@@ -88,6 +93,7 @@ class CostViewModel : ViewModel() {
     fun getIncomeLiveData(): LiveData<List<Cost>> {
         return incomesLiveData
     }
+
     fun loadIncomes() {
         dataRepository.getIncomes().observeForever() { income ->
             incomesList.clear()
@@ -99,6 +105,7 @@ class CostViewModel : ViewModel() {
     fun getExpenseLiveData(): LiveData<List<Cost>> {
         return expensesLiveData
     }
+
     fun loadExpenses() {
         dataRepository.getExpenses().observeForever() { expense ->
             expensesList.clear()
@@ -106,23 +113,59 @@ class CostViewModel : ViewModel() {
             expensesLiveData.value = expensesList
         }
     }
+
+    fun getIncomeCategory(): List<String>? {
+        val set = incomesList.mapNotNull { it.category }.toSet()
+        Log.d("katrin_getExpense", expensesList.toString())
+        Log.d("katrin_getExpense_category", set.toString())
+        return if (set.isNotEmpty()) set.toList() else null
+    }
+
+    fun filterByCategoryForIncome(category: String) {
+        val incomeListByCategory =
+            incomesList.toList().filter { it.category == category }
+        incomesLiveData.value = incomeListByCategory
+    }
+
+    fun resetFilters(){
+        incomesLiveData.value = incomesList
+        expensesLiveData.value = expensesList
+    }
+
+    fun getExpenseCategory(): List<String>? {
+        val set = expensesList.mapNotNull { it.category }.toSet()
+        Log.d("katrin_getExpense", expensesList.toString())
+        Log.d("katrin_getExpense_category", set.toString())
+        return if (set.isNotEmpty()) set.toList() else null
+    }
+
+    fun filterByCategory(category: String) {
+        val expensesListByCategory =
+            expensesList.toList().filter { it.category == category }
+        expensesLiveData.value = expensesListByCategory
+    }
+
     fun getOneRandomTipLiveData(): LiveData<Tip> {
         return oneRandomTipLiveData
     }
-    fun loadOneRandomTipLiveData(category : String) {
+
+    fun loadOneRandomTipLiveData(category: String) {
         dataRepository.getOneTip(category).observeForever() { tip ->
             oneRandomTipLiveData.value = tip
         }
     }
+
     fun getOneRandomGoalLiveData(): LiveData<Goal> {
         return oneRandomGoalLiveData
     }
+
     fun loadOneRandomGoalLiveData() {
         dataRepository.getOneGoal().observeForever() { goal ->
             oneRandomGoalLiveData.value = goal
         }
     }
-    fun saveIncomeToBase(newCost: Cost){
+
+    fun saveIncomeToBase(newCost: Cost) {
         dataRepository.writeIncomeData(newCost)
         Log.d("SaveBalance", balance.toString())
         //val balance = 0.0//getBalance()
@@ -146,10 +189,11 @@ class CostViewModel : ViewModel() {
         setSelectedCost(selectIncome)
         dataRepository.editIncomeToBase(newIncome, selectIncome)
     }
-    fun deleteIncome(){
+
+    fun deleteIncome() {
         //val balance = 0.0//getBalance()
         val sum = selectedCost.value?.moneyCost
-        if (sum != null){
+        if (sum != null) {
             dataRepository.updateUserBalance(balance - sum)
             dataRepository.deleteIncome(selectedCost.value)
         }
@@ -162,13 +206,14 @@ class CostViewModel : ViewModel() {
         Log.d("Balance3", (newCost.moneyCost.toDouble() + balance).toString())
         dataRepository.updateUserBalance(balance - newCost.moneyCost.toDouble())
     }
-    fun addProgressGoal(goal: Goal, sum: Long){
+
+    fun addProgressGoal(goal: Goal, sum: Long) {
         val newSumProgress = goal.progressOfMoneyGoal + sum
         var status = goal.status
         if (newSumProgress == goal.moneyGoal) status = "Achieved"
         val newGoalData = mapOf(
             "goalId" to goal.goalId,
-            "titleOfGoal" to  goal.titleOfGoal.toString(),
+            "titleOfGoal" to goal.titleOfGoal.toString(),
             "moneyGoal" to goal.moneyGoal,
             "progressOfMoneyGoal" to newSumProgress,
             "date" to goal.date,
@@ -179,14 +224,14 @@ class CostViewModel : ViewModel() {
         dataRepository.editGoalToBase(newGoalData, goal)
     }
 
-    fun minusProgressGoal(goal: Goal, sum: Long){
+    fun minusProgressGoal(goal: Goal, sum: Long) {
         val newSumProgress = goal.progressOfMoneyGoal - sum
         var status = goal.status
         //if (newSumProgress == goal.moneyGoal) status = "Achived"
         if (status == "Achieved" && newSumProgress < goal.moneyGoal) status = "Active"
         val newGoalData = mapOf(
             "goalId" to goal.goalId,
-            "titleOfGoal" to  goal.titleOfGoal.toString(),
+            "titleOfGoal" to goal.titleOfGoal.toString(),
             "moneyGoal" to goal.moneyGoal,
             "progressOfMoneyGoal" to newSumProgress,
             "date" to goal.date,
@@ -196,10 +241,11 @@ class CostViewModel : ViewModel() {
         )
         dataRepository.editGoalToBase(newGoalData, goal)
     }
-    fun deleteExpense(){
+
+    fun deleteExpense() {
         val balance = getBalanceNow()
         val selectExpense = selectedCost.value
-        if (selectExpense != null){
+        if (selectExpense != null) {
             val sum = selectExpense.moneyCost
 
             dataRepository.updateUserBalance(balance + sum)
@@ -216,7 +262,8 @@ class CostViewModel : ViewModel() {
             Log.d("goalForSpinner-1", goalsListLiveData.value.toString())
         }
     }
-    fun getGoalsLivaData() : MutableLiveData<List<Goal>>{
+
+    fun getGoalsLivaData(): MutableLiveData<List<Goal>> {
         return goalsListLiveData
     }
 }

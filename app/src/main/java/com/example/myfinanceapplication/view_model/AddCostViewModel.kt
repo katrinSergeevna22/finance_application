@@ -3,7 +3,6 @@ package com.example.myfinanceapplication.view_model
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Cost
@@ -54,7 +53,7 @@ class AddCostViewModel  : ViewModel() {
         }
         return false
     }
-    fun saveIncomeToBase(newCost: Cost){
+    private fun saveIncomeToBase(newCost: Cost){
         dataRepository.writeIncomeData(newCost)
         Log.d("SaveBalance", balance.toString())
         //val balance = 0.0//getBalance()
@@ -128,7 +127,7 @@ class AddCostViewModel  : ViewModel() {
             return false
         }
     }
-    fun saveExpenseToBase(newCost: Cost){
+    private fun saveExpenseToBase(newCost: Cost){
         dataRepository.writeExpenseData(newCost)
         //val balance = viewModel.getBalanceNow()
         Log.d("Balance", balance.toString())
@@ -143,5 +142,4 @@ class AddCostViewModel  : ViewModel() {
     private fun checkIsTitle(sum : String) : Boolean{
         return sum.matches(Regex("[a-zA-Zа-яА-Я0-9.,\\s]+"))
     }
-
 }

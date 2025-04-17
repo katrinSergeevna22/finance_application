@@ -21,6 +21,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/filter_menu"
             app:navigationIcon="@drawable/ic_menu"
             app:title="@string/app_name"
             app:titleTextColor="@color/white" />
@@ -40,7 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wTips" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_balance" />
 
         <ImageButton
             android:id="@+id/ibAddIncome"
@@ -178,16 +179,110 @@
             tools:ignore="MissingConstraints" />
 
         <ImageView
-            android:id="@+id/wTips"
+            android:id="@+id/iv_filter_category"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="150dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbarGoal"
+            app:srcCompat="@drawable/shape_rectangle_contur_violet" />
+
+        <TextView
+            android:id="@+id/tv_title_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:visibility="gone"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="Вывести доходы по категории"
+            android:textColor="@color/dark_violet"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_filter_category"
+            app:layout_constraintVertical_bias="0.229" />
+
+
+        <Spinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="@color/white"
+            android:entries="@array/categoriesExpense"
+            android:fontFamily="@font/open_sans_bold"
+            android:spinnerMode="dropdown"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_category"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageButton
+            android:id="@+id/ib_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:drawable/ic_delete"
+            android:src="@android:drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintEnd_toEndOf="@+id/iv_filter_category"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_filter_category"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageButton
+            android:id="@+id/ib_save_category"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/shape_rectangle_violet"
+            app:layout_constraintEnd_toEndOf="@+id/iv_filter_category"
+            app:layout_constraintHorizontal_bias="0.489"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCategory" />
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="@string/done"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_save_category"
+            app:layout_constraintEnd_toEndOf="@+id/ib_save_category"
+            app:layout_constraintStart_toStartOf="@+id/ib_save_category"
+            app:layout_constraintTop_toTopOf="@+id/ib_save_category" />
+
+        <ImageView
+            android:id="@+id/iv_balance"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_filter_category"
             app:srcCompat="@drawable/shape_rectangle_contur_white" />
 
         <TextView
@@ -199,9 +294,9 @@
             android:text="@string/balance"
             android:textColor="@color/white"
             android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="@+id/wTips"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_balance"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/wTips" />
+            app:layout_constraintTop_toTopOf="@+id/iv_balance" />
 
         <TextView
             android:id="@+id/tv_balance_income"
@@ -214,9 +309,9 @@
             android:text="0.00"
             android:textColor="@color/white"
             android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="@+id/wTips"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_balance"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/wTips" />
+            app:layout_constraintTop_toTopOf="@+id/iv_balance" />
 
         <FrameLayout
             android:id="@+id/backgroundFragment"
@@ -241,7 +336,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wTips"
+            app:layout_constraintTop_toBottomOf="@+id/iv_balance"
             app:layout_constraintVertical_bias="0.0">
 
         </FrameLayout>
@@ -258,7 +353,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wTips"
+            app:layout_constraintTop_toBottomOf="@+id/iv_balance"
             app:layout_constraintVertical_bias="0.0">
 
         </FrameLayout>

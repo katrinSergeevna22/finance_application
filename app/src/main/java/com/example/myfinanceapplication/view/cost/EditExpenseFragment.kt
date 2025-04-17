@@ -15,6 +15,7 @@ import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentEditExpenseBinding
 import com.example.myfinanceapplication.model.Cost
+import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.view_model.CostViewModel
 import com.example.myfinanceapplication.view_model.EditCostViewModel
 
@@ -22,18 +23,19 @@ class EditExpenseFragment : Fragment() {
     lateinit var binding: FragmentEditExpenseBinding
     private lateinit var viewModel: CostViewModel
     private lateinit var editViewModel: EditCostViewModel
-    lateinit var selectExpense: Cost
-    var goalForSpinner = mutableListOf<String>()
+    private lateinit var selectExpense: Cost
+    private var goalForSpinner = mutableListOf<String>()
     var goalList = mutableListOf<Goal>()
     var selectGoal = Goal()
     var titleOfGoal = ""
+    var category = ""
 
     private lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEditExpenseBinding.inflate(inflater)
         viewModel = ViewModelProvider(requireActivity()).get(CostViewModel::class.java)
         editViewModel = ViewModelProvider(requireActivity()).get(EditCostViewModel::class.java)
@@ -49,14 +51,14 @@ class EditExpenseFragment : Fragment() {
         fun newInstance() = EditExpenseFragment()
     }
 
-    fun setupUI(){
-        binding.ibSave.setOnClickListener {
-            editGoal()
-        }
-        binding.ibClose.setOnClickListener{
-            (activity as ExpensesActivity).closeFragments()
-        }
+    fun setupUI() {
         binding.apply {
+            ibSave.setOnClickListener {
+                editGoal()
+            }
+            ibClose.setOnClickListener {
+                (activity as ExpensesActivity).closeFragments()
+            }
 //            spinnerCategory.onItemSelectedListener =
 //                object : AdapterView.OnItemSelectedListener {
 //                    override fun onItemSelected(
@@ -116,7 +118,6 @@ class EditExpenseFragment : Fragment() {
                     ) {
                         selectGoal = goalList[position]
                         titleOfGoal = selectGoal.titleOfGoal.toString()
-
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -127,9 +128,48 @@ class EditExpenseFragment : Fragment() {
                         ).show()
                     }
                 }
+            tvGoalExpense.visibility = View.GONE
+            spinnerGoal.visibility = View.GONE
+            tvBtnCategory?.text = "Выберите категорию"
+            ibtnCategory.setOnClickListener {
+                //parentFragment?.view?.visibility = View.INVISIBLE
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.backgroundFragment, BackgroundFragment())
+                    .addToBackStack(null)
+                    .commit()
+
+                val categoriesFragment = CategoriesFragmentForExpense()
+                categoriesFragment.setTargetFragment(this@EditExpenseFragment, 1)
+                requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.place_holder_addExpenseFragment, categoriesFragment)
+                    .addToBackStack(null)
+                    .commit()
+
+            }
         }
     }
-    fun observeViewModel(){
+
+    fun receiveData(data: String) {
+        category = data
+        binding.apply {
+            binding.tvBtnCategory?.text = if (data != "")
+                "Выбрана: $data"
+            else
+                "Выберите категорию"
+
+            if (resources.getStringArray(R.array.categoriesExpense)[0] == data) {
+                tvGoalExpense.visibility = View.VISIBLE
+                spinnerGoal.visibility = View.VISIBLE
+            } else {
+                tvGoalExpense.visibility = View.GONE
+                spinnerGoal.visibility = View.GONE
+            }
+        }
+    }
+
+    var selectingCategory: String? = null
+    private fun observeViewModel() {
 
         viewModel.selectedCost.observe(viewLifecycleOwner) { cost ->
             selectExpense = cost
@@ -138,20 +178,28 @@ class EditExpenseFragment : Fragment() {
                 etSum.setText(cost.moneyCost.toString())
                 etMultyLineComment.setText(cost.comment)
                 selectExpense = cost
-                Log.d("untilgoalList", selectExpense.goal.toString())
+                Log.d("untilgoalList", selectExpense.goal)
                 editViewModel.selectCost = cost
-                val categoriesArray = resources.getStringArray(R.array.categoriesExpense)
-                val categoryToSet = selectExpense.category
+//                val categoriesArray = resources.getStringArray(R.array.categoriesExpense)
+//                val categoryToSet = selectExpense.category
+                selectingCategory = cost.category
+                tvBtnCategory?.text = if (selectingCategory != "")
+                    "Выбрана: $selectingCategory"
+                else
+                    "Выберите категорию"
 
-                val categoryIndex = categoriesArray.indexOf(categoryToSet)
-                if (categoryIndex != -1) {
-                    //spinnerCategory.setSelection(categoryIndex)
-                }
+
+
+//                val categoryIndex = categoriesArray.indexOf(categoryToSet)
+//                if (categoryIndex != -1) {
+//                    //spinnerCategory.setSelection(categoryIndex)
+//                }
 
             }
         }
         viewModel.getGoalsLivaData().observe(viewLifecycleOwner, Observer { goals ->
-            val activeGoals = goals.filter { it.status == "Active" || it.titleOfGoal == selectExpense.goal}
+            val activeGoals =
+                goals.filter { it.status == "Active" || it.titleOfGoal == selectExpense.goal }
             goalForSpinner = activeGoals.map { it.titleOfGoal!! }.toMutableList()
 
             adapter =
@@ -162,39 +210,62 @@ class EditExpenseFragment : Fragment() {
             editViewModel.goalsMutableList = activeGoals
             goalList = activeGoals.toMutableList()
             Log.d("goalForSpinner1", goalList.toString())
-/*
-            if (!goalForSpinner.contains(selectExpense.goal)){
-                goalForSpinner.add(selectExpense.goal)
-                val goalSelect = goalList.filter { it.titleOfGoal == selectExpense.goal }[0]
-                goalList.add(goalSelect)
-                editViewModel.goalsMutableList = goalList
-            }
+            /*
+                        if (!goalForSpinner.contains(selectExpense.goal)){
+                            goalForSpinner.add(selectExpense.goal)
+                            val goalSelect = goalList.filter { it.titleOfGoal == selectExpense.goal }[0]
+                            goalList.add(goalSelect)
+                            editViewModel.goalsMutableList = goalList
+                        }
 
- */
+             */
+            if (selectingCategory == "Цель"){
+                binding.apply {
+                    tvGoalExpense.visibility = View.VISIBLE
+                    spinnerGoal.visibility = View.VISIBLE
+                    spinnerGoal.setSelection(goalForSpinner.indexOf(selectExpense.goal))
+                    Log.d("katrin_goal", selectExpense.goal)
+                    Log.d("katrin_goal", goalForSpinner.indexOf(selectExpense.goal).toString())
+                }
+            }
             Log.d("goalForSpinner4", binding.spinnerGoal.adapter.toString())
             adapter.notifyDataSetChanged()
 
         })
     }
-    fun editGoal() {
+
+    private fun editGoal() {
         binding.apply {
             val title = etTitle.text.toString().trim()
             val sum = etSum.text.toString().replace(" ", "")
-            val category = ""//spinnerCategory.selectedItem.toString()
+            //spinnerCategory.selectedItem.toString()
             val comment = etMultyLineComment.text.toString()
             //val date: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
             Log.d("goalList1", goalList.toString())
             Log.d("goalList2", selectExpense.goal)
             Log.d("goalList3", titleOfGoal)
 
-            if (editViewModel.checkExpenseData(title, sum, category, comment, titleOfGoal, viewModel.getBalanceNow())) {
+            if (editViewModel.checkExpenseData(
+                    title,
+                    sum,
+                    category,
+                    comment,
+                    titleOfGoal,
+                    viewModel.getBalanceNow()
+                )
+            ) {
                 viewModel.setSelectedCost(editViewModel.selectCost)
                 (activity as ExpensesActivity).closeFragments()
             } else {
                 // Обработка ошибок
-                Toast.makeText((activity as ExpensesActivity), editViewModel.answerException, Toast.LENGTH_SHORT).show()
-                if (editViewModel.answerException == "Сумма больше, чем нужно для достижения цели"){
-                    val sumTipForGoal = selectGoal.moneyGoal - selectGoal.progressOfMoneyGoal + selectExpense.moneyCost
+                Toast.makeText(
+                    (activity as ExpensesActivity),
+                    editViewModel.answerException,
+                    Toast.LENGTH_SHORT
+                ).show()
+                if (editViewModel.answerException == "Сумма больше, чем нужно для достижения цели") {
+                    val sumTipForGoal =
+                        selectGoal.moneyGoal - selectGoal.progressOfMoneyGoal + selectExpense.moneyCost
                     etSum.setText(sumTipForGoal.toString())
                 }
             }

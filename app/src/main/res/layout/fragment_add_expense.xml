@@ -72,7 +72,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:ems="10"
-                android:hint="Сумма расхода"
+                android:hint="@string/edit_expense_title_sum_of_expense"
                 android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.059"
@@ -98,7 +98,7 @@
             <ImageButton
                 android:id="@+id/ibtnCategory"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
