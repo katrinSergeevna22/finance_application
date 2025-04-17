@@ -50,6 +50,8 @@
         <item>Инвестиции</item>
         <item>Подарок</item>
         <item>Гос. выплаты</item>
+        <item>Кэшбэк</item>
+        <item>Рента</item>
     </string-array>
 
     <string-array name="categoriesExpense">

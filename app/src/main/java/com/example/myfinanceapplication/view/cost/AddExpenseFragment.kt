@@ -69,7 +69,7 @@ class AddExpenseFragment : Fragment() {
                     .addToBackStack(null)
                     .commit()
 
-                val categoriesFragment = CategoriesFragment()
+                val categoriesFragment = CategoriesFragmentForExpense()
                 categoriesFragment.setTargetFragment(this@AddExpenseFragment, 1)
                 requireActivity().supportFragmentManager
                     .beginTransaction()

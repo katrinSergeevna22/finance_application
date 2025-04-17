@@ -34,6 +34,7 @@ class IncomeActivity : AppCompatActivity() {
     private lateinit var adapter: CostAdapter
     private var mainTip = Tip()
     private var mainGoal = Goal()
+    var categoriesList: List<String> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,6 +140,7 @@ class IncomeActivity : AppCompatActivity() {
             binding.tvBalanceIncome.text = balance.toString()
         })
         viewModel.getIncomeLiveData().observe(this) { incomeList ->
+            categoriesList = incomeList.mapNotNull { it.category }
             adapter.submitList(incomeList)
             adapter.notifyDataSetChanged()
         }

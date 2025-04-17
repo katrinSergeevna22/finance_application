@@ -1,4 +1,4 @@
-package com.example.myfinanceapplication.view.cost
+package com.example.myfinanceapplication.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,12 +12,15 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
-import com.example.myfinanceapplication.databinding.FragmentCategoriesBinding
+import com.example.myfinanceapplication.databinding.FragmentCategoriesForIncomeBinding
+import com.example.myfinanceapplication.view.cost.AddIncomeFragment
+import com.example.myfinanceapplication.view.cost.EditIncomeFragment
+import com.example.myfinanceapplication.view.cost.IncomeActivity
 import com.example.myfinanceapplication.view_model.AddCostViewModel
 
-class CategoriesFragment : Fragment() {
+class CategoriesFragmentForIncome : Fragment() {
 
-    lateinit var binding: FragmentCategoriesBinding
+    lateinit var binding: FragmentCategoriesForIncomeBinding
     lateinit var viewModel: AddCostViewModel
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -25,10 +28,10 @@ class CategoriesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCategoriesBinding.inflate(inflater)
+        binding = FragmentCategoriesForIncomeBinding.inflate(inflater)
         viewModel = ViewModelProvider(requireActivity())[AddCostViewModel::class.java]
         binding.apply {
-            val categoriesArray = resources.getStringArray(R.array.categoriesExpense)
+            val categoriesArray = resources.getStringArray(R.array.categoriesIncome)
             fetchNewCategories(categoriesArray)
             selectedCategory()
             var selectingCategory = categoriesArray[1]
@@ -51,10 +54,10 @@ class CategoriesFragment : Fragment() {
                 llNewCategory4.background =
                     resources.getDrawable(R.drawable.shape_rectangle_all_white)
 
-                selectingCategory = categoriesArray[2]
+                selectingCategory = categoriesArray[1]
             }
             llTransport.setOnClickListener {
-                selectingCategory = categoriesArray[3]
+                selectingCategory = categoriesArray[2]
                 etNewCategory.visibility = View.INVISIBLE
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTransport.background =
@@ -75,7 +78,7 @@ class CategoriesFragment : Fragment() {
                     resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llFood.setOnClickListener {
-                selectingCategory = categoriesArray[4]
+                selectingCategory = categoriesArray[3]
                 etNewCategory.visibility = View.INVISIBLE
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
@@ -95,7 +98,7 @@ class CategoriesFragment : Fragment() {
                     resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llHobby.setOnClickListener {
-                selectingCategory = categoriesArray[5]
+                selectingCategory = categoriesArray[4]
                 etNewCategory.visibility = View.INVISIBLE
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
@@ -115,7 +118,7 @@ class CategoriesFragment : Fragment() {
                     resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llTecnic.setOnClickListener {
-                selectingCategory = categoriesArray[6]
+                selectingCategory = categoriesArray[5]
                 etNewCategory.visibility = View.INVISIBLE
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
@@ -136,7 +139,7 @@ class CategoriesFragment : Fragment() {
                     resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llEducation.setOnClickListener {
-                selectingCategory = categoriesArray[7]
+                selectingCategory = categoriesArray[6]
                 etNewCategory.visibility = View.INVISIBLE
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
@@ -157,7 +160,7 @@ class CategoriesFragment : Fragment() {
                     resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llShopping.setOnClickListener {
-                selectingCategory = categoriesArray[8]
+                selectingCategory = categoriesArray[7]
                 etNewCategory.visibility = View.INVISIBLE
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
@@ -178,9 +181,9 @@ class CategoriesFragment : Fragment() {
                     resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             llOther.setOnClickListener {
-                selectingCategory = categoriesArray[1]
+                selectingCategory = categoriesArray[0]
                 etNewCategory.visibility = View.VISIBLE
-                etNewCategory.setText(categoriesArray[1])
+                //etNewCategory.setText(categoriesArray[1])
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llTransport.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
                 llFood.background = resources.getDrawable(R.drawable.shape_rectangle_all_white)
@@ -285,27 +288,17 @@ class CategoriesFragment : Fragment() {
 //                    if (selectingCategory == categoriesArray[1])
 //                        newCategory
 //                    else selectingCategory
-                (targetFragment as? AddExpenseFragment)?.receiveData(
-                    if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
+                (targetFragment as? AddIncomeFragment)?.receiveData(
+                    if (selectingCategory == categoriesArray[0] && newCategory.isNotEmpty())
                         newCategory
                     else selectingCategory
                 )
-                (targetFragment as? EditExpenseFragment)?.receiveData(
-                    if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
+                (targetFragment as? EditIncomeFragment)?.receiveData(
+                    if (selectingCategory == categoriesArray[0] && newCategory.isNotEmpty())
                         newCategory
                     else selectingCategory
                 )
-                (activity as ExpensesActivity).closeFragments()
-                //requireActivity().supportFragmentManager.popBackStack()
-            }
-            ibSelectGoal.setOnClickListener {
-                (targetFragment as? AddExpenseFragment)?.receiveData(
-                    categoriesArray[0]
-                )
-                (targetFragment as? EditExpenseFragment)?.receiveData(
-                    categoriesArray[0]
-                )
-                (activity as ExpensesActivity).closeFragments()
+                (activity as IncomeActivity).closeFragments()
             }
         }
 
@@ -313,7 +306,7 @@ class CategoriesFragment : Fragment() {
     }
 
     private fun selectedCategory() {
-        val selectingCategory = (targetFragment as? EditExpenseFragment)?.selectingCategory
+        val selectingCategory = (targetFragment as? EditIncomeFragment)?.selectingCategory
         Log.d("katrin_selectedCategory", selectingCategory.toString())
         Log.d("katrin_selectedCategory_tv1", binding.tvCategoryText1.text.toString())
         binding.apply {
@@ -353,11 +346,13 @@ class CategoriesFragment : Fragment() {
 
                 tvNewCategory4.text -> llNewCategory4.background =
                     resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
                 "Цель" -> {
 //                    ibSelectGoal.background =
 //                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
 //                    tvSelectGoal.setTextColor(resources.getColor(R.color.dark_violet))
                 }
+
                 else -> {
                     etNewCategory.setText(selectingCategory)
                 }
@@ -366,7 +361,7 @@ class CategoriesFragment : Fragment() {
     }
 
     private fun fetchNewCategories(categoriesArray: Array<String>) {
-        val newCategories = (activity as ExpensesActivity).categoriesList.toSet()
+        val newCategories = (activity as IncomeActivity).categoriesList.toSet()
             .filter { !categoriesArray.contains(it) }
         if (newCategories.isNotEmpty()) {
             binding.apply {
