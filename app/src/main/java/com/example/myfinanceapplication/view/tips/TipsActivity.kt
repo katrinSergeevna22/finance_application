@@ -58,7 +58,12 @@ class TipsActivity : AppCompatActivity() {
             rcView.addItemDecoration(itemDecoration)
 
             navigationView.setNavigationItemSelectedListener {
-                navigationForNavigationView(context = this@TipsActivity, itemId = it.itemId)
+                startActivity(
+                    navigationForNavigationView(
+                        context = this@TipsActivity,
+                        itemId = it.itemId
+                    )
+                )
                 true
             }
         }

@@ -128,7 +128,12 @@ class GoalsActivity : AppCompatActivity() {
             }
 
             binding.navigationView.setNavigationItemSelectedListener {
-                navigationForNavigationView(context = this@GoalsActivity, itemId = it.itemId)
+                startActivity(
+                    navigationForNavigationView(
+                        context = this@GoalsActivity,
+                        itemId = it.itemId
+                    )
+                )
                 true
             }
 

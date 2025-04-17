@@ -132,8 +132,7 @@ class ExpensesActivity : AppCompatActivity() {
             toolbarGoal.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.item_filter_category -> {
-                        item.isChecked = !item.isChecked
-                        if (!item.isChecked) {
+                        if (item.isChecked) {
                             visibilityFilter(View.GONE)
                         } else {
                             visibilityFilter(View.VISIBLE)
@@ -177,8 +176,9 @@ class ExpensesActivity : AppCompatActivity() {
         val categoriesList =
             resources.getStringArray(R.array.categoriesExpense).toMutableList()
         categoriesList.addAll(
-            viewModel.getExpenseCategory()?.filter { !categoriesList.contains(it) }
-                ?.subList(0, 5) ?: listOf()
+            viewModel.getExpenseCategory()?.filter { !categoriesList.contains(it) }.let {
+                if ((it?.size ?: 0) > 4) it?.subList(0, 4) else it
+            } ?: listOf()
         )
 
         Log.d("katrin_category", categoriesList.toString())
@@ -193,7 +193,10 @@ class ExpensesActivity : AppCompatActivity() {
     }
 
     private fun visibilityFilter(visibility: Int) {
+        viewModel.resetFilters()
         binding.apply {
+            val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
+            toolbarGoal.menu.getItem(0).isChecked = !oldIsChecked
             ivFilterCategory?.visibility = visibility
             tvTitleCategory?.visibility = visibility
             spinnerCategory?.visibility = visibility

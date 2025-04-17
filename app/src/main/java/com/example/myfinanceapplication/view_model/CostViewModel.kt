@@ -114,6 +114,24 @@ class CostViewModel : ViewModel() {
         }
     }
 
+    fun getIncomeCategory(): List<String>? {
+        val set = incomesList.mapNotNull { it.category }.toSet()
+        Log.d("katrin_getExpense", expensesList.toString())
+        Log.d("katrin_getExpense_category", set.toString())
+        return if (set.isNotEmpty()) set.toList() else null
+    }
+
+    fun filterByCategoryForIncome(category: String) {
+        val incomeListByCategory =
+            incomesList.toList().filter { it.category == category }
+        incomesLiveData.value = incomeListByCategory
+    }
+
+    fun resetFilters(){
+        incomesLiveData.value = incomesList
+        expensesLiveData.value = expensesList
+    }
+
     fun getExpenseCategory(): List<String>? {
         val set = expensesList.mapNotNull { it.category }.toSet()
         Log.d("katrin_getExpense", expensesList.toString())

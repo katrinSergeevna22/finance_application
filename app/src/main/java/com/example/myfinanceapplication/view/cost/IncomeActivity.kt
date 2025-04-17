@@ -4,9 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -59,13 +63,48 @@ class IncomeActivity : AppCompatActivity() {
         val newAddIncomeFragment = AddIncomeFragment.newInstance()
 
         binding.apply {
-            toolbarGoal.setNavigationOnClickListener {
-                binding.drawerGoal.openDrawer(GravityCompat.START)
+            toolbarGoal.apply {
+                setNavigationOnClickListener {
+                    drawerGoal.openDrawer(GravityCompat.START)
+                }
+
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.item_filter_category -> {
+                            //item.isChecked = !item.isChecked
+                            Log.d("katrin_menu_id", item.isChecked.toString())
+                            if (item.isChecked) {
+                                visibilityFilter(View.GONE)
+                            } else {
+                                visibilityFilter(View.VISIBLE)
+                                fetchSpinnerCategory()
+                            }
+                        }
+                    }
+                    true
+                }
+            }
+
+            ibClose?.setOnClickListener {
+                visibilityFilter(View.GONE)
+            }
+
+            ibSaveCategory?.setOnClickListener {
+                val selectedItem = spinnerCategory?.selectedItem?.toString()
+                if (selectedItem != null) {
+                    viewModel.filterByCategoryForIncome(selectedItem)
+                } else {
+                    Toast.makeText(
+                        this@IncomeActivity,
+                        "Выберите категорию фильтрации или если хотите закрыть - нажмите крестик",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
 
             adapter = CostAdapter {
                 viewModel.setSelectedCost(it)
-
+                visibilityFilter(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -91,6 +130,7 @@ class IncomeActivity : AppCompatActivity() {
             rcView.addItemDecoration(itemDecoration)
 
             ibAddIncome.setOnClickListener {
+                visibilityFilter(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -130,6 +170,42 @@ class IncomeActivity : AppCompatActivity() {
                 )
                 true
             }
+        }
+    }
+
+    private fun fetchSpinnerCategory() {
+        val categoriesList =
+            resources.getStringArray(R.array.categoriesIncome).toMutableList()
+        categoriesList.addAll(
+            viewModel.getIncomeCategory()?.filter { !categoriesList.contains(it) }.let {
+                if ((it?.size ?: 0) > 4) it?.subList(0, 4) else it
+            } ?: listOf()
+        )
+
+        Log.d("katrin_category", categoriesList.toString())
+        val adapter =
+            ArrayAdapter(
+                this@IncomeActivity,
+                android.R.layout.simple_spinner_item,
+                categoriesList
+            )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerCategory?.adapter = adapter
+    }
+
+    private fun visibilityFilter(visibility: Int) {
+        viewModel.resetFilters()
+
+        binding.apply {
+            Log.d("katrin_menu", toolbarGoal.menu.getItem(0).isChecked.toString())
+            val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
+            toolbarGoal.menu.getItem(0).isChecked = !oldIsChecked
+            ivFilterCategory?.visibility = visibility
+            tvTitleCategory?.visibility = visibility
+            spinnerCategory?.visibility = visibility
+            ibClose?.visibility = visibility
+            ibSaveCategory?.visibility = visibility
+            tvSave?.visibility = visibility
         }
     }
 

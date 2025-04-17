@@ -19,7 +19,6 @@ class AddIncomeFragment : Fragment() {
     lateinit var binding: FragmentAddIncomeBinding
     private lateinit var viewModel: CostViewModel
     private lateinit var addCostViewModel: AddCostViewModel
-    var selectIncome: Cost = Cost()
     var category = ""
 
     override fun onCreateView(

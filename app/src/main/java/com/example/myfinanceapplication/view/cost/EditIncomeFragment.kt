@@ -45,7 +45,7 @@ class EditIncomeFragment : Fragment() {
             }
 
             ibClose.setOnClickListener {
-                parentFragmentManager.popBackStack()
+                (activity as IncomeActivity).closeFragments()
             }
 
             tvBtnCategory?.text = "Выберите категорию"
