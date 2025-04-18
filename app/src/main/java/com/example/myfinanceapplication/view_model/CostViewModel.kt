@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip
@@ -121,13 +120,44 @@ class CostViewModel : ViewModel() {
         return if (set.isNotEmpty()) set.toList() else null
     }
 
+    fun sorter(mode: ModeSorter) {
+        when (mode) {
+            ModeSorter.AscendingIncome -> incomesLiveData.value =
+                incomesList.sortedByDescending { it.moneyCost }
+
+            ModeSorter.DescendingIncome -> incomesLiveData.value =
+                incomesList.sortedBy { it.moneyCost }
+
+            ModeSorter.DateIncome -> incomesLiveData.value =
+                incomesList.sortedBy { it.date }
+
+            ModeSorter.AscendingExpense -> expensesLiveData.value =
+                expensesList.sortedByDescending { it.moneyCost }
+
+            ModeSorter.DescendingExpense -> expensesLiveData.value =
+                expensesList.sortedBy { it.moneyCost }
+
+            ModeSorter.DateExpense -> expensesLiveData.value =
+                expensesList.sortedBy { it.date }
+        }
+    }
+
+    fun searchIncome(pathOfTitle: String){
+        Log.d("katrin_title", pathOfTitle)
+        incomesLiveData.value = incomesList.filter { it.titleOfCost?.contains(pathOfTitle) == true }
+    }
+
+    fun searchExpense(pathOfTitle: String){
+        expensesLiveData.value = expensesList.filter { it.titleOfCost?.contains(pathOfTitle) == true }
+    }
+
     fun filterByCategoryForIncome(category: String) {
         val incomeListByCategory =
             incomesList.toList().filter { it.category == category }
         incomesLiveData.value = incomeListByCategory
     }
 
-    fun resetFilters(){
+    fun resetFilters() {
         incomesLiveData.value = incomesList
         expensesLiveData.value = expensesList
     }
@@ -266,4 +296,8 @@ class CostViewModel : ViewModel() {
     fun getGoalsLivaData(): MutableLiveData<List<Goal>> {
         return goalsListLiveData
     }
+}
+
+enum class ModeSorter {
+    AscendingIncome, DescendingIncome, DateIncome, AscendingExpense, DescendingExpense, DateExpense
 }

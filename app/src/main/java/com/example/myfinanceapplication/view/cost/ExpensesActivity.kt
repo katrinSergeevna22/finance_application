@@ -29,6 +29,7 @@ import com.example.myfinanceapplication.model.utils.getIntentForNavigation
 import com.example.myfinanceapplication.model.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.view_model.CostViewModel
+import com.example.myfinanceapplication.view_model.ModeSorter
 import kotlinx.coroutines.launch
 
 class ExpensesActivity : AppCompatActivity() {
@@ -70,6 +71,7 @@ class ExpensesActivity : AppCompatActivity() {
             adapter = CostAdapter {
                 viewModel.setSelectedCost(it)
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -98,6 +100,7 @@ class ExpensesActivity : AppCompatActivity() {
 
             ibAddExpense.setOnClickListener {
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -132,11 +135,68 @@ class ExpensesActivity : AppCompatActivity() {
             toolbarGoal.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.item_filter_category -> {
+                        //item.isChecked = !item.isChecked
+                        val menuItemSearchIsChecked = toolbarGoal.menu.getItem(4).isChecked
+                        if (menuItemSearchIsChecked) {
+                            toolbarGoal.menu.getItem(4).isChecked = false
+                            visibilitySearch(View.GONE)
+                        }
+                        Log.d("katrin_menu_id", item.isChecked.toString())
                         if (item.isChecked) {
                             visibilityFilter(View.GONE)
                         } else {
                             visibilityFilter(View.VISIBLE)
                             fetchSpinnerCategory()
+                        }
+                    }
+
+                    R.id.item_filter_ascending_sum -> {
+                        val menuItemSearchIsChecked = toolbarGoal.menu.getItem(2).isChecked
+                        if (menuItemSearchIsChecked) {
+                            toolbarGoal.menu.getItem(2).isChecked = false
+                            visibilitySearch(View.GONE)
+                        }
+                        if (item.isChecked) {
+                            viewModel.resetFilters()
+                        } else {
+                            viewModel.sorter(ModeSorter.AscendingIncome)
+                        }
+                        item.isChecked = !item.isChecked
+                    }
+
+                    R.id.item_filter_descending_sum -> {
+                        val menuItemSearchIsChecked = toolbarGoal.menu.getItem(1).isChecked
+                        if (menuItemSearchIsChecked) {
+                            toolbarGoal.menu.getItem(1).isChecked = false
+                            visibilitySearch(View.GONE)
+                        }
+                        if (item.isChecked) {
+                            viewModel.resetFilters()
+                        } else {
+                            viewModel.sorter(ModeSorter.DescendingIncome)
+                        }
+                        item.isChecked = !item.isChecked
+                    }
+
+                    R.id.item_filter_descending_date -> {
+                        if (item.isChecked) {
+                            viewModel.resetFilters()
+                        } else {
+                            viewModel.sorter(ModeSorter.DateIncome)
+                        }
+                        item.isChecked = !item.isChecked
+                    }
+
+                    R.id.item_search -> {
+                        val menuItemSearchIsChecked = toolbarGoal.menu.getItem(0).isChecked
+                        if (menuItemSearchIsChecked) {
+                            toolbarGoal.menu.getItem(0).isChecked = false
+                            visibilityFilter(View.GONE)
+                        }
+                        if (item.isChecked) {
+                            visibilitySearch(View.GONE)
+                        } else {
+                            visibilitySearch(View.VISIBLE)
                         }
                     }
                 }
@@ -145,29 +205,43 @@ class ExpensesActivity : AppCompatActivity() {
 
             ibClose?.setOnClickListener {
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
             }
 
             ibSaveCategory?.setOnClickListener {
-                val selectedItem = spinnerCategory?.selectedItem?.toString()
-                if (selectedItem != null) {
-                    viewModel.filterByCategory(selectedItem)
+                if (toolbarGoal.menu.getItem(0).isChecked) {
+                    val selectedItem = spinnerCategory?.selectedItem?.toString()
+                    if (selectedItem != null) {
+                        viewModel.filterByCategory(selectedItem)
+                    } else {
+                        Toast.makeText(
+                            this@ExpensesActivity,
+                            "Выберите категорию фильтрации или если хотите закрыть - нажмите крестик",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 } else {
-                    Toast.makeText(
-                        this@ExpensesActivity,
-                        "Выберите категорию фильтрации или если хотите закрыть - нажмите крестик",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    val text = etSearch?.text
+                    if (!text.isNullOrEmpty()) {
+                        viewModel.searchIncome(text.toString())
+                    } else {
+                        Toast.makeText(
+                            this@ExpensesActivity,
+                            "Введите текст в поисковую строку или если хотите закрыть - нажмите крестик",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
 
-            navigationView.setNavigationItemSelectedListener {
-                startActivity(
-                    navigationForNavigationView(
-                        context = this@ExpensesActivity,
-                        itemId = it.itemId
+                navigationView.setNavigationItemSelectedListener {
+                    startActivity(
+                        navigationForNavigationView(
+                            context = this@ExpensesActivity,
+                            itemId = it.itemId
+                        )
                     )
-                )
-                true
+                    true
+                }
             }
         }
     }
@@ -190,6 +264,29 @@ class ExpensesActivity : AppCompatActivity() {
             )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerCategory?.adapter = adapter
+    }
+
+    private fun visibilitySearch(visibility: Int) {
+        binding.apply {
+            val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
+            if ((oldIsChecked && visibility == View.GONE)
+                || (!oldIsChecked && visibility == View.VISIBLE)
+            ) {
+                if (oldIsChecked) {
+                    viewModel.resetFilters()
+                    toolbarGoal.menu.getItem(0).isChecked = false
+                } else if (!oldIsChecked) {
+                    toolbarGoal.menu.getItem(0).isChecked = true
+                }
+
+                ivFilterCategory?.visibility = visibility
+                tvTitleSearch?.visibility = visibility
+                etSearch?.visibility = visibility
+                ibClose?.visibility = visibility
+                ibSaveCategory?.visibility = visibility
+                tvSave?.visibility = visibility
+            }
+        }
     }
 
     private fun visibilityFilter(visibility: Int) {
@@ -257,7 +354,8 @@ class ExpensesActivity : AppCompatActivity() {
                 v.getGlobalVisibleRect(outRect)
                 if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
                     v.clearFocus()
-                    val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(v.windowToken, 0)
                 }
             }

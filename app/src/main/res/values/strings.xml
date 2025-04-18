@@ -31,6 +31,11 @@
     <string name="title_of_fragment_categores">Категории</string>
     <string name="title_last_week">Последняя неделя</string>
     <string name="edit_expense_title_sum_of_expense">Сумма расхода</string>
+    <string name="filter_category">Фильтровать по категории</string>
+    <string name="filter_ascending_sum">Сначала дорогие</string>
+    <string name="filter_descending_sum">Сначала дешевые</string>
+    <string name="filter_descending_date">Сначала новые</string>
+    <string name="menu_item_search">Поиск</string>
 
     <string-array name="categoriesGoals">
         <item>Другое</item>

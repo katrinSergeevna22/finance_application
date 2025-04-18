@@ -29,6 +29,7 @@ import com.example.myfinanceapplication.model.utils.getIntentForNavigation
 import com.example.myfinanceapplication.model.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.view_model.CostViewModel
+import com.example.myfinanceapplication.view_model.ModeSorter
 import kotlinx.coroutines.launch
 
 
@@ -72,12 +73,67 @@ class IncomeActivity : AppCompatActivity() {
                     when (item.itemId) {
                         R.id.item_filter_category -> {
                             //item.isChecked = !item.isChecked
+                            val menuItemSearchIsChecked = toolbarGoal.menu.getItem(4).isChecked
+                            if (menuItemSearchIsChecked) {
+                                toolbarGoal.menu.getItem(4).isChecked = false
+                                visibilitySearch(View.GONE)
+                            }
                             Log.d("katrin_menu_id", item.isChecked.toString())
                             if (item.isChecked) {
                                 visibilityFilter(View.GONE)
                             } else {
                                 visibilityFilter(View.VISIBLE)
                                 fetchSpinnerCategory()
+                            }
+                        }
+
+                        R.id.item_filter_ascending_sum -> {
+                            val menuItemSearchIsChecked = toolbarGoal.menu.getItem(2).isChecked
+                            if (menuItemSearchIsChecked) {
+                                toolbarGoal.menu.getItem(2).isChecked = false
+                                visibilitySearch(View.GONE)
+                            }
+                            if (item.isChecked) {
+                                viewModel.resetFilters()
+                            } else {
+                                viewModel.sorter(ModeSorter.AscendingIncome)
+                            }
+                            item.isChecked = !item.isChecked
+                        }
+
+                        R.id.item_filter_descending_sum -> {
+                            val menuItemSearchIsChecked = toolbarGoal.menu.getItem(1).isChecked
+                            if (menuItemSearchIsChecked) {
+                                toolbarGoal.menu.getItem(1).isChecked = false
+                                visibilitySearch(View.GONE)
+                            }
+                            if (item.isChecked) {
+                                viewModel.resetFilters()
+                            } else {
+                                viewModel.sorter(ModeSorter.DescendingIncome)
+                            }
+                            item.isChecked = !item.isChecked
+                        }
+
+                        R.id.item_filter_descending_date -> {
+                            if (item.isChecked) {
+                                viewModel.resetFilters()
+                            } else {
+                                viewModel.sorter(ModeSorter.DateIncome)
+                            }
+                            item.isChecked = !item.isChecked
+                        }
+
+                        R.id.item_search -> {
+                            val menuItemSearchIsChecked = toolbarGoal.menu.getItem(0).isChecked
+                            if (menuItemSearchIsChecked) {
+                                toolbarGoal.menu.getItem(0).isChecked = false
+                                visibilityFilter(View.GONE)
+                            }
+                            if (item.isChecked) {
+                                visibilitySearch(View.GONE)
+                            } else {
+                                visibilitySearch(View.VISIBLE)
                             }
                         }
                     }
@@ -87,24 +143,39 @@ class IncomeActivity : AppCompatActivity() {
 
             ibClose?.setOnClickListener {
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
             }
 
             ibSaveCategory?.setOnClickListener {
-                val selectedItem = spinnerCategory?.selectedItem?.toString()
-                if (selectedItem != null) {
-                    viewModel.filterByCategoryForIncome(selectedItem)
+                if (toolbarGoal.menu.getItem(0).isChecked) {
+                    val selectedItem = spinnerCategory?.selectedItem?.toString()
+                    if (selectedItem != null) {
+                        viewModel.filterByCategoryForIncome(selectedItem)
+                    } else {
+                        Toast.makeText(
+                            this@IncomeActivity,
+                            "Выберите категорию фильтрации или если хотите закрыть - нажмите крестик",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 } else {
-                    Toast.makeText(
-                        this@IncomeActivity,
-                        "Выберите категорию фильтрации или если хотите закрыть - нажмите крестик",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    val text = etSearch?.text
+                    if (!text.isNullOrEmpty()) {
+                        viewModel.searchIncome(text.toString())
+                    } else {
+                        Toast.makeText(
+                            this@IncomeActivity,
+                            "Введите текст в поисковую строку или если хотите закрыть - нажмите крестик",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
 
             adapter = CostAdapter {
                 viewModel.setSelectedCost(it)
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -131,6 +202,7 @@ class IncomeActivity : AppCompatActivity() {
 
             ibAddIncome.setOnClickListener {
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -193,53 +265,83 @@ class IncomeActivity : AppCompatActivity() {
         binding.spinnerCategory?.adapter = adapter
     }
 
-    private fun visibilityFilter(visibility: Int) {
-        viewModel.resetFilters()
-
+    private fun visibilitySearch(visibility: Int) {
         binding.apply {
-            Log.d("katrin_menu", toolbarGoal.menu.getItem(0).isChecked.toString())
             val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
-            toolbarGoal.menu.getItem(0).isChecked = !oldIsChecked
-            ivFilterCategory?.visibility = visibility
-            tvTitleCategory?.visibility = visibility
-            spinnerCategory?.visibility = visibility
-            ibClose?.visibility = visibility
-            ibSaveCategory?.visibility = visibility
-            tvSave?.visibility = visibility
+            if (oldIsChecked && visibility == View.GONE
+                || !oldIsChecked && visibility == View.VISIBLE
+            ) {
+                if (oldIsChecked) {
+                    viewModel.resetFilters()
+                    toolbarGoal.menu.getItem(0).isChecked = false
+                } else if (!oldIsChecked) {
+                    toolbarGoal.menu.getItem(0).isChecked = true
+                }
+
+                ivFilterCategory?.visibility = visibility
+                tvTitleSearch?.visibility = visibility
+                etSearch?.visibility = visibility
+                ibClose?.visibility = visibility
+                ibSaveCategory?.visibility = visibility
+                tvSave?.visibility = visibility
+            }
+        }
+    }
+
+    private fun visibilityFilter(visibility: Int) {
+        binding.apply {
+            val oldIsChecked = toolbarGoal.menu.getItem(4).isChecked
+            if (oldIsChecked && visibility == View.GONE
+                || !oldIsChecked && visibility == View.VISIBLE
+            ) {
+                if (oldIsChecked) {
+                    viewModel.resetFilters()
+                    toolbarGoal.menu.getItem(4).isChecked = false
+                } else if (!oldIsChecked) {
+                    toolbarGoal.menu.getItem(4).isChecked = true
+                }
+                ivFilterCategory?.visibility = visibility
+                tvTitleCategory?.visibility = visibility
+                spinnerCategory?.visibility = visibility
+                ibClose?.visibility = visibility
+                ibSaveCategory?.visibility = visibility
+                tvSave?.visibility = visibility
+            }
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
+        viewModel.apply {
+            balanceLiveData.observe(this@IncomeActivity, Observer { balance ->
+                binding.tvBalanceIncome.text = balance.toString()
+            })
+            getIncomeLiveData().observe(this@IncomeActivity) { incomeList ->
+                categoriesList = incomeList.mapNotNull { it.category }
+                adapter.submitList(incomeList)
+                adapter.notifyDataSetChanged()
+            }
+            getOneRandomGoalLiveData().observe(this@IncomeActivity) { goal ->
+                mainGoal = goal
+                binding.apply {
+                    tvTitleGoal.text = goal.titleOfGoal
+                    if (goal.date == "") {
+                        tvMoneyGoal.text = ""
+                    } else {
+                        tvMoneyGoal.text = goal.moneyGoal.toString()
+                        val totalAmountToSave = goal.moneyGoal
+                        val currentAmountSaved = goal.progressOfMoneyGoal
 
-        viewModel.balanceLiveData.observe(this, Observer { balance ->
-            binding.tvBalanceIncome.text = balance.toString()
-        })
-        viewModel.getIncomeLiveData().observe(this) { incomeList ->
-            categoriesList = incomeList.mapNotNull { it.category }
-            adapter.submitList(incomeList)
-            adapter.notifyDataSetChanged()
-        }
-        viewModel.getOneRandomGoalLiveData().observe(this) { goal ->
-            mainGoal = goal
-            binding.apply {
-                tvTitleGoal.text = goal.titleOfGoal
-                if (goal.date == "") {
-                    tvMoneyGoal.text = ""
-                } else {
-                    tvMoneyGoal.text = goal.moneyGoal.toString()
-                    val totalAmountToSave = goal.moneyGoal
-                    val currentAmountSaved = goal.progressOfMoneyGoal
-
-                    val progress =
-                        (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
-                    progressBar.progress = progress
+                        val progress =
+                            (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
+                        progressBar.progress = progress
+                    }
                 }
             }
-        }
-        viewModel.getOneRandomTipLiveData().observe(this) { tip ->
-            mainTip = tip
-            binding.tvTitleTip.text = tip.title
+            getOneRandomTipLiveData().observe(this@IncomeActivity) { tip ->
+                mainTip = tip
+                binding.tvTitleTip.text = tip.title
+            }
         }
     }
 
@@ -256,7 +358,8 @@ class IncomeActivity : AppCompatActivity() {
                 v.getGlobalVisibleRect(outRect)
                 if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
                     v.clearFocus()
-                    val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(v.windowToken, 0)
                 }
             }

@@ -183,7 +183,7 @@
         <ImageView
             android:id="@+id/iv_filter_category"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="175dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -209,6 +209,36 @@
             app:layout_constraintTop_toTopOf="@id/iv_filter_category"
             app:layout_constraintVertical_bias="0.229" />
 
+        <TextView
+            android:id="@+id/tv_title_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="Поиск по названию"
+            android:textColor="@color/dark_violet"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_filter_category"
+            app:layout_constraintVertical_bias="0.229" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="4dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/open_sans_bold"
+            android:hint="Введите название "
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_search"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Spinner
             android:id="@+id/spinnerCategory"
@@ -249,14 +279,15 @@
             android:id="@+id/ib_save_category"
             android:layout_width="150dp"
             android:layout_height="40dp"
-            android:visibility="gone"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/shape_rectangle_violet"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
             app:layout_constraintEnd_toEndOf="@+id/iv_filter_category"
             app:layout_constraintHorizontal_bias="0.489"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerCategory" />
+            app:layout_constraintTop_toTopOf="@+id/iv_filter_category"
+            app:layout_constraintVertical_bias="0.97" />
 
         <TextView
             android:id="@+id/tv_save"
