@@ -28,8 +28,8 @@ import com.example.myfinanceapplication.model.utils.NavigationTitle
 import com.example.myfinanceapplication.model.utils.getIntentForNavigation
 import com.example.myfinanceapplication.model.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.CostViewModel
-import com.example.myfinanceapplication.view_model.ModeSorter
+import com.example.myfinanceapplication.viewModel.CostViewModel
+import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
 
 class ExpensesActivity : AppCompatActivity() {
@@ -223,7 +223,7 @@ class ExpensesActivity : AppCompatActivity() {
                 } else {
                     val text = etSearch?.text
                     if (!text.isNullOrEmpty()) {
-                        viewModel.searchIncome(text.toString())
+                        viewModel.searchExpense(text.toString())
                     } else {
                         Toast.makeText(
                             this@ExpensesActivity,
@@ -274,9 +274,9 @@ class ExpensesActivity : AppCompatActivity() {
             ) {
                 if (oldIsChecked) {
                     viewModel.resetFilters()
-                    toolbarGoal.menu.getItem(0).isChecked = false
-                } else if (!oldIsChecked) {
-                    toolbarGoal.menu.getItem(0).isChecked = true
+                    toolbarGoal.menu.getItem(4).isChecked = false
+                } else {
+                    toolbarGoal.menu.getItem(4).isChecked = true
                 }
 
                 ivFilterCategory?.visibility = visibility

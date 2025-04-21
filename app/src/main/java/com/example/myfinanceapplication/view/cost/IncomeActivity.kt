@@ -28,8 +28,8 @@ import com.example.myfinanceapplication.model.utils.NavigationTitle
 import com.example.myfinanceapplication.model.utils.getIntentForNavigation
 import com.example.myfinanceapplication.model.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.CostViewModel
-import com.example.myfinanceapplication.view_model.ModeSorter
+import com.example.myfinanceapplication.viewModel.CostViewModel
+import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
 
 
@@ -267,15 +267,15 @@ class IncomeActivity : AppCompatActivity() {
 
     private fun visibilitySearch(visibility: Int) {
         binding.apply {
-            val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
+            val oldIsChecked = toolbarGoal.menu.getItem(4).isChecked
             if (oldIsChecked && visibility == View.GONE
                 || !oldIsChecked && visibility == View.VISIBLE
             ) {
                 if (oldIsChecked) {
                     viewModel.resetFilters()
-                    toolbarGoal.menu.getItem(0).isChecked = false
-                } else if (!oldIsChecked) {
-                    toolbarGoal.menu.getItem(0).isChecked = true
+                    toolbarGoal.menu.getItem(4).isChecked = false
+                } else {
+                    toolbarGoal.menu.getItem(4).isChecked = true
                 }
 
                 ivFilterCategory?.visibility = visibility
@@ -290,15 +290,15 @@ class IncomeActivity : AppCompatActivity() {
 
     private fun visibilityFilter(visibility: Int) {
         binding.apply {
-            val oldIsChecked = toolbarGoal.menu.getItem(4).isChecked
+            val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
             if (oldIsChecked && visibility == View.GONE
                 || !oldIsChecked && visibility == View.VISIBLE
             ) {
                 if (oldIsChecked) {
                     viewModel.resetFilters()
-                    toolbarGoal.menu.getItem(4).isChecked = false
+                    toolbarGoal.menu.getItem(0).isChecked = false
                 } else if (!oldIsChecked) {
-                    toolbarGoal.menu.getItem(4).isChecked = true
+                    toolbarGoal.menu.getItem(0).isChecked = true
                 }
                 ivFilterCategory?.visibility = visibility
                 tvTitleCategory?.visibility = visibility

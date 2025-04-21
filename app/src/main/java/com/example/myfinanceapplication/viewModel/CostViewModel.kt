@@ -142,13 +142,16 @@ class CostViewModel : ViewModel() {
         }
     }
 
-    fun searchIncome(pathOfTitle: String){
-        Log.d("katrin_title", pathOfTitle)
-        incomesLiveData.value = incomesList.filter { it.titleOfCost?.contains(pathOfTitle) == true }
+    fun searchIncome(pathOfTitle: String) {
+        incomesLiveData.value = incomesList.filter {
+            it.titleOfCost?.lowercase()?.contains(pathOfTitle.lowercase().trim()) == true
+        }
     }
 
-    fun searchExpense(pathOfTitle: String){
-        expensesLiveData.value = expensesList.filter { it.titleOfCost?.contains(pathOfTitle) == true }
+    fun searchExpense(pathOfTitle: String) {
+        expensesLiveData.value = expensesList.filter {
+            it.titleOfCost?.lowercase()?.contains(pathOfTitle.lowercase().trim()) == true
+        }
     }
 
     fun filterByCategoryForIncome(category: String) {
