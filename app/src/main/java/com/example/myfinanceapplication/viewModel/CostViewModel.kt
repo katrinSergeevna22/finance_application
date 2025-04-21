@@ -1,10 +1,9 @@
-package com.example.myfinanceapplication.view_model
+package com.example.myfinanceapplication.viewModel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip

@@ -9,7 +9,7 @@ import com.example.myfinanceapplication.view.cost.ExpensesActivity
 import com.example.myfinanceapplication.view.cost.IncomeActivity
 import com.example.myfinanceapplication.view.goals.GoalsActivity
 import com.example.myfinanceapplication.view.tips.TipsActivity
-import com.example.myfinanceapplication.view_model.AuthViewModel
+import com.example.myfinanceapplication.viewModel.AuthViewModel
 
 enum class NavigationTitle {
     GOALS, TIPS, INCOME, EXPENSE, TIPS_WITH_SELECT, GOALS_WITH_SELECT, MAIN, AUTH,

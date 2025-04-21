@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentInfoGoalBinding
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.EditGoalViewModel
-import com.example.myfinanceapplication.view_model.GoalViewModel
+import com.example.myfinanceapplication.viewModel.EditGoalViewModel
+import com.example.myfinanceapplication.viewModel.GoalViewModel
 
 class InfoGoalFragment : Fragment() {
     lateinit var binding: FragmentInfoGoalBinding

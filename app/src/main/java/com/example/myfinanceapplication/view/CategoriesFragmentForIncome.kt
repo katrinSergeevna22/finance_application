@@ -16,7 +16,7 @@ import com.example.myfinanceapplication.databinding.FragmentCategoriesForIncomeB
 import com.example.myfinanceapplication.view.cost.AddIncomeFragment
 import com.example.myfinanceapplication.view.cost.EditIncomeFragment
 import com.example.myfinanceapplication.view.cost.IncomeActivity
-import com.example.myfinanceapplication.view_model.AddCostViewModel
+import com.example.myfinanceapplication.viewModel.AddCostViewModel
 
 class CategoriesFragmentForIncome : Fragment() {
 

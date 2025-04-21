@@ -11,9 +11,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.example.myfinanceapplication.view_model.EditGoalViewModel
+import com.example.myfinanceapplication.viewModel.EditGoalViewModel
 import com.example.myfinanceapplication.model.Goal
-import com.example.myfinanceapplication.view_model.GoalViewModel
+import com.example.myfinanceapplication.viewModel.GoalViewModel
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentEditGoalBinding
 import java.text.SimpleDateFormat
