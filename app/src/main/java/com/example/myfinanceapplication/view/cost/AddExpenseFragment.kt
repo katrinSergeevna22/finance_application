@@ -11,12 +11,12 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.myfinanceapplication.view_model.CostViewModel
+import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentAddExpenseBinding
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.AddCostViewModel
+import com.example.myfinanceapplication.viewModel.AddCostViewModel
 
 class AddExpenseFragment : Fragment() {
     lateinit var binding: FragmentAddExpenseBinding

@@ -13,7 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.databinding.FragmentAddGoalBinding
-import com.example.myfinanceapplication.view_model.AddGoalViewModel
+import com.example.myfinanceapplication.viewModel.AddGoalViewModel
 
 
 class AddGoalFragment : Fragment() {

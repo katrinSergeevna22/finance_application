@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -14,9 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.MainActivity
 import com.example.myfinanceapplication.databinding.ActivityAuthBinding
-import com.example.myfinanceapplication.view_model.AuthViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.example.myfinanceapplication.viewModel.AuthViewModel
 
 class AuthActivity : AppCompatActivity() {
     lateinit var binding: ActivityAuthBinding
@@ -31,7 +28,7 @@ class AuthActivity : AppCompatActivity() {
         setupUI()
     }
 
-    val isForTesting = true
+    private val isForTesting = true
     fun setupUI() {
         binding.apply {
             ibRegister.setOnClickListener {
@@ -42,7 +39,7 @@ class AuthActivity : AppCompatActivity() {
                     Toast.makeText(this@AuthActivity, "Ненадежный пароль", Toast.LENGTH_LONG).show()
                 } else {
                     viewModel.register(email, password)
-                        .observe(this@AuthActivity, Observer { text ->
+                        .observe(this@AuthActivity) { text ->
                             if (text != "") {
                                 Toast.makeText(
                                     this@AuthActivity,
@@ -50,34 +47,29 @@ class AuthActivity : AppCompatActivity() {
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
-                        })
+                        }
                 }
 
             }
             ibLogIn.setOnClickListener {
-                val email = binding.etLogin.text.toString()
-                val password = binding.etPassword.text.toString()
-                if (isForTesting) {
-                    startActivity(Intent(this@AuthActivity, MainActivity::class.java))
-                    finish()
-                } else {
-                    viewModel.logIn(email, password).observe(this@AuthActivity, Observer { text ->
-                        Log.d("Auth2", password.toString())
+                val email = if (isForTesting) "katrin@mail.ru" else binding.etLogin.text.toString()
+                val password = if (isForTesting) "123456789" else binding.etPassword.text.toString()
+                viewModel.logIn(email, password).observe(this@AuthActivity) { text ->
 
-                        if (text == "Добро пожаловать!") {
-                            //database.getReference("users").setValue(auth.currentUser!!.uid)
-                            startActivity(Intent(this@AuthActivity, MainActivity::class.java))
-                            finish()
-                        }
-                        if (text != "") {
-                            Toast.makeText(
-                                this@AuthActivity,
-                                text,
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    })
+                    if (text == "Добро пожаловать!") {
+                        //database.getReference("users").setValue(auth.currentUser!!.uid)
+                        startActivity(Intent(this@AuthActivity, MainActivity::class.java))
+                        finish()
+                    }
+                    if (text != "") {
+                        Toast.makeText(
+                            this@AuthActivity,
+                            text,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
+
             }
         }
     }

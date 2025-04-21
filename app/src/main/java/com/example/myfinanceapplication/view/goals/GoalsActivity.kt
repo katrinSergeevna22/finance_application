@@ -22,7 +22,7 @@ import com.example.myfinanceapplication.model.utils.NavigationTitle
 import com.example.myfinanceapplication.model.utils.getIntentForNavigation
 import com.example.myfinanceapplication.model.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.GoalViewModel
+import com.example.myfinanceapplication.viewModel.GoalViewModel
 import kotlinx.coroutines.launch
 
 class GoalsActivity : AppCompatActivity() {

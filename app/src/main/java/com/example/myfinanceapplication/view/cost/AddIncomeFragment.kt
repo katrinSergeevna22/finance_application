@@ -9,11 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentAddIncomeBinding
-import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.view.CategoriesFragmentForIncome
-import com.example.myfinanceapplication.view_model.AddCostViewModel
-import com.example.myfinanceapplication.view_model.CostViewModel
+import com.example.myfinanceapplication.viewModel.AddCostViewModel
+import com.example.myfinanceapplication.viewModel.CostViewModel
 
 class AddIncomeFragment : Fragment() {
     lateinit var binding: FragmentAddIncomeBinding

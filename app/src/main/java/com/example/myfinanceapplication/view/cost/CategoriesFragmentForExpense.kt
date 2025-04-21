@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentCategoriesForExpenseBinding
-import com.example.myfinanceapplication.view_model.AddCostViewModel
+import com.example.myfinanceapplication.viewModel.AddCostViewModel
 
 class CategoriesFragmentForExpense : Fragment() {
 

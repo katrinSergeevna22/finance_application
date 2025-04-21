@@ -13,7 +13,7 @@ import com.example.myfinanceapplication.databinding.FragmentInfoExpenseBinding
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.CostViewModel
+import com.example.myfinanceapplication.viewModel.CostViewModel
 
 class InfoExpenseFragment : Fragment() {
     lateinit var binding: FragmentInfoExpenseBinding

@@ -28,7 +28,7 @@ import com.example.myfinanceapplication.model.utils.NavigationTitle
 import com.example.myfinanceapplication.model.utils.getIntentForNavigation
 import com.example.myfinanceapplication.model.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.CostViewModel
+import com.example.myfinanceapplication.viewModel.CostViewModel
 import kotlinx.coroutines.launch
 
 
