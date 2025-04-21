@@ -16,8 +16,8 @@ import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentEditExpenseBinding
 import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.CostViewModel
-import com.example.myfinanceapplication.view_model.EditCostViewModel
+import com.example.myfinanceapplication.viewModel.CostViewModel
+import com.example.myfinanceapplication.viewModel.EditCostViewModel
 
 class EditExpenseFragment : Fragment() {
     lateinit var binding: FragmentEditExpenseBinding

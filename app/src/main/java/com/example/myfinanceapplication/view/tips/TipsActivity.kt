@@ -13,7 +13,7 @@ import com.example.myapplication.adapter.TipAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityTipsBinding
 import com.example.myfinanceapplication.model.utils.navigationForNavigationView
-import com.example.myfinanceapplication.view_model.TipViewModel
+import com.example.myfinanceapplication.viewModel.TipViewModel
 import kotlinx.coroutines.launch
 
 class TipsActivity : AppCompatActivity() {

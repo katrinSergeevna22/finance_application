@@ -1,4 +1,4 @@
-package com.example.myfinanceapplication.view_model
+package com.example.myfinanceapplication.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

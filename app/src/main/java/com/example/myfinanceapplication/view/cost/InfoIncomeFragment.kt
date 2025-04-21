@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentInfoIncomeBinding
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view_model.CostViewModel
+import com.example.myfinanceapplication.viewModel.CostViewModel
 
 class InfoIncomeFragment : Fragment() {
     lateinit var binding: FragmentInfoIncomeBinding
