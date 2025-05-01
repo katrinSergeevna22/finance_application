@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarGoal"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/dark_violet"
@@ -33,7 +33,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarGoal">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="Диаграмма доходов"
+                    android:text="@string/statistics_title_diagramm_category_income"
                     android:textSize="16sp" />
 
                 <com.github.mikephil.charting.charts.PieChart
@@ -69,7 +69,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="Диаграмма расходов"
+                    android:text="@string/statistics_title_diagramm_category_expense"
                     android:textSize="16sp" />
 
                 <com.github.mikephil.charting.charts.PieChart
@@ -92,7 +92,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="Диаграмма целей"
+                    android:text="@string/statistics_title_diagramm_category_goals"
                     android:textSize="16sp" />
 
                 <com.github.mikephil.charting.charts.PieChart
@@ -115,7 +115,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="Диаграмма процента достижения целей"
+                    android:text="@string/statistics_title_diagramm_progress_goals"
                     android:textSize="16sp" />
 
                 <com.github.mikephil.charting.charts.PieChart
@@ -186,7 +186,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="График изменения прогресса целей"
+                    android:text="График изменения прогресса достижения целей"
                     android:textSize="16sp" />
 
                 <HorizontalScrollView

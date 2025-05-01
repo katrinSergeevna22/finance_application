@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.forEach
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
@@ -24,9 +25,9 @@ import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityExpensesBinding
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip
-import com.example.myfinanceapplication.model.utils.NavigationTitle
-import com.example.myfinanceapplication.model.utils.getIntentForNavigation
-import com.example.myfinanceapplication.model.utils.navigationForNavigationView
+import com.example.myfinanceapplication.utils.NavigationTitle
+import com.example.myfinanceapplication.utils.getIntentForNavigation
+import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.ModeSorter
@@ -39,6 +40,8 @@ class ExpensesActivity : AppCompatActivity() {
 
     private var mainTip = Tip()
     private var mainGoal = Goal()
+
+    lateinit var categoriesList: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +68,7 @@ class ExpensesActivity : AppCompatActivity() {
         val newAddExpenseFragment = AddExpenseFragment()
 
         binding.apply {
-            toolbarGoal.setNavigationOnClickListener {
+            toolbar.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
             }
             adapter = CostAdapter {
@@ -132,47 +135,33 @@ class ExpensesActivity : AppCompatActivity() {
                 )
             }
 
-            toolbarGoal.setOnMenuItemClickListener { item ->
+            toolbar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.item_filter_category -> {
-                        //item.isChecked = !item.isChecked
-                        val menuItemSearchIsChecked = toolbarGoal.menu.getItem(4).isChecked
-                        if (menuItemSearchIsChecked) {
-                            toolbarGoal.menu.getItem(4).isChecked = false
-                            visibilitySearch(View.GONE)
-                        }
-                        Log.d("katrin_menu_id", item.isChecked.toString())
                         if (item.isChecked) {
                             visibilityFilter(View.GONE)
                         } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
                             visibilityFilter(View.VISIBLE)
                             fetchSpinnerCategory()
                         }
                     }
 
                     R.id.item_filter_ascending_sum -> {
-                        val menuItemSearchIsChecked = toolbarGoal.menu.getItem(2).isChecked
-                        if (menuItemSearchIsChecked) {
-                            toolbarGoal.menu.getItem(2).isChecked = false
-                            visibilitySearch(View.GONE)
-                        }
                         if (item.isChecked) {
                             viewModel.resetFilters()
                         } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
                             viewModel.sorter(ModeSorter.AscendingIncome)
                         }
                         item.isChecked = !item.isChecked
                     }
 
                     R.id.item_filter_descending_sum -> {
-                        val menuItemSearchIsChecked = toolbarGoal.menu.getItem(1).isChecked
-                        if (menuItemSearchIsChecked) {
-                            toolbarGoal.menu.getItem(1).isChecked = false
-                            visibilitySearch(View.GONE)
-                        }
                         if (item.isChecked) {
                             viewModel.resetFilters()
                         } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
                             viewModel.sorter(ModeSorter.DescendingIncome)
                         }
                         item.isChecked = !item.isChecked
@@ -182,20 +171,17 @@ class ExpensesActivity : AppCompatActivity() {
                         if (item.isChecked) {
                             viewModel.resetFilters()
                         } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
                             viewModel.sorter(ModeSorter.DateIncome)
                         }
                         item.isChecked = !item.isChecked
                     }
 
                     R.id.item_search -> {
-                        val menuItemSearchIsChecked = toolbarGoal.menu.getItem(0).isChecked
-                        if (menuItemSearchIsChecked) {
-                            toolbarGoal.menu.getItem(0).isChecked = false
-                            visibilityFilter(View.GONE)
-                        }
                         if (item.isChecked) {
                             visibilitySearch(View.GONE)
                         } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
                             visibilitySearch(View.VISIBLE)
                         }
                     }
@@ -209,14 +195,14 @@ class ExpensesActivity : AppCompatActivity() {
             }
 
             ibSaveCategory?.setOnClickListener {
-                if (toolbarGoal.menu.getItem(0).isChecked) {
+                if (toolbar.menu.getItem(0).isChecked) {
                     val selectedItem = spinnerCategory?.selectedItem?.toString()
                     if (selectedItem != null) {
                         viewModel.filterByCategory(selectedItem)
                     } else {
                         Toast.makeText(
                             this@ExpensesActivity,
-                            "Выберите категорию фильтрации или если хотите закрыть - нажмите крестик",
+                            getString(R.string.cost_toast_text_empty_filter),
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -227,7 +213,7 @@ class ExpensesActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             this@ExpensesActivity,
-                            "Введите текст в поисковую строку или если хотите закрыть - нажмите крестик",
+                            getString(R.string.cost_toast_text_empty_search),
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -246,12 +232,16 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
+    private val minOfNumberNewCategory = 4
     private fun fetchSpinnerCategory() {
         val categoriesList =
             resources.getStringArray(R.array.categoriesExpense).toMutableList()
         categoriesList.addAll(
             viewModel.getExpenseCategory()?.filter { !categoriesList.contains(it) }.let {
-                if ((it?.size ?: 0) > 4) it?.subList(0, 4) else it
+                if ((it?.size ?: 0) > minOfNumberNewCategory) it?.subList(
+                    0,
+                    minOfNumberNewCategory
+                ) else it
             } ?: listOf()
         )
 
@@ -268,43 +258,53 @@ class ExpensesActivity : AppCompatActivity() {
 
     private fun visibilitySearch(visibility: Int) {
         binding.apply {
-            val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
-            if ((oldIsChecked && visibility == View.GONE)
-                || (!oldIsChecked && visibility == View.VISIBLE)
-            ) {
-                if (oldIsChecked) {
-                    viewModel.resetFilters()
-                    toolbarGoal.menu.getItem(4).isChecked = false
-                } else {
-                    toolbarGoal.menu.getItem(4).isChecked = true
-                }
-
-                ivFilterCategory?.visibility = visibility
-                tvTitleSearch?.visibility = visibility
-                etSearch?.visibility = visibility
-                ibClose?.visibility = visibility
-                ibSaveCategory?.visibility = visibility
-                tvSave?.visibility = visibility
+            if (visibility == View.GONE) {
+                viewModel.resetFilters()
+                toolbar.menu.getItem(4).isChecked = false
+            } else {
+                toolbar.menu.getItem(4).isChecked = true
             }
+
+            ivFilterCategory?.visibility = visibility
+            tvTitleSearch?.visibility = visibility
+            etSearch?.visibility = visibility
+            ibClose?.visibility = visibility
+            ibSaveCategory?.visibility = visibility
+            tvSave?.visibility = visibility
         }
     }
 
     private fun visibilityFilter(visibility: Int) {
-        viewModel.resetFilters()
         binding.apply {
-            val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
-            toolbarGoal.menu.getItem(0).isChecked = !oldIsChecked
+
+            if (visibility == View.GONE) {
+                viewModel.resetFilters()
+                toolbar.menu.getItem(0).isChecked = false
+            } else {
+                toolbar.menu.getItem(0).isChecked = true
+            }
             ivFilterCategory?.visibility = visibility
             tvTitleCategory?.visibility = visibility
             spinnerCategory?.visibility = visibility
             ibClose?.visibility = visibility
             ibSaveCategory?.visibility = visibility
             tvSave?.visibility = visibility
-            // toolbarGoal.menu.getItem(0).isChecked = visibility == View.VISIBLE
         }
     }
 
-    lateinit var categoriesList: List<String>
+
+    private fun isCheckedMenuItem(): Boolean {
+        var isChecked = false
+        binding.toolbar.menu.forEach { isChecked = it.isChecked.or(isChecked) }
+        return isChecked
+    }
+
+    private fun unselectedMenuItem() {
+        binding.toolbar.menu.forEach { it.isChecked = false }
+        viewModel.resetFilters()
+        visibilityFilter(View.GONE)
+        visibilitySearch(View.GONE)
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {

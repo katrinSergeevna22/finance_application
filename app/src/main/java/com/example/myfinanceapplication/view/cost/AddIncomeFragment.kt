@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentAddIncomeBinding
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view.CategoriesFragmentForIncome
 import com.example.myfinanceapplication.viewModel.AddCostViewModel
 import com.example.myfinanceapplication.viewModel.CostViewModel
 

@@ -9,7 +9,7 @@
     <EditText
         android:id="@+id/etLogin"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:backgroundTint="@color/dark_violet"
         android:ems="10"
         android:hint="@string/login"

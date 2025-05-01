@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.databinding.ActivityMainBinding
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip
-import com.example.myfinanceapplication.model.utils.NavigationTitle
-import com.example.myfinanceapplication.model.utils.getIntentForNavigation
-import com.example.myfinanceapplication.model.utils.navigationForNavigationView
+import com.example.myfinanceapplication.utils.NavigationTitle
+import com.example.myfinanceapplication.utils.getIntentForNavigation
+import com.example.myfinanceapplication.utils.navigationForNavigationView
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding

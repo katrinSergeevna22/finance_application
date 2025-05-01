@@ -1,18 +1,16 @@
 package com.example.myfinanceapplication.view
 
-//import com.example.myfinanceapplication.model.utils.navigationForNavigationView
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityStatisticsBinding
-import com.example.myfinanceapplication.model.utils.NavigationTitle
+import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.viewModel.StatisticsViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
@@ -53,15 +51,20 @@ class StatisticsActivity : AppCompatActivity() {
             initEditOfIncome()
             initEditOfExpenses()
             initEditOfProgressOfGoal()
-//            navigationView.setNavigationItemSelectedListener {
-//                startActivity(
-//                    navigationForNavigationView(
-//                        context = this@StatisticsActivity,
-//                        itemId = it.itemId
-//                    )
-//                )
-//                true
-//            }
+
+            toolbar.setNavigationOnClickListener {
+                drawerGoal.openDrawer(GravityCompat.START)
+            }
+
+            navigationView.setNavigationItemSelectedListener {
+                startActivity(
+                    navigationForNavigationView(
+                        context = this@StatisticsActivity,
+                        itemId = it.itemId
+                    )
+                )
+                true
+            }
         }
     }
 

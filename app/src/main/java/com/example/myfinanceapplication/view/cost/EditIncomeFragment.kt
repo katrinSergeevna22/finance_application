@@ -11,7 +11,6 @@ import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentEditIncomeBinding
 import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view.CategoriesFragmentForIncome
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.EditCostViewModel
 

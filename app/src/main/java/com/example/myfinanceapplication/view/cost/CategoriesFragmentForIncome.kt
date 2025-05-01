@@ -1,4 +1,4 @@
-package com.example.myfinanceapplication.view
+package com.example.myfinanceapplication.view.cost
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -13,9 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentCategoriesForIncomeBinding
-import com.example.myfinanceapplication.view.cost.AddIncomeFragment
-import com.example.myfinanceapplication.view.cost.EditIncomeFragment
-import com.example.myfinanceapplication.view.cost.IncomeActivity
 import com.example.myfinanceapplication.viewModel.AddCostViewModel
 
 class CategoriesFragmentForIncome : Fragment() {

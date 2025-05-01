@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.adapter.TipAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityTipsBinding
-import com.example.myfinanceapplication.model.utils.navigationForNavigationView
+import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.viewModel.TipViewModel
 import kotlinx.coroutines.launch
 
@@ -39,7 +39,7 @@ class TipsActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.apply {
-            toolbarGoal.setNavigationOnClickListener {
+            toolbar.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
             }
 

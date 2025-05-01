@@ -1,4 +1,4 @@
-package com.example.myfinanceapplication.model.utils
+package com.example.myfinanceapplication.utils
 
 import android.content.Context
 import android.content.Intent

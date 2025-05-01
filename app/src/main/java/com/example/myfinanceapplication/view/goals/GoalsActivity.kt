@@ -18,9 +18,9 @@ import com.example.myapplication.adapter.GoalAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityGoalsBinding
 import com.example.myfinanceapplication.model.Tip
-import com.example.myfinanceapplication.model.utils.NavigationTitle
-import com.example.myfinanceapplication.model.utils.getIntentForNavigation
-import com.example.myfinanceapplication.model.utils.navigationForNavigationView
+import com.example.myfinanceapplication.utils.NavigationTitle
+import com.example.myfinanceapplication.utils.getIntentForNavigation
+import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.viewModel.GoalViewModel
 import kotlinx.coroutines.launch
@@ -65,7 +65,7 @@ class GoalsActivity : AppCompatActivity() {
         val infoGoalFragment = InfoGoalFragment.newInstance()
         val newAddGoalFragment = AddGoalFragment.newInstance()
         binding.apply {
-            toolbarGoal.setNavigationOnClickListener {
+            toolbar.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
             }
 
@@ -137,7 +137,7 @@ class GoalsActivity : AppCompatActivity() {
                 true
             }
 
-            toolbarGoal.setOnMenuItemClickListener { item ->
+            toolbar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.item_active -> viewModel.setSelectedCategory("Active")
                     R.id.item_achieved -> viewModel.setSelectedCategory("Achieved")
