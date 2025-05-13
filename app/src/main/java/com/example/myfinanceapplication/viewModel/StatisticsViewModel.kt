@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class StatisticsViewModel : ViewModel() {
     private val dataRepository = DataRepository()
@@ -20,8 +22,12 @@ class StatisticsViewModel : ViewModel() {
     private val goalsMutableLiveData = MutableLiveData<List<Goal>>()
     val goalsLiveData: LiveData<List<Goal>> = goalsMutableLiveData
 
+    private val costsMutableLiveData = MutableLiveData<List<Cost>>()
+    val costsLiveData: LiveData<List<Cost>> = costsMutableLiveData
+
     init {
         fetchEntityList()
+        fetchListOfCost()
     }
 
     private fun fetchEntityList() {
@@ -47,5 +53,18 @@ class StatisticsViewModel : ViewModel() {
         mutableMap[categoryList[1]] =
             goalsLiveData.value?.count { it.progressOfMoneyGoal != it.moneyGoal }?.toLong() ?: 0L
         return mutableMap
+    }
+
+    private fun fetchListOfCost() {
+        incomesLiveData.observeForever { incomes ->
+            if(incomes != null) {
+                val listOfCost = mutableListOf<Cost>()
+                listOfCost.addAll(incomes)
+                if (expensesLiveData.value != null){
+                    listOfCost.addAll(expensesLiveData.value ?: listOf())
+                }
+                costsMutableLiveData.value = listOfCost.sortedBy { it.date }
+            }
+        }
     }
 }

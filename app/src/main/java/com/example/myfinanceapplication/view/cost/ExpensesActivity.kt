@@ -218,16 +218,16 @@ class ExpensesActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
+            }
 
-                navigationView.setNavigationItemSelectedListener {
-                    startActivity(
-                        navigationForNavigationView(
-                            context = this@ExpensesActivity,
-                            itemId = it.itemId
-                        )
+            navigationView.setNavigationItemSelectedListener {
+                startActivity(
+                    navigationForNavigationView(
+                        context = this@ExpensesActivity,
+                        itemId = it.itemId
                     )
-                    true
-                }
+                )
+                true
             }
         }
     }

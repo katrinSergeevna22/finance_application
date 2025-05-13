@@ -77,4 +77,10 @@
         <item>Образование</item>
         <item>Покупки</item>
     </string-array>
+
+    <string-array name="categoriesTimeForDiagram">
+        <item>За последний год</item>
+        <item>За последний месяц</item>
+        <item>За последние две недели</item>
+    </string-array>
 </resources>

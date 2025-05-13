@@ -26,6 +26,8 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class StatisticsActivity : AppCompatActivity() {
     lateinit var binding: ActivityStatisticsBinding
@@ -137,6 +139,13 @@ class StatisticsActivity : AppCompatActivity() {
         }
     }
 
+    private val dateComparator: Comparator<String> = Comparator { date1, date2 ->
+        val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val localDate1 = LocalDate.parse(date1, dateFormatter)
+        val localDate2 = LocalDate.parse(date2, dateFormatter)
+        localDate1.compareTo(localDate2)
+    }
+
     private fun initEditOfExpenses() {
         viewModel.expensesLiveData.observeForever { expenses ->
             val expensesMap = expenses.associateBy({ it.date }, { it.moneyCost.toFloat() })
@@ -174,7 +183,7 @@ class StatisticsActivity : AppCompatActivity() {
         pieChart.holeRadius = 2f // Уменьшенный радиус дыры
         pieChart.transparentCircleRadius = 2f // Уменьшенный радиус прозрачного круга
 
-        pieChart.setDrawCenterText(true)
+        pieChart.setDrawCenterText(false) // Отключаем текст в центре
         pieChart.rotationAngle = 0f
         pieChart.isRotationEnabled = true
         pieChart.isHighlightPerTapEnabled = true
@@ -183,12 +192,21 @@ class StatisticsActivity : AppCompatActivity() {
         // Настройка легенды
         pieChart.legend.isEnabled = true
         pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL // Вертикальная ориентация
-        pieChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM // Внизу
-        pieChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER // По центру
+        pieChart.legend.verticalAlignment =
+            Legend.LegendVerticalAlignment.CENTER // По центру по вертикали
+        pieChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT // Справа
         pieChart.legend.setDrawInside(false) // Не рисовать внутри графика
 
         // Увеличение шрифта легенды
         pieChart.legend.textSize = 14f // Увеличение шрифта до 14sp
+
+        // Установка заголовка для легенды
+        pieChart.legend.formSize = 14f // Размер формы в легенде
+        pieChart.legend.formToTextSpace = 10f // Расстояние между формой и текстом легенды
+        pieChart.legend.yEntrySpace = 10f // Расстояние между записями легенды
+
+        // Отключаем отображение текстов категорий на диаграмме
+        pieChart.setDrawEntryLabels(false) // Отключаем подписи категорий на диаграмме
     }
 
     private fun setupLineChart(
@@ -199,11 +217,11 @@ class StatisticsActivity : AppCompatActivity() {
         val entries = mutableListOf<Entry>()
 
         var index = 0
-        for ((date, amount) in dataMap.entries.sortedBy { it.key }) {
+        for ((date, amount) in dataMap) {
             entries.add(Entry(index.toFloat(), amount))
             index++
         }
-
+        Log.d("katrin_dataMap", dataMap.toString())
         val dataSet = LineDataSet(entries, label)
         dataSet.color = resources.getColor(R.color.dark_violet) // Задайте цвет линии
         dataSet.valueTextColor = resources.getColor(R.color.color_of_text) // Цвет текста значений
@@ -213,7 +231,7 @@ class StatisticsActivity : AppCompatActivity() {
         lineChart.data = lineData
         lineChart.xAxis.valueFormatter = object : ValueFormatter() {
             override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                val date = dataMap.keys.sorted()[value.toInt()]
+                val date = dataMap.keys.sortedWith(dateComparator)[value.toInt()]
                 return date
             }
         }
@@ -228,11 +246,21 @@ class StatisticsActivity : AppCompatActivity() {
         lineChart.legend.textSize = 14f // Увеличенный размер шрифта легенды
 
         // Установка отступа для легенды (измените 8 на нужное значение в dp)
-        val legendOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics)
+        val legendOffset =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics)
         lineChart.setExtraOffsets(0f, 0f, 0f, legendOffset)
+
+        // Настройка смещения значений над точками
+        dataSet.setDrawValues(true)
+        dataSet.valueFormatter = object : ValueFormatter() {
+            override fun getPointLabel(entries: Entry?): String {
+                return entries?.y.toString()
+            }
+        }
 
         lineChart.invalidate() // Обновляем график
     }
+
 
     private fun updateChart(mapOfEntities: Map<String, Long>, pieChart: PieChart) {
         val entries = ArrayList<PieEntry>()
@@ -241,7 +269,7 @@ class StatisticsActivity : AppCompatActivity() {
             entries.add(PieEntry(amount.toFloat(), category))
         }
 
-        val dataSet = PieDataSet(entries, "Категории")
+        val dataSet = PieDataSet(entries, "")
         dataSet.sliceSpace = 3f
         dataSet.selectionShift = 5f
 
