@@ -132,7 +132,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="График внесения нового дохода"
+                    android:text="Внесение нового дохода"
                     android:textSize="16sp" />
 
                 <Spinner
@@ -165,7 +165,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="График внесения нового расхода"
+                    android:text="Внесение нового расхода"
                     android:textSize="16sp" />
 
                 <HorizontalScrollView
@@ -192,7 +192,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="График изменения прогресса достижения целей"
+                    android:text="Изменения прогресса достижения целей"
                     android:textSize="16sp" />
 
                 <HorizontalScrollView

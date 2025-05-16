@@ -3,10 +3,10 @@
     <string name="title_last_week">Последняя неделя</string>
     <string name="edit_expense_title_sum_of_expense">Сумма расхода</string>
     <string name="filter_category">Фильтровать по категории</string>
-    <string name="statistics_title_diagramm_category_income">Диаграмма категорий доходов</string>
-    <string name="statistics_title_diagramm_category_expense">Диаграмма категорий расходов</string>
-    <string name="statistics_title_diagramm_category_goals">Диаграмма категорий целей</string>
-    <string name="statistics_title_diagramm_progress_goals">Диаграмма процент достигнутых целей</string>
+    <string name="statistics_title_diagramm_category_income">Категории доходов</string>
+    <string name="statistics_title_diagramm_category_expense">Категории расходов</string>
+    <string name="statistics_title_diagramm_category_goals">Категории целей</string>
+    <string name="statistics_title_diagramm_progress_goals">Процент достигнутых целей</string>
     <string name="cost_toast_text_empty_filter">Выберите категорию фильтрации или если хотите закрыть - нажмите крестик</string>
     <string name="cost_toast_text_empty_search">Введите текст в поисковую строку или если хотите закрыть - нажмите крестик</string>
 </resources>
