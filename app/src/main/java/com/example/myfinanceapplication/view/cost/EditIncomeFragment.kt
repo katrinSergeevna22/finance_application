@@ -18,12 +18,12 @@ class EditIncomeFragment : Fragment() {
     lateinit var binding: FragmentEditIncomeBinding
     private lateinit var viewModel: CostViewModel
     private lateinit var editViewModel: EditCostViewModel
-    lateinit var selectIncome: Cost
+    private lateinit var selectIncome: Cost
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEditIncomeBinding.inflate(inflater)
         viewModel = ViewModelProvider(requireActivity()).get(CostViewModel::class.java)
         editViewModel = ViewModelProvider(requireActivity()).get(EditCostViewModel::class.java)
@@ -48,7 +48,7 @@ class EditIncomeFragment : Fragment() {
             }
 
             tvBtnCategory?.text = "Выберите категорию"
-            ibtnCategory?.setOnClickListener {
+            ibtnCategory.setOnClickListener {
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, BackgroundFragment())
                     .addToBackStack(null)
@@ -115,7 +115,7 @@ class EditIncomeFragment : Fragment() {
         }
     }
 
-    var category = ""
+    var category = selectingCategory ?: ""
     fun receiveData(data: String) {
         category = data
         binding.apply {

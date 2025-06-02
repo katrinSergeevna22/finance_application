@@ -32,6 +32,7 @@ import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
+import androidx.core.view.get
 
 class ExpensesActivity : AppCompatActivity() {
     lateinit var binding: ActivityExpensesBinding
@@ -195,7 +196,7 @@ class ExpensesActivity : AppCompatActivity() {
             }
 
             ibSaveCategory?.setOnClickListener {
-                if (toolbar.menu.getItem(0).isChecked) {
+                if (toolbar.menu[0].isChecked) {
                     val selectedItem = spinnerCategory?.selectedItem?.toString()
                     if (selectedItem != null) {
                         viewModel.filterByCategory(selectedItem)
@@ -260,9 +261,9 @@ class ExpensesActivity : AppCompatActivity() {
         binding.apply {
             if (visibility == View.GONE) {
                 viewModel.resetFilters()
-                toolbar.menu.getItem(4).isChecked = false
+                toolbar.menu[4].isChecked = false
             } else {
-                toolbar.menu.getItem(4).isChecked = true
+                toolbar.menu[4].isChecked = true
             }
 
             ivFilterCategory?.visibility = visibility
@@ -279,9 +280,9 @@ class ExpensesActivity : AppCompatActivity() {
 
             if (visibility == View.GONE) {
                 viewModel.resetFilters()
-                toolbar.menu.getItem(0).isChecked = false
+                toolbar.menu[0].isChecked = false
             } else {
-                toolbar.menu.getItem(0).isChecked = true
+                toolbar.menu[0].isChecked = true
             }
             ivFilterCategory?.visibility = visibility
             tvTitleCategory?.visibility = visibility

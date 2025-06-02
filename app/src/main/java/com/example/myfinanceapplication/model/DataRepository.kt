@@ -1,7 +1,6 @@
 package com.example.myfinanceapplication.model
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -142,7 +141,7 @@ class DataRepository {
                             items.add(it)
                         }
                     }
-                    var goalActiveList = items.filter { it.status == "Active" }
+                    val goalActiveList = items.filter { it.status == "Active" }
                     if (goalActiveList.isEmpty()) {
                         oneGoalLiveData.value = Goal("0", "Добавьте цель", 0L, 0L, "", "", "")
                     } else {

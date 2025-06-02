@@ -248,7 +248,7 @@ class EditExpenseFragment : Fragment() {
             if (editViewModel.checkExpenseData(
                     title,
                     sum,
-                    category,
+                    category.ifBlank { selectingCategory ?: "" },
                     comment,
                     titleOfGoal,
                     viewModel.getBalanceNow()

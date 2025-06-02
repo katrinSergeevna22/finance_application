@@ -116,7 +116,7 @@
                 android:textColor="@color/dark_violet"
                 android:textSize="20sp"
                 android:ellipsize="end"
-                android:maxEms="25"
+                android:maxWidth="330dp"
                 android:maxLines="1"
                 app:layout_constraintBottom_toBottomOf="@+id/ibtnCategory"
                 app:layout_constraintEnd_toEndOf="parent"

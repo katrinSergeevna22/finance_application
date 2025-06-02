@@ -4,12 +4,17 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityStatisticsBinding
+import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.viewModel.StatisticsViewModel
 import com.github.mikephil.charting.charts.LineChart
@@ -26,8 +31,12 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class StatisticsActivity : AppCompatActivity() {
     lateinit var binding: ActivityStatisticsBinding
@@ -54,6 +63,12 @@ class StatisticsActivity : AppCompatActivity() {
             initEditOfExpenses()
             initEditOfProgressOfGoal()
 
+//            val periods = arrayOf("За последний год", "За последний месяц", "За последнюю неделю")
+//            val spinnerAdapter = ArrayAdapter(this@StatisticsActivity, android.R.layout.simple_spinner_item, periods)
+//            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//            spinnerLineChartIncome.adapter = spinnerAdapter
+
+
             toolbar.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
             }
@@ -68,6 +83,55 @@ class StatisticsActivity : AppCompatActivity() {
                 true
             }
         }
+    }
+
+    private fun filterData(selectedPeriod: String, originalList: List<Cost>): MutableList<Cost> {
+        val calendar = Calendar.getInstance()
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val currentDate = Date()
+
+        val filteredList = mutableListOf<Cost>()
+
+        when (selectedPeriod) {
+            "За последний год" -> {
+                calendar.add(Calendar.YEAR, -1)
+                val yearAgo = calendar.time
+                originalList.forEach {
+                    val itemDate = sdf.parse(it.date)
+                    if (itemDate != null && itemDate in yearAgo..currentDate) {
+                        filteredList.add(it)
+                    }
+                }
+            }
+
+            "За последний месяц" -> {
+                calendar.add(Calendar.MONTH, -1)
+                val monthAgo = calendar.time
+                originalList.forEach {
+                    val itemDate = sdf.parse(it.date)
+                    if (itemDate != null && itemDate in monthAgo..currentDate) {
+                        filteredList.add(it)
+                    }
+                }
+                Log.d("katrin_filter", filteredList.toString())
+            }
+
+            "За последнюю неделю" -> {
+                calendar.add(Calendar.WEEK_OF_YEAR, -1)
+                val weekAgo = calendar.time
+                originalList.forEach {
+                    val itemDate = sdf.parse(it.date)
+                    if (itemDate != null && itemDate in weekAgo..currentDate) {
+                        filteredList.add(it)
+                    }
+                }
+            }
+
+            else -> filteredList.addAll(originalList)
+        }
+
+        Toast.makeText(this, "Отображаются данные: $selectedPeriod", Toast.LENGTH_SHORT).show()
+        return filteredList
     }
 
     private fun initIncomeStatistics() {
@@ -129,8 +193,32 @@ class StatisticsActivity : AppCompatActivity() {
     }
 
     private fun initEditOfIncome() {
+        val periods = resources.getStringArray(R.array.categoriesTimeForDiagram)
         viewModel.incomesLiveData.observeForever { incomes ->
-            val incomesMap = incomes.associateBy({ it.date }, { it.moneyCost.toFloat() })
+            binding.spinnerLineChartIncome.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        val incomesMap =
+                            filterData(periods[position], incomes).associateBy(
+                                { it.date },
+                                { it.moneyCost.toFloat() })
+                        setupLineChart(
+                            dataMap = incomesMap,
+                            lineChart = binding.lineChartIncome,
+                            label = "Доходы"
+                        )
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+
+            val incomesMap =
+                filterData(periods[0], incomes).associateBy({ it.date }, { it.moneyCost.toFloat() })
             setupLineChart(
                 dataMap = incomesMap,
                 lineChart = binding.lineChartIncome,
@@ -214,53 +302,96 @@ class StatisticsActivity : AppCompatActivity() {
         lineChart: LineChart,
         label: String,
     ) {
-        val entries = mutableListOf<Entry>()
+        if (dataMap.isNotEmpty()) {
+            // Сортируем данные по дате
+            val sortedDates = dataMap.keys.sortedWith(dateComparator)
+            val entries = mutableListOf<Entry>()
 
-        var index = 0
-        for ((date, amount) in dataMap) {
-            entries.add(Entry(index.toFloat(), amount))
-            index++
-        }
-        Log.d("katrin_dataMap", dataMap.toString())
-        val dataSet = LineDataSet(entries, label)
-        dataSet.color = resources.getColor(R.color.dark_violet) // Задайте цвет линии
-        dataSet.valueTextColor = resources.getColor(R.color.color_of_text) // Цвет текста значений
-        dataSet.valueTextSize = 14f
+            // Создаем точки данных с индексами от 0 до size-1
+            sortedDates.forEachIndexed { index, date ->
+                entries.add(Entry(index.toFloat(), dataMap[date] ?: 0f))
+            }
 
-        val lineData = LineData(dataSet)
-        lineChart.data = lineData
-        lineChart.xAxis.valueFormatter = object : ValueFormatter() {
-            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                val date = dataMap.keys.sortedWith(dateComparator)[value.toInt()]
-                return date
+            val dataSet = LineDataSet(entries, label).apply {
+                color = resources.getColor(R.color.dark_violet)
+                valueTextColor = resources.getColor(R.color.color_of_text)
+                valueTextSize = 14f
+                setDrawValues(true)
+                lineWidth = 2f
+                setDrawCircles(true)
+                circleRadius = 4f
+                circleHoleRadius = 2f
+                valueFormatter = object : ValueFormatter() {
+                    override fun getPointLabel(entry: Entry?): String {
+                        return entry?.y?.toInt().toString()
+                    }
+                }
+            }
+
+            lineChart.apply {
+                // Настройка отступов для крайних точек
+                val extraOffset = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    16f,
+                    resources.displayMetrics
+                )
+
+                // Рассчитываем отступы в зависимости от количества точек
+                val xOffset = if (entries.size > 1) extraOffset else 0f
+                setExtraOffsets(0f, 0f, xOffset, 0f)
+
+                data = LineData(dataSet)
+
+                xAxis.apply {
+                    valueFormatter = object : ValueFormatter() {
+                        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                            val index = value.toInt()
+                            return if (index >= 0 && index < sortedDates.size) {
+                                sortedDates[index]
+                            } else {
+                                ""
+                            }
+                        }
+                    }
+                    position = XAxis.XAxisPosition.BOTTOM
+                    granularity = 1f // Одна метка на точку
+                    setAvoidFirstLastClipping(true) // Предотвращаем обрезание меток
+                    labelCount = entries.size // Устанавливаем точное количество меток
+                    textSize = 14f
+                    setDrawGridLines(false)
+                }
+
+                axisLeft.apply {
+                    textSize = 14f
+                    axisMinimum = 0f
+                    granularity = 1f
+                }
+
+                axisRight.isEnabled = false
+
+                legend.apply {
+                    setDrawInside(false)
+                    textSize = 14f
+                }
+
+                // Дополнительные настройки для лучшего отображения
+                setTouchEnabled(true)
+                isDragEnabled = true
+                setScaleEnabled(true)
+                setPinchZoom(true)
+                description.isEnabled = false
+
+                // Автоматическое масштабирование по оси X
+                setVisibleXRangeMaximum(entries.size.toFloat())
+                moveViewToX(entries.last().x)
+
+                // Настройка анимации
+                animateX(1000)
+
+                invalidate()
             }
         }
-
-        lineChart.xAxis.textSize = 14f
-        lineChart.axisLeft.textSize = 14f
-        lineChart.axisLeft.axisMinimum = 0f // Минимальное значение по оси Y
-        lineChart.axisRight.isEnabled = false // Отключаем правую ось Y
-        lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM // Позиция оси X
-
-        lineChart.legend.setDrawInside(false)
-        lineChart.legend.textSize = 14f // Увеличенный размер шрифта легенды
-
-        // Установка отступа для легенды (измените 8 на нужное значение в dp)
-        val legendOffset =
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics)
-        lineChart.setExtraOffsets(0f, 0f, 0f, legendOffset)
-
-        // Настройка смещения значений над точками
-        dataSet.setDrawValues(true)
-        dataSet.valueFormatter = object : ValueFormatter() {
-            override fun getPointLabel(entries: Entry?): String {
-                return entries?.y.toString()
-            }
-        }
-
-        lineChart.invalidate() // Обновляем график
     }
-
 
     private fun updateChart(mapOfEntities: Map<String, Long>, pieChart: PieChart) {
         val entries = ArrayList<PieEntry>()

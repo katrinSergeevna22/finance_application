@@ -136,6 +136,7 @@
                     android:textSize="16sp" />
 
                 <Spinner
+                    android:id="@+id/spinner_lineChart_income"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -151,8 +152,10 @@
 
                         <com.github.mikephil.charting.charts.LineChart
                             android:id="@+id/lineChart_income"
-                            android:layout_width="800dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:minWidth="400dp"
+                            android:maxWidth="800dp"
                             android:minHeight="300dp"
                             android:maxHeight="800dp"
                             android:layout_margin="16dp" />
@@ -167,6 +170,13 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:text="Внесение нового расхода"
                     android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_lineChart_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:entries="@array/categoriesTimeForDiagram"/>
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -194,6 +204,13 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:text="Изменения прогресса достижения целей"
                     android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_lineChart_goals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:entries="@array/categoriesTimeForDiagram"/>
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"

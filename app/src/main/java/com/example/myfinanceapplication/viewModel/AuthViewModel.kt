@@ -9,8 +9,8 @@ import com.google.firebase.database.FirebaseDatabase
 class AuthViewModel : ViewModel() {
     private val database = FirebaseDatabase.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    val exceptionForRegister = MutableLiveData<String>()
-    val exceptionForLogIn = MutableLiveData<String>()
+    private val exceptionForRegister = MutableLiveData<String>()
+    private val exceptionForLogIn = MutableLiveData<String>()
 
     fun register(email: String, password: String): LiveData<String> {
         if (email == "" && password == "") {

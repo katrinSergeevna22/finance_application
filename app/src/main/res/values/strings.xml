@@ -81,6 +81,6 @@
     <string-array name="categoriesTimeForDiagram">
         <item>За последний год</item>
         <item>За последний месяц</item>
-        <item>За последние две недели</item>
+        <item>За последнюю неделю</item>
     </string-array>
 </resources>
