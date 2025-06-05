@@ -49,8 +49,7 @@ class AddIncomeFragment : Fragment() {
                         title,
                         sum,
                         category,
-                        comment,
-                        viewModel.getBalanceNow()
+                        comment
                     )
                 ) {
                     (activity as IncomeActivity).closeFragments()

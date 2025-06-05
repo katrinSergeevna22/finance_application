@@ -1,6 +1,7 @@
 package com.example.myfinanceapplication.model
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -19,35 +20,56 @@ class DataRepository {
     // Получение ID текущего пользователя
     private val userId = auth.currentUser?.uid
 
-    private val userName = auth.currentUser?.displayName
+    private val balanceLiveData = MutableLiveData<Double>()
+    private var balanceListener: ValueEventListener? = null
 
-    fun getUserBalance(): MutableLiveData<Double> {
-        val balance = MutableLiveData<Double>()
-        if (userId != null) {
-            val balanceRef = database.getReference("users").child(userId).child("balance")
-            balanceRef.addListenerForSingleValueEvent(object : ValueEventListener {
+    fun getUserBalance(): LiveData<Double> {
+        userId?.let { uid ->
+            // Удаляем предыдущий listener, если был
+            balanceListener?.let { listener ->
+                database.getReference("users").child(uid).child("balance")
+                    .removeEventListener(listener)
+            }
+
+            val balanceRef = database.getReference("users").child(uid).child("balance")
+            val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    var newBalance = snapshot.getValue(Double::class.java)
-                    if (newBalance == null) {
-                        newBalance = 0.0
+                    val newBalance = snapshot.getValue(Double::class.java) ?: run {
                         updateUserBalance(0.0)
+                        0.0
                     }
-                    balance.value = newBalance
+                    balanceLiveData.postValue(newBalance)
+                    Log.d("BalanceRepo", "Balance updated: $newBalance")
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // Обработка ошибки
-                    balance.value = 0.0
+                    balanceLiveData.postValue(0.0)
+                    Log.e("BalanceRepo", "Failed to read balance: ${error.message}")
                 }
-            })
+            }
+
+            balanceListener = listener
+            balanceRef.addValueEventListener(listener) // Постоянный listener
+        } ?: run {
+            balanceLiveData.postValue(0.0)
         }
-        return balance
+
+        return balanceLiveData
+    }
+
+    fun cleanup() {
+        userId?.let { uid ->
+            balanceListener?.let { listener ->
+                database.getReference("users").child(uid).child("balance")
+                    .removeEventListener(listener)
+            }
+        }
     }
 
     fun updateUserBalance(newBalance: Double) {
-        if (userId != null) {
-            val balanceRef = database.getReference("users").child(userId).child("balance")
-            balanceRef.setValue(newBalance)
+        userId?.let { uid ->
+            database.getReference("users").child(uid).child("balance")
+                .setValue(newBalance)
         }
     }
 

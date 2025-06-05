@@ -251,7 +251,6 @@ class EditExpenseFragment : Fragment() {
                     category.ifBlank { selectingCategory ?: "" },
                     comment,
                     titleOfGoal,
-                    viewModel.getBalanceNow()
                 )
             ) {
                 viewModel.setSelectedCost(editViewModel.selectCost)

@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
-import androidx.lifecycle.Observer
+import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -32,7 +32,6 @@ import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
-import androidx.core.view.get
 
 class ExpensesActivity : AppCompatActivity() {
     lateinit var binding: ActivityExpensesBinding
@@ -309,11 +308,9 @@ class ExpensesActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
-        viewModel.balanceLiveData.observe(this, Observer { balance ->
+        viewModel.balanceLiveData.observe(this) { balance ->
             binding.tvBalanceExpense.text = balance.toString()
-            Log.d("ShowBalance3", viewModel.getBalanceNow().toString())
-            Log.d("ShowBalance4", balance.toString())
-        })
+        }
         viewModel.getExpenseLiveData().observe(this) { expenseList ->
             categoriesList = expenseList.mapNotNull { it.category }
             adapter.submitList(expenseList)

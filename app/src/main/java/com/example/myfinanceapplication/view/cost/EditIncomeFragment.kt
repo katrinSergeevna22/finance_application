@@ -96,7 +96,6 @@ class EditIncomeFragment : Fragment() {
                 sum,
                 category,
                 comment,
-                viewModel.getBalanceNow()
             )
             if (resultChecking) {
 

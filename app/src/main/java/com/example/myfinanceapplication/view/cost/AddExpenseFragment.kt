@@ -145,7 +145,6 @@ class AddExpenseFragment : Fragment() {
                     category,
                     comment,
                     selectGoal,
-                    viewModel.getBalanceNow()
                 )
             ) {
                 etTitle.text.clear()

@@ -52,7 +52,7 @@ class InfoIncomeFragment : Fragment() {
         }
 
         binding.ibDelete.setOnClickListener {
-            val balance = viewModel.getBalanceNow()
+            val balance = viewModel.balanceLiveData.value?.toDouble() ?: 0.0
             if (viewModel.selectedCost.value!!.moneyCost > balance){
                 Toast.makeText((activity as IncomeActivity), "Баланс станет меньше нуля", Toast.LENGTH_SHORT).show()
             }

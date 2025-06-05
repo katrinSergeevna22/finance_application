@@ -3,72 +3,129 @@ package com.example.myfinanceapplication.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 class AuthViewModel : ViewModel() {
-    private val database = FirebaseDatabase.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private val exceptionForRegister = MutableLiveData<String>()
-    private val exceptionForLogIn = MutableLiveData<String>()
 
-    fun register(email: String, password: String): LiveData<String> {
-        if (email == "" && password == "") {
-            exceptionForRegister.value = "Введите логин и пароль"
-        } else if (email == "") {
-            exceptionForRegister.value = "Введите логин"
-        } else if (password == "") {
-            exceptionForRegister.value = "Введите пароль"
-        } else {
-            //var toast = ""
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Регистрация прошла успешно, добавляем пользователя в базу данных
-                        //val user = User(email, password)
-                        //database.getReference("users").setValue(auth.currentUser!!.uid)
-                        //database.getReference("users").child(auth.currentUser!!.uid)
-                        exceptionForRegister.value = "Регистрация прошла успешна!"
-                    } else {
-                        // Ошибка при регистрации
-                        exceptionForRegister.value = "Ошибка при регистрации"
-                    }
-                }
+    private val _registerResult = MutableLiveData<Resource<String>>(Resource.Loading())
+    val registerResult: LiveData<Resource<String>> = _registerResult
+
+    private val _loginResult = MutableLiveData<Resource<String>>(Resource.Loading())
+    val loginResult: LiveData<Resource<String>> = _loginResult
+
+    fun register(email: String, password: String) {
+        // Валидация ввода
+        when {
+            email.isBlank() && password.isBlank() -> {
+                _registerResult.value = Resource.Error("Введите email и пароль")
+                return
+            }
+
+            email.isBlank() -> {
+                _registerResult.value = Resource.Error("Введите email")
+                return
+            }
+
+            password.isBlank() -> {
+                _registerResult.value = Resource.Error("Введите пароль")
+                return
+            }
+
+            password.length < 6 -> {
+                _registerResult.value = Resource.Error("Пароль должен содержать минимум 6 символов")
+                return
+            }
+
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                _registerResult.value = Resource.Error("Введите корректный email")
+                return
+            }
         }
-        return exceptionForRegister
+
+        _registerResult.value = Resource.Loading() // Показываем состояние загрузки
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _registerResult.value = Resource.Success("Регистрация прошла успешно!")
+                } else {
+                    // Обработка ошибок Firebase
+                    val errorMessage = when (task.exception) {
+                        is FirebaseNetworkException -> "Ошибка подключения к интернету"
+                        is FirebaseAuthUserCollisionException -> "Пользователь с таким email уже существует"
+                        is FirebaseAuthWeakPasswordException -> "Пароль слишком слабый"
+                        is FirebaseAuthInvalidCredentialsException -> "Некорректный формат email"
+                        else -> "Ошибка при регистрации: ${task.exception?.message ?: "Неизвестная ошибка"}"
+                    }
+                    _registerResult.value = Resource.Error(errorMessage)
+                }
+            }
     }
 
-    fun logIn(email: String, password: String): LiveData<String> {
-        //Log.d("Auth1", auth.currentUser!!.uid)
-        //create()
-        //database.getReference("users").child(auth.currentUser!!.uid)
+    fun logIn(email: String, password: String) {
+        // Валидация ввода
+        when {
+            email.isBlank() && password.isBlank() -> {
+                _loginResult.value = Resource.Error("Введите email и пароль")
+                return
+            }
 
-        if (email == "" && password == "") {
-            exceptionForLogIn.value = "Введите логин и пароль"
-        } else if (email == "") {
-            exceptionForLogIn.value = "Введите логин"
-        } else if (password == "") {
-            exceptionForLogIn.value = "Введите пароль"
-        } else {
-            //CoroutineScope(Dispatchers.Main).launch {
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
+            email.isBlank() -> {
+                _loginResult.value = Resource.Error("Введите email")
+                return
+            }
 
-                    if (task.isSuccessful) {
-                        // Вход выполнен успешно, переход на MainActivity
-                        database.getReference("users").child(auth.currentUser!!.uid)
-                        exceptionForLogIn.value = "Добро пожаловать!"
-                    } else {
-                        // Ошибка при входе
-                        exceptionForLogIn.value = "Неверный логин или пароль"
-                    }
-                }
+            password.isBlank() -> {
+                _loginResult.value = Resource.Error("Введите пароль")
+                return
+            }
+
+            password.length < 6 -> {
+                _loginResult.value = Resource.Error("Пароль должен содержать минимум 6 символов")
+                return
+            }
         }
 
-        return exceptionForLogIn
+        _loginResult.value = Resource.Loading() // Показываем состояние загрузки
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Проверяем, верифицирован ли email (если требуется)
+                    val user = auth.currentUser
+                    if (user != null) {
+                        _loginResult.value = Resource.Success("Добро пожаловать!")
+                        // Дополнительные действия после успешного входа
+                    }
+                } else {
+                    // Обработка ошибок Firebase
+                    val errorMessage = when (task.exception) {
+                        is FirebaseNetworkException -> "Ошибка подключения к интернету"
+                        is FirebaseAuthInvalidUserException -> "Пользователь не найден"
+                        is FirebaseAuthInvalidCredentialsException -> "Неверный email или пароль"
+                        else -> "Ошибка при входе: ${task.exception?.message ?: "Неизвестная ошибка"}"
+                    }
+                    _loginResult.value = Resource.Error(errorMessage)
+                }
+            }
     }
 
     fun exit() {
         auth.signOut()
     }
+}
+
+sealed class Resource<T>(
+    val data: T? = null,
+    val message: String? = null
+) {
+    class Success<T>(data: T) : Resource<T>(data)
+    class Error<T>(message: String, data: T? = null) : Resource<T>(data, message)
+    class Loading<T> : Resource<T>()
 }
