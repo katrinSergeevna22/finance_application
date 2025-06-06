@@ -7,5 +7,6 @@
     <item android:title="@string/expense" android:id="@+id/menu_expense"/>
     <item android:title="@string/goals" android:id="@+id/menu_goals"/>
     <item android:title="@string/tips" android:id="@+id/menu_tips"/>
+    <item android:title="@string/statistics" android:id="@+id/menu_statistics"/>
     <item android:title="@string/exit" android:id="@+id/menu_exit"/>
 </menu>

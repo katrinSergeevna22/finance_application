@@ -1,6 +1,5 @@
 package com.example.myfinanceapplication.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Cost
@@ -10,7 +9,6 @@ class EditCostViewModel : ViewModel() {
     private val dataRepository = DataRepository()
     val viewModel = CostViewModel()
     lateinit var selectCost: Cost
-    var balance = 0.0
     lateinit var goalsMutableList: List<Goal>
     var answerException = ""
 
@@ -19,10 +17,9 @@ class EditCostViewModel : ViewModel() {
         sumCost: String,
         category: String,
         comment: String,
-        balanceNow: Double
     ): Boolean {
         if (title.isNotEmpty() && sumCost.isNotEmpty() && category.isNotEmpty()) {
-            balance = balanceNow
+            val balance = viewModel.balanceLiveData.value?.toDouble() ?: 0.0
             if (!checkIsTitle(title)) {
                 answerException = "Некорректный ввод названия!"
                 return false
@@ -50,10 +47,10 @@ class EditCostViewModel : ViewModel() {
                 return false
             } else {
                 val newIncome = mapOf(
-                    "costId" to selectCost!!.costId,
+                    "costId" to selectCost.costId,
                     "titleOfCost" to title,
                     "moneyCost" to sum,
-                    "date" to selectCost!!.date,
+                    "date" to selectCost.date,
                     "category" to category,
                     "comment" to comment,
                     "isExpense" to false,
@@ -67,33 +64,34 @@ class EditCostViewModel : ViewModel() {
         return false
     }
 
-    fun editIncomeToBase(newIncome: Map<String, Any>, selectIncome: Cost) {
+    private fun editIncomeToBase(newIncome: Map<String, Any>, selectIncome: Cost) {
+        val balance = viewModel.getBalance()
+
         val newSum = newIncome.get("moneyCost")
         if (newSum != selectIncome.moneyCost) {
-            var diff =
-                if (newSum.toString().toDouble() > selectIncome.moneyCost.toString().toDouble()) {
-                    val diff =
-                        newSum.toString().toDouble() - selectIncome.moneyCost.toString().toDouble()
-                    dataRepository.updateUserBalance(balance + diff)
-                } else {
-                    val diff =
-                        selectIncome.moneyCost.toString().toDouble() - newSum.toString().toDouble()
-                    dataRepository.updateUserBalance(balance - diff)
-                }
+            if (newSum.toString().toDouble() > selectIncome.moneyCost.toString().toDouble()) {
+                val diff =
+                    newSum.toString().toDouble() - selectIncome.moneyCost.toString().toDouble()
+                dataRepository.updateUserBalance(balance + diff)
+            } else {
+                val diff =
+                    selectIncome.moneyCost.toString().toDouble() - newSum.toString().toDouble()
+                dataRepository.updateUserBalance(balance - diff)
+            }
         }
         selectIncome.titleOfCost = newIncome["titleOfCost"].toString()
-        selectIncome.moneyCost = newIncome["moneyCost"].toString().toLong()
+        selectIncome.moneyCost = newIncome["moneyCost"].toString().toDouble()
         selectIncome.category = newIncome["category"].toString()
         selectIncome.comment = newIncome["comment"].toString()
         //setSelectedCost(selectIncome)
         dataRepository.editIncomeToBase(newIncome, selectIncome)
     }
 
-    fun checkIsNumber(sum: String): Boolean {
-        return sum.matches(Regex("[0-9]+"))
+    private fun checkIsNumber(sum: String): Boolean {
+        return sum.matches(Regex("[0-9.]+"))
     }
 
-    fun checkIsTitle(sum: String): Boolean {
+    private fun checkIsTitle(sum: String): Boolean {
         return sum.matches(Regex("[a-zA-Zа-яА-Я0-9.,\\s]+"))
     }
 
@@ -103,11 +101,10 @@ class EditCostViewModel : ViewModel() {
         category: String,
         comment: String,
         titleOfGoal: String,
-        balanceNow: Double
     ): Boolean {
 
         if (title.isNotEmpty() && sumCost.isNotEmpty() && category.isNotEmpty()) {
-            balance = balanceNow
+            val balance = viewModel.getBalance()
             if (!checkIsTitle(title)) {
                 answerException = "Некорректный ввод названия!"
                 return false
@@ -120,8 +117,7 @@ class EditCostViewModel : ViewModel() {
                 answerException = "Слишком длинное название!"
                 return false
             }
-            val sum = sumCost.toLong()
-            if (sum > 1000000000000L) {
+            if (sumCost.toDouble() > 1000000000000L) {
                 answerException = "Укажите реальную сумму"
                 return false
             }
@@ -130,20 +126,15 @@ class EditCostViewModel : ViewModel() {
                 return false
             }
 
-            if (sum > selectCost.moneyCost && sum - selectCost.moneyCost > balance) {
+            if (sumCost.toDouble() > selectCost.moneyCost && sumCost.toDouble() - selectCost.moneyCost > balance) {
                 answerException = "Недостаочно средст на балансе"
                 return false
                 //Toast.makeText((activity as ExpensesActivity), "Недостаочно средст", Toast.LENGTH_SHORT).show()
             }
             if (selectCost.category == "Цель") {
-                Log.d("goalOld", selectCost.goal)
-                Log.d("goalOldList", goalsMutableList.toString())
                 val goalOld = goalsMutableList.filter { it.titleOfGoal == selectCost.goal }[0]
                 if (category == "Цель") {
-                    Log.d("goalOld", selectCost.goal)
                     val goalNew = goalsMutableList.filter { it.titleOfGoal == titleOfGoal }[0]
-                    Log.d("EditGoalProgress", selectCost.moneyCost.toString())
-                    Log.d("EditGoalProgressTitle", selectCost.goal + " " + titleOfGoal)
 
                     if (goalOld != goalNew) {
                         viewModel.minusProgressGoal(
@@ -152,16 +143,18 @@ class EditCostViewModel : ViewModel() {
                         )
                         viewModel.addProgressGoal(
                             goalNew,
-                            sum
+                            sumCost.toDouble()
                         )
                     } else {
-                        if (selectCost.moneyCost > sum) {
+                        if (selectCost.moneyCost > sumCost.toDouble()) {
                             viewModel.minusProgressGoal(
                                 goalNew,
-                                selectCost.moneyCost - sum
+                                selectCost.moneyCost - sumCost.toDouble()
                             )
-                        } else if (selectCost.moneyCost < sum) {
-                            if (goalNew.moneyGoal < sum + goalNew.progressOfMoneyGoal - selectCost.moneyCost) {
+                        } else if (selectCost.moneyCost < sumCost.toDouble()) {
+                            if (goalNew.moneyGoal < sumCost.toDouble()
+                                + goalNew.progressOfMoneyGoal - selectCost.moneyCost
+                            ) {
                                 answerException = "Сумма больше, чем нужно для достижения цели"
 
                                 //etSum.setText((selectGoal.moneyGoal - selectGoal.progressOfMoneyGoal).toString())
@@ -169,7 +162,7 @@ class EditCostViewModel : ViewModel() {
                             }
                             viewModel.addProgressGoal(
                                 goalNew,
-                                sum - selectCost.moneyCost
+                                sumCost.toDouble() - selectCost.moneyCost
                             )
                         }
                     }
@@ -183,14 +176,14 @@ class EditCostViewModel : ViewModel() {
                 val goalNew = goalsMutableList.filter { it.titleOfGoal == titleOfGoal }[0]
                 viewModel.addProgressGoal(
                     goalNew,
-                    sum
+                    sumCost.toDouble()
                 )
             }
             val newExpense = mapOf(
-                "costId" to selectCost!!.costId,
+                "costId" to selectCost.costId,
                 "titleOfCost" to title,
-                "moneyCost" to sum,
-                "date" to selectCost!!.date,
+                "moneyCost" to sumCost.toDouble(),
+                "date" to selectCost.date,
                 "category" to category,
                 "goal" to titleOfGoal,
                 "comment" to comment,
@@ -200,7 +193,7 @@ class EditCostViewModel : ViewModel() {
             //selectIncome!!.category = category
             //viewModel.setSelectedCost(selectIncome!!)
 
-            editExpenseToBase(newExpense, selectCost!!)
+            editExpenseToBase(newExpense, selectCost)
             return true
 
         } else {
@@ -209,10 +202,10 @@ class EditCostViewModel : ViewModel() {
         }
     }
 
-    fun editExpenseToBase(newExpense: Map<String, Any>, selectExpense: Cost) {
-        val newSum = newExpense.get("moneyCost").toString().toDouble()
+    private fun editExpenseToBase(newExpense: Map<String, Any>, selectExpense: Cost) {
+        val newSum = newExpense["moneyCost"].toString().toDouble()
         val pastSum = selectExpense.moneyCost.toString().toDouble()
-        //val balance = viewModel.getBalanceNow()
+        val balance = viewModel.getBalance()
 
         if (newSum > pastSum) {
             dataRepository.updateUserBalance(balance - (newSum - pastSum))
@@ -220,14 +213,12 @@ class EditCostViewModel : ViewModel() {
             dataRepository.updateUserBalance(balance + (pastSum - newSum))
         }
 
-        selectExpense!!.titleOfCost = newExpense["titleOfCost"].toString()
-        selectExpense!!.moneyCost = newExpense["moneyCost"].toString().toLong()
-        selectExpense!!.category = newExpense["category"].toString()
+        selectExpense.titleOfCost = newExpense["titleOfCost"].toString()
+        selectExpense.moneyCost = newExpense["moneyCost"].toString().toDouble()
+        selectExpense.category = newExpense["category"].toString()
         selectExpense.comment = newExpense["comment"].toString()
         if (selectExpense.category == "Цель") selectExpense.goal = newExpense["goal"].toString()
-        //viewModel.setSelectedCost(selectExpense!!)
+
         dataRepository.editExpenseToBase(newExpense, selectExpense)
-
-
     }
 }

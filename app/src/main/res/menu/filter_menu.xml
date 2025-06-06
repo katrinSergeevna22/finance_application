@@ -5,6 +5,29 @@
         android:id="@+id/item_filter_category"
         android:checkable="true"
         android:textColor="@color/black"
-        android:title="Фильтровать по категории" />
+        android:title="@string/filter_category" />
 
+    <item
+        android:id="@+id/item_filter_ascending_sum"
+        android:checkable="true"
+        android:textColor="@color/black"
+        android:title="@string/filter_ascending_sum" />
+
+    <item
+        android:id="@+id/item_filter_descending_sum"
+        android:checkable="true"
+        android:textColor="@color/black"
+        android:title="@string/filter_descending_sum" />
+
+    <item
+        android:id="@+id/item_filter_descending_date"
+        android:checkable="true"
+        android:textColor="@color/black"
+        android:title="@string/filter_descending_date" />
+
+    <item
+        android:id="@+id/item_search"
+        android:checkable="true"
+        android:textColor="@color/black"
+        android:title="@string/menu_item_search" />
 </menu>

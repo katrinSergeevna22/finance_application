@@ -9,9 +9,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.databinding.ActivityMainBinding
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip
-import com.example.myfinanceapplication.model.utils.NavigationTitle
-import com.example.myfinanceapplication.model.utils.getIntentForNavigation
-import com.example.myfinanceapplication.model.utils.navigationForNavigationView
+import com.example.myfinanceapplication.utils.NavigationTitle
+import com.example.myfinanceapplication.utils.getIntentForNavigation
+import com.example.myfinanceapplication.utils.navigationForNavigationView
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     fun observeViewModel() {
         binding.apply {
             viewModel.getBalance().observe(this@MainActivity) { balance ->
-                tvBalance.text = balance.toString()
+                tvBalance.text = formatBalance(balance)
             }
             viewModel.getOneRandomGoal().observe(this@MainActivity) { goal ->
 
@@ -87,15 +88,15 @@ class MainActivity : AppCompatActivity() {
                     tvDate.text = ""
                 } else {
                     mainGoal = goal
-                    tvMoneyGoal.text = goal.moneyGoal.toString()
+                    tvMoneyGoal.text = formatSum(goal.moneyGoal)
                     tvProgressMoney.text =
-                        goal.progressOfMoneyGoal.toString() + " из " + goal.moneyGoal.toString()
+                        formatSum(goal.progressOfMoneyGoal) + " из " + formatSum(goal.moneyGoal)
                     tvDate.text = goal.date
                     val totalAmountToSave = goal.moneyGoal
                     val currentAmountSaved = goal.progressOfMoneyGoal
 
                     val progress =
-                        (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
+                        (currentAmountSaved / totalAmountToSave * 100).toInt()
                     progressBar.progress = progress
                 }
             }
@@ -105,11 +106,24 @@ class MainActivity : AppCompatActivity() {
                 mainTip = tip
             }
             viewModel.getSumIncome().observe(this@MainActivity) { sumIncome ->
-                tvBalanceIncome.text = "+ " + String.format("%.2f", sumIncome)
+                tvBalanceIncome.text = "+ " + formatBalance(sumIncome)
             }
             viewModel.getSumExpense().observe(this@MainActivity) { sumExpense ->
-                tvBalanceExpense.text = "- " + String.format("%.2f", sumExpense)
+                tvBalanceExpense.text = "- " + formatBalance(sumExpense)
             }
+        }
+    }
+
+    private fun formatBalance(value: Double) = "%.2f".format(Locale.US, value)
+        .replace(",", ".")
+
+    private fun formatSum(value: Double): String {
+        return if (value == value.toInt().toDouble()) {
+            // Если число целое - показываем без десятичной части
+            value.toInt().toString()
+        } else {
+            // Если дробное - показываем 2 знака после запятой
+            "%.2f".format(Locale.US, value).replace(",", ".")
         }
     }
 

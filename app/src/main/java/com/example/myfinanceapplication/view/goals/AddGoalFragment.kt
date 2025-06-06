@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -58,7 +59,7 @@ class AddGoalFragment : Fragment() {
                 val category = spinnerCategory?.selectedItem.toString()
                 val comment = etMultyLineComment.text.toString().trim()
 
-                if (viewModel.checkData(title, sum, category, comment)) {
+                if (viewModel.checkData(title, formattedSum(sum), category, comment)) {
                     (activity as GoalsActivity).closeFragments()
                     //parentFragmentManager.popBackStack()
                 } else {
@@ -78,6 +79,26 @@ class AddGoalFragment : Fragment() {
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
+    private fun formattedSum(sum: String): String{
+        val cleanString = sum
+            .replace(",", ".")
+            .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
 
+        // Обрабатываем ввод
+        val formattedValue = when {
+            cleanString.contains(".") -> {
+                // Если есть точка, ограничиваем до 2 знаков после запятой
+                val parts = cleanString.split(".")
+                when {
+                    parts.size > 2 -> parts[0] + "." + parts[1].take(2) // Если несколько точек
+                    parts[1].length > 2 -> parts[0] + "." + parts[1].take(2) // Если больше 2 знаков
+                    else -> cleanString
+                }
+            }
+            else -> cleanString
+        }
 
+        Log.d("katrin_formatted", formattedValue)
+        return formattedValue
+    }
 }

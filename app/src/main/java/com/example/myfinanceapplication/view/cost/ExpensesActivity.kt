@@ -14,22 +14,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
+import androidx.core.view.forEach
+import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.adapter.CostAdapter
+import com.example.myfinanceapplication.view.cost.adapterCost.CostAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityExpensesBinding
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Tip
-import com.example.myfinanceapplication.model.utils.NavigationTitle
-import com.example.myfinanceapplication.model.utils.getIntentForNavigation
-import com.example.myfinanceapplication.model.utils.navigationForNavigationView
+import com.example.myfinanceapplication.utils.NavigationTitle
+import com.example.myfinanceapplication.utils.getIntentForNavigation
+import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.viewModel.CostViewModel
+import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class ExpensesActivity : AppCompatActivity() {
     lateinit var binding: ActivityExpensesBinding
@@ -38,6 +41,8 @@ class ExpensesActivity : AppCompatActivity() {
 
     private var mainTip = Tip()
     private var mainGoal = Goal()
+
+    lateinit var categoriesList: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,12 +69,13 @@ class ExpensesActivity : AppCompatActivity() {
         val newAddExpenseFragment = AddExpenseFragment()
 
         binding.apply {
-            toolbarGoal.setNavigationOnClickListener {
+            toolbar.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
             }
             adapter = CostAdapter {
                 viewModel.setSelectedCost(it)
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -98,6 +104,7 @@ class ExpensesActivity : AppCompatActivity() {
 
             ibAddExpense.setOnClickListener {
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -129,14 +136,54 @@ class ExpensesActivity : AppCompatActivity() {
                 )
             }
 
-            toolbarGoal.setOnMenuItemClickListener { item ->
+            toolbar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.item_filter_category -> {
                         if (item.isChecked) {
                             visibilityFilter(View.GONE)
                         } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
                             visibilityFilter(View.VISIBLE)
                             fetchSpinnerCategory()
+                        }
+                    }
+
+                    R.id.item_filter_ascending_sum -> {
+                        if (item.isChecked) {
+                            viewModel.resetFilters()
+                        } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
+                            viewModel.sorter(ModeSorter.AscendingIncome)
+                        }
+                        item.isChecked = !item.isChecked
+                    }
+
+                    R.id.item_filter_descending_sum -> {
+                        if (item.isChecked) {
+                            viewModel.resetFilters()
+                        } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
+                            viewModel.sorter(ModeSorter.DescendingIncome)
+                        }
+                        item.isChecked = !item.isChecked
+                    }
+
+                    R.id.item_filter_descending_date -> {
+                        if (item.isChecked) {
+                            viewModel.resetFilters()
+                        } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
+                            viewModel.sorter(ModeSorter.DateIncome)
+                        }
+                        item.isChecked = !item.isChecked
+                    }
+
+                    R.id.item_search -> {
+                        if (item.isChecked) {
+                            visibilitySearch(View.GONE)
+                        } else {
+                            if (isCheckedMenuItem()) unselectedMenuItem()
+                            visibilitySearch(View.VISIBLE)
                         }
                     }
                 }
@@ -145,18 +192,32 @@ class ExpensesActivity : AppCompatActivity() {
 
             ibClose?.setOnClickListener {
                 visibilityFilter(View.GONE)
+                visibilitySearch(View.GONE)
             }
 
             ibSaveCategory?.setOnClickListener {
-                val selectedItem = spinnerCategory?.selectedItem?.toString()
-                if (selectedItem != null) {
-                    viewModel.filterByCategory(selectedItem)
+                if (toolbar.menu[0].isChecked) {
+                    val selectedItem = spinnerCategory?.selectedItem?.toString()
+                    if (selectedItem != null) {
+                        viewModel.filterByCategory(selectedItem)
+                    } else {
+                        Toast.makeText(
+                            this@ExpensesActivity,
+                            getString(R.string.cost_toast_text_empty_filter),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 } else {
-                    Toast.makeText(
-                        this@ExpensesActivity,
-                        "Выберите категорию фильтрации или если хотите закрыть - нажмите крестик",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    val text = etSearch?.text
+                    if (!text.isNullOrEmpty()) {
+                        viewModel.searchExpense(text.toString())
+                    } else {
+                        Toast.makeText(
+                            this@ExpensesActivity,
+                            getString(R.string.cost_toast_text_empty_search),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
 
@@ -172,12 +233,16 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
+    private val minOfNumberNewCategory = 4
     private fun fetchSpinnerCategory() {
         val categoriesList =
             resources.getStringArray(R.array.categoriesExpense).toMutableList()
         categoriesList.addAll(
             viewModel.getExpenseCategory()?.filter { !categoriesList.contains(it) }.let {
-                if ((it?.size ?: 0) > 4) it?.subList(0, 4) else it
+                if ((it?.size ?: 0) > minOfNumberNewCategory) it?.subList(
+                    0,
+                    minOfNumberNewCategory
+                ) else it
             } ?: listOf()
         )
 
@@ -192,30 +257,61 @@ class ExpensesActivity : AppCompatActivity() {
         binding.spinnerCategory?.adapter = adapter
     }
 
-    private fun visibilityFilter(visibility: Int) {
-        viewModel.resetFilters()
+    private fun visibilitySearch(visibility: Int) {
         binding.apply {
-            val oldIsChecked = toolbarGoal.menu.getItem(0).isChecked
-            toolbarGoal.menu.getItem(0).isChecked = !oldIsChecked
+            if (visibility == View.GONE) {
+                viewModel.resetFilters()
+                toolbar.menu[4].isChecked = false
+            } else {
+                toolbar.menu[4].isChecked = true
+            }
+
+            ivFilterCategory?.visibility = visibility
+            tvTitleSearch?.visibility = visibility
+            etSearch?.visibility = visibility
+            ibClose?.visibility = visibility
+            ibSaveCategory?.visibility = visibility
+            tvSave?.visibility = visibility
+        }
+    }
+
+    private fun visibilityFilter(visibility: Int) {
+        binding.apply {
+
+            if (visibility == View.GONE) {
+                viewModel.resetFilters()
+                toolbar.menu[0].isChecked = false
+            } else {
+                toolbar.menu[0].isChecked = true
+            }
             ivFilterCategory?.visibility = visibility
             tvTitleCategory?.visibility = visibility
             spinnerCategory?.visibility = visibility
             ibClose?.visibility = visibility
             ibSaveCategory?.visibility = visibility
             tvSave?.visibility = visibility
-            // toolbarGoal.menu.getItem(0).isChecked = visibility == View.VISIBLE
         }
     }
 
-    lateinit var categoriesList: List<String>
+
+    private fun isCheckedMenuItem(): Boolean {
+        var isChecked = false
+        binding.toolbar.menu.forEach { isChecked = it.isChecked.or(isChecked) }
+        return isChecked
+    }
+
+    private fun unselectedMenuItem() {
+        binding.toolbar.menu.forEach { it.isChecked = false }
+        viewModel.resetFilters()
+        visibilityFilter(View.GONE)
+        visibilitySearch(View.GONE)
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
-        viewModel.balanceLiveData.observe(this, Observer { balance ->
-            binding.tvBalanceExpense.text = balance.toString()
-            Log.d("ShowBalance3", viewModel.getBalanceNow().toString())
-            Log.d("ShowBalance4", balance.toString())
-        })
+        viewModel.balanceLiveData.observe(this) { balance ->
+            binding.tvBalanceExpense.text = formatBalance(balance)
+        }
         viewModel.getExpenseLiveData().observe(this) { expenseList ->
             categoriesList = expenseList.mapNotNull { it.category }
             adapter.submitList(expenseList)
@@ -244,6 +340,18 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
+    // Функция для форматированного отображения числа
+    private fun formatBalance(value: Double): String {
+        val balance = if (value == value.toInt().toDouble()) {
+            // Если число целое - показываем без десятичной части
+            value.toInt().toString()
+        } else {
+            // Если дробное - показываем 2 знака после запятой
+            "%.2f".format(Locale.US, value).replace(",", ".")
+        }
+        return balance
+    }
+
     fun closeFragments() {
         supportFragmentManager.popBackStack()
         supportFragmentManager.popBackStack()
@@ -257,7 +365,8 @@ class ExpensesActivity : AppCompatActivity() {
                 v.getGlobalVisibleRect(outRect)
                 if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
                     v.clearFocus()
-                    val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(v.windowToken, 0)
                 }
             }

@@ -3,6 +3,8 @@ package com.example.myfinanceapplication.viewModel
 import androidx.lifecycle.ViewModel
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -30,7 +32,7 @@ class AddGoalViewModel : ViewModel() {
                 textOfToast = "Слишком длинное название!"
                 return false
             }
-            val moneyGoal = sum.toLong()
+            val moneyGoal = getInputValue(sum)
             if (moneyGoal > 1000000000000L){
                 textOfToast = "Укажите реальную сумму"
                 return false
@@ -44,7 +46,7 @@ class AddGoalViewModel : ViewModel() {
                 return false
             }
             val date: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-            val goal = Goal("", title, moneyGoal, 0, date, category, comment, "Active")
+            val goal = Goal("", title, moneyGoal, 0.00, date, category, comment, "Active")
 
             saveGoalToBase(goal)
             return true
@@ -59,9 +61,17 @@ class AddGoalViewModel : ViewModel() {
         return viewModel.getGoalsLiveData().value?.map { it.titleOfGoal!! } ?: listOf()
     }
     fun checkIsNumber(sum : String) : Boolean{
-        return sum.matches(Regex("[0-9]+"))
+        return sum.matches(Regex("[0-9.]+"))
     }
     fun checkIsTitle(sum : String) : Boolean{
         return sum.matches(Regex("[a-zA-Zа-яА-Я0-9.,\\s]+"))
+    }
+
+    private fun getInputValue(text: String): Double = try {
+        val value = text.replace(",", ".").toDouble()
+        // Округляем до 2 знаков после запятой
+        BigDecimal(value).setScale(2, RoundingMode.HALF_UP).toDouble()
+    } catch (e: NumberFormatException) {
+        0.00
     }
 }

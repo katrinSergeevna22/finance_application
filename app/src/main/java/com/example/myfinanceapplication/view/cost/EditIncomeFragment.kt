@@ -11,7 +11,6 @@ import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentEditIncomeBinding
 import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view.CategoriesFragmentForIncome
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.EditCostViewModel
 
@@ -19,12 +18,12 @@ class EditIncomeFragment : Fragment() {
     lateinit var binding: FragmentEditIncomeBinding
     private lateinit var viewModel: CostViewModel
     private lateinit var editViewModel: EditCostViewModel
-    lateinit var selectIncome: Cost
+    private lateinit var selectIncome: Cost
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEditIncomeBinding.inflate(inflater)
         viewModel = ViewModelProvider(requireActivity()).get(CostViewModel::class.java)
         editViewModel = ViewModelProvider(requireActivity()).get(EditCostViewModel::class.java)
@@ -49,7 +48,7 @@ class EditIncomeFragment : Fragment() {
             }
 
             tvBtnCategory?.text = "Выберите категорию"
-            ibtnCategory?.setOnClickListener {
+            ibtnCategory.setOnClickListener {
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, BackgroundFragment())
                     .addToBackStack(null)
@@ -67,7 +66,7 @@ class EditIncomeFragment : Fragment() {
         }
     }
 
-    var selectingCategory: String? = null
+    var selectingCategory = ""
     private fun observeSelectCost() {
         viewModel.selectedCost.observe(viewLifecycleOwner) { cost ->
             binding.apply {
@@ -76,7 +75,7 @@ class EditIncomeFragment : Fragment() {
                 etMultyLineComment.setText(cost.comment)
                 selectIncome = cost
                 editViewModel.selectCost = cost
-                selectingCategory = cost.category
+                selectingCategory = cost.category ?: ""
                 tvBtnCategory?.text = if (selectingCategory != "")
                     "Выбрана: $selectingCategory"
                 else
@@ -94,10 +93,9 @@ class EditIncomeFragment : Fragment() {
 
             val resultChecking = editViewModel.checkIncomeData(
                 title,
-                sum,
-                category,
+                formattedSum(sum),
+                selectingCategory,
                 comment,
-                viewModel.getBalanceNow()
             )
             if (resultChecking) {
 
@@ -116,9 +114,31 @@ class EditIncomeFragment : Fragment() {
         }
     }
 
-    var category = ""
+    private fun formattedSum(sum: String): String {
+        val cleanString = sum
+            .replace(",", ".")
+            .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
+
+        // Обрабатываем ввод
+        val formattedValue = when {
+            cleanString.contains(".") -> {
+                // Если есть точка, ограничиваем до 2 знаков после запятой
+                val parts = cleanString.split(".")
+                when {
+                    parts.size > 2 -> parts[0] + "." + parts[1].take(2) // Если несколько точек
+                    parts[1].length > 2 -> parts[0] + "." + parts[1].take(2) // Если больше 2 знаков
+                    else -> cleanString
+                }
+            }
+
+            else -> cleanString
+        }
+
+        return formattedValue
+    }
+
     fun receiveData(data: String) {
-        category = data
+        selectingCategory = data
         binding.apply {
             tvBtnCategory?.text = if (data != "")
                 "Выбрана: $data"

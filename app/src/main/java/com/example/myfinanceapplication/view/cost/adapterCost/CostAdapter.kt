@@ -1,4 +1,4 @@
-package com.example.myapplication.adapter
+package com.example.myfinanceapplication.view.cost.adapterCost
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

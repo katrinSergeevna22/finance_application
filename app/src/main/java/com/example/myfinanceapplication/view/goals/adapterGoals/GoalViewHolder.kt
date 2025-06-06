@@ -1,9 +1,11 @@
 package com.example.myapplication.adapter
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.databinding.GoalItemBinding
+import java.util.Locale
 
 class GoalViewHolder(
     private val binding: GoalItemBinding,
@@ -14,6 +16,7 @@ class GoalViewHolder(
     private val goal: Goal
         get() = _film!!
 
+    @SuppressLint("SetTextI18n")
     fun onBind(data: Goal) {
         _film = data
         with(binding) {
@@ -31,32 +34,30 @@ class GoalViewHolder(
 
 
             tvTitle.text = goal.titleOfGoal
-            tvMoneyGoal.text = goal.moneyGoal.toString()
-            tvProgressMoney.text = goal.progressOfMoneyGoal.toString() + " из " + goal.moneyGoal.toString()
+            tvMoneyGoal.text = formatSum(goal.moneyGoal)
+            tvProgressMoney.text =
+                formatSum(goal.progressOfMoneyGoal) + " из " + formatSum(goal.moneyGoal)
             tvDate.text = goal.date
-            val totalAmountToSave =  goal.moneyGoal// Общая сумма для накопления
-            val currentAmountSaved = goal.progressOfMoneyGoal // Текущая сумма, которая уже накоплена
+            val totalAmountToSave = goal.moneyGoal// Общая сумма для накопления
+            val currentAmountSaved =
+                goal.progressOfMoneyGoal // Текущая сумма, которая уже накоплена
 
-            val progress = (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
+            val progress =
+                (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
             progressBar.progress = progress
             //progressBar.max = goal.moneyGoal.toString().toInt()
             //progressBar.progress = goal.progressOfMoneyGoal.toString().toInt()
 
-            /*Picasso.with(root.context)
-                .load(goal.posterUrl)
-                .into(ivPoster)*/
         }
     }
 
-    fun parse(input: String): String {
-        val pattern = Regex("genre=([a-zA-Zа-яА-Я]+)")
-        val matches = pattern.findAll(input)
-
-        val genresList = mutableListOf<String>()
-
-        for (match in matches) {
-            genresList.add(match.groupValues[1])
+    private fun formatSum(value: Double): String {
+        return if (value == value.toInt().toDouble()) {
+            // Если число целое - показываем без десятичной части
+            value.toInt().toString()
+        } else {
+            // Если дробное - показываем 2 знака после запятой
+            "%.2f".format(Locale.US, value).replace(",", ".")
         }
-        return genresList[0]
     }
 }

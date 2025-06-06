@@ -1,6 +1,7 @@
 package com.example.myfinanceapplication.view.cost
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentAddIncomeBinding
 import com.example.myfinanceapplication.view.BackgroundFragment
-import com.example.myfinanceapplication.view.CategoriesFragmentForIncome
 import com.example.myfinanceapplication.viewModel.AddCostViewModel
 import com.example.myfinanceapplication.viewModel.CostViewModel
 
@@ -48,10 +48,9 @@ class AddIncomeFragment : Fragment() {
                 val comment = etMultyLineComment.text.toString()
                 if (addCostViewModel.checkDataIncome(
                         title,
-                        sum,
+                        formattedSum(sum),
                         category,
-                        comment,
-                        viewModel.getBalanceNow()
+                        comment
                     )
                 ) {
                     (activity as IncomeActivity).closeFragments()
@@ -85,6 +84,29 @@ class AddIncomeFragment : Fragment() {
                     .commit()
             }
         }
+    }
+
+    private fun formattedSum(sum: String): String{
+        val cleanString = sum
+            .replace(",", ".")
+            .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
+
+        // Обрабатываем ввод
+        val formattedValue = when {
+            cleanString.contains(".") -> {
+                // Если есть точка, ограничиваем до 2 знаков после запятой
+                val parts = cleanString.split(".")
+                when {
+                    parts.size > 2 -> parts[0] + "." + parts[1].take(2) // Если несколько точек
+                    parts[1].length > 2 -> parts[0] + "." + parts[1].take(2) // Если больше 2 знаков
+                    else -> cleanString
+                }
+            }
+            else -> cleanString
+        }
+
+        Log.d("katrin_formatted", formattedValue)
+        return formattedValue
     }
 
     fun receiveData(data: String) {

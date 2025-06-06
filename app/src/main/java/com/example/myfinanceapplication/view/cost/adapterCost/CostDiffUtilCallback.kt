@@ -1,4 +1,4 @@
-package com.example.myapplication.adapter
+package com.example.myfinanceapplication.view.cost.adapterCost
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.myfinanceapplication.model.Cost

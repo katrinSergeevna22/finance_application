@@ -48,7 +48,7 @@
             <TextView
                 android:id="@+id/tv_sum"
                 android:layout_width="wrap_content"
-                android:layout_height="28dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
@@ -71,6 +71,7 @@
                 android:ems="10"
                 android:hint="Сумма,которую нужно накопить"
                 android:inputType="numberDecimal"
+                android:digits="0123456789.,"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.059"
                 app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:fontFamily="@font/open_sans_bold"
                 android:text="@string/category"
@@ -91,7 +92,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etSum" />
-
 
             <Spinner
                 android:id="@+id/spinnerCategory"
@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:fontFamily="@font/open_sans_bold"
                 android:text="@string/comment"
@@ -120,7 +120,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ibtnCategory" />
+                app:layout_constraintTop_toBottomOf="@+id/spinnerCategory" />
 
               <EditText
                   android:id="@+id/etMultyLineComment"
@@ -148,9 +148,9 @@
                 android:foregroundGravity="center"
                 android:src="@drawable/shape_rectangle_violet"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/ibtnCategory"
+                app:layout_constraintEnd_toEndOf="@+id/spinnerCategory"
                 app:layout_constraintHorizontal_bias="0.496"
-                app:layout_constraintStart_toStartOf="@+id/ibtnCategory"
+                app:layout_constraintStart_toStartOf="@+id/spinnerCategory"
                 app:layout_constraintTop_toBottomOf="@+id/etMultyLineComment"
                 app:layout_constraintVertical_bias="1.0" />
 

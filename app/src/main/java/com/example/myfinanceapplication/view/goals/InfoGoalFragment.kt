@@ -19,11 +19,12 @@ class InfoGoalFragment : Fragment() {
     private lateinit var viewModel: GoalViewModel
     private lateinit var editViewModel: EditGoalViewModel
     private val backgroundFragment = BackgroundFragment.newInstance()
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentInfoGoalBinding.inflate(inflater)
 
         viewModel = ViewModelProvider(requireActivity()).get(GoalViewModel::class.java)
@@ -33,21 +34,25 @@ class InfoGoalFragment : Fragment() {
                 tvTitleInfo.text = goal.titleOfGoal
                 tvMoneyGoalInfo.text = goal.moneyGoal.toString()
                 tvDateInfo.text = goal.date
-                tvProgressMoneyInfo.text = goal.progressOfMoneyGoal.toString() + " из " + goal.moneyGoal.toString()
+                tvProgressMoneyInfo.text =
+                    goal.progressOfMoneyGoal.toString() + " из " + goal.moneyGoal.toString()
                 tvGoalCategory.text = goal.category
                 tvGoalComment.text = goal.comment
 
-                val totalAmountToSave =  goal.moneyGoal// Общая сумма для накопления
-                val currentAmountSaved = goal.progressOfMoneyGoal // Текущая сумма, которая уже накоплена
-                val progress = (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
+                val totalAmountToSave = goal.moneyGoal// Общая сумма для накопления
+                val currentAmountSaved =
+                    goal.progressOfMoneyGoal // Текущая сумма, которая уже накоплена
+                val progress =
+                    (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
                 progressBarInfo.progress = progress
             }
         }
 
         binding.apply {
-            when (viewModel.getSelectedCategory().value){
+            when (viewModel.getSelectedCategory().value) {
                 "Active" -> {
                 }
+
                 "Deleted" -> {
                     ibAddMoney.visibility = View.GONE
                     tvAddMoney.visibility = View.GONE
@@ -55,6 +60,7 @@ class InfoGoalFragment : Fragment() {
                     tvDelete.text = "Восстановить"
                     tvEdit.text = "Удалить"
                 }
+
                 "Achieved" -> {
                     ibAddMoney.visibility = View.GONE
                     tvAddMoney.visibility = View.GONE
@@ -66,20 +72,18 @@ class InfoGoalFragment : Fragment() {
             }
 
             ibEdit.setOnClickListener {
-                if (viewModel.getSelectedCategory().value == "Deleted"){
-                    if (viewModel.selectedGoal.value!!.progressOfMoneyGoal != 0L){
+                if (viewModel.getSelectedCategory().value == "Deleted") {
+                    if ((viewModel.selectedGoal.value?.progressOfMoneyGoal ?: 0.0) != 0.0) {
                         Toast.makeText(
                             (activity as GoalsActivity),
                             "Нельзя удалить цель, по которой у тебя есть прогресс! Продолжайте двигаться к своей цели!",
                             Toast.LENGTH_LONG,
                         ).show()
-                    }
-                    else {
+                    } else {
                         viewModel.deleteGoal()
                         (activity as GoalsActivity).closeFragments()
                     }
-                }
-                else {
+                } else {
                     requireFragmentManager().beginTransaction()
                         .replace(R.id.backgroundFragment, backgroundFragment)
                         .addToBackStack(null)
@@ -94,14 +98,13 @@ class InfoGoalFragment : Fragment() {
             ibDelete.setOnClickListener {
                 val selectGoal = viewModel.selectedGoal.value
                 var newStatus = ""
-                if (viewModel.getSelectedCategory().value == "Deleted"){
-                    if (selectGoal?.moneyGoal == selectGoal?.progressOfMoneyGoal){
+                if (viewModel.getSelectedCategory().value == "Deleted") {
+                    if (selectGoal?.moneyGoal == selectGoal?.progressOfMoneyGoal) {
                         newStatus = "Achieved"
-                    }else {
+                    } else {
                         newStatus = "Active"
                     }
-                }
-                else{
+                } else {
                     newStatus = "Deleted"
                 }
                 val newGoalData = mapOf(
@@ -128,9 +131,11 @@ class InfoGoalFragment : Fragment() {
         return binding.root
 
     }
-    fun closeInfoFragment(){
+
+    fun closeInfoFragment() {
         this.parentFragmentManager.popBackStack()
     }
+
     companion object {
         @JvmStatic
         fun newInstance() = InfoGoalFragment()

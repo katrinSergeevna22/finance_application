@@ -1,10 +1,11 @@
-package com.example.myfinanceapplication.model.utils
+package com.example.myfinanceapplication.utils
 
 import android.content.Context
 import android.content.Intent
 import com.example.myfinanceapplication.MainActivity
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.view.AuthActivity
+import com.example.myfinanceapplication.view.StatisticsActivity
 import com.example.myfinanceapplication.view.cost.ExpensesActivity
 import com.example.myfinanceapplication.view.cost.IncomeActivity
 import com.example.myfinanceapplication.view.goals.GoalsActivity
@@ -12,7 +13,7 @@ import com.example.myfinanceapplication.view.tips.TipsActivity
 import com.example.myfinanceapplication.viewModel.AuthViewModel
 
 enum class NavigationTitle {
-    GOALS, TIPS, INCOME, EXPENSE, TIPS_WITH_SELECT, GOALS_WITH_SELECT, MAIN, AUTH,
+    GOALS, TIPS, INCOME, EXPENSE, TIPS_WITH_SELECT, GOALS_WITH_SELECT, MAIN, AUTH, STATISTICS
 }
 
 const val SELECTED_ITEM = "selectedItem"
@@ -60,6 +61,8 @@ fun getIntentForNavigation(
         }
 
         NavigationTitle.MAIN -> intent = Intent(context, MainActivity::class.java)
+
+        NavigationTitle.STATISTICS -> intent = Intent(context, StatisticsActivity::class.java)
     }
     return intent
 }
@@ -84,6 +87,10 @@ fun navigationForNavigationView(context: Context, itemId: Int): Intent {
 
         R.id.menu_goals -> {
             getIntentForNavigation(context, NavigationTitle.GOALS)
+        }
+
+        R.id.menu_statistics -> {
+            getIntentForNavigation(context, NavigationTitle.STATISTICS)
         }
 
         R.id.menu_exit -> {
