@@ -88,15 +88,15 @@ class MainActivity : AppCompatActivity() {
                     tvDate.text = ""
                 } else {
                     mainGoal = goal
-                    tvMoneyGoal.text = goal.moneyGoal.toString()
+                    tvMoneyGoal.text = formatSum(goal.moneyGoal)
                     tvProgressMoney.text =
-                        goal.progressOfMoneyGoal.toString() + " из " + goal.moneyGoal.toString()
+                        formatSum(goal.progressOfMoneyGoal) + " из " + formatSum(goal.moneyGoal)
                     tvDate.text = goal.date
                     val totalAmountToSave = goal.moneyGoal
                     val currentAmountSaved = goal.progressOfMoneyGoal
 
                     val progress =
-                        (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
+                        (currentAmountSaved / totalAmountToSave * 100).toInt()
                     progressBar.progress = progress
                 }
             }
@@ -116,6 +116,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun formatBalance(value: Double) = "%.2f".format(Locale.US, value)
         .replace(",", ".")
+
+    private fun formatSum(value: Double): String {
+        return if (value == value.toInt().toDouble()) {
+            // Если число целое - показываем без десятичной части
+            value.toInt().toString()
+        } else {
+            // Если дробное - показываем 2 знака после запятой
+            "%.2f".format(Locale.US, value).replace(",", ".")
+        }
+    }
 
     private fun navigateTo(nameActivity: NavigationTitle, titleOfGoalsOrTips: String = "") {
         startActivity(

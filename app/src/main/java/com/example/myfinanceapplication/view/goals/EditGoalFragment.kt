@@ -42,7 +42,8 @@ class EditGoalFragment : Fragment() {
         @JvmStatic
         fun newInstance() = EditGoalFragment()
     }
-    private fun setupUI(){
+
+    private fun setupUI() {
         binding.apply {
             ibSave.setOnClickListener {
                 val title = etTitle.text.toString().trim()
@@ -50,7 +51,13 @@ class EditGoalFragment : Fragment() {
                 val category = spinnerCategory?.selectedItem.toString()
                 val comment = etMultyLineComment.text.toString()
 
-                if (editGoalViewModel.checkData(title, sum, category, comment)) {
+                if (editGoalViewModel.checkData(
+                        title,
+                        formattedSum(sum),
+                        category,
+                        comment
+                    )
+                ) {
                     goalViewModel.setSelectedGoal(editGoalViewModel.selectGoal)
                     (activity as GoalsActivity).closeFragments()
                     //parentFragmentManager.popBackStack()
@@ -63,14 +70,15 @@ class EditGoalFragment : Fragment() {
                 }
                 hideKeyboardFrom((activity as GoalsActivity), requireView())
             }
-            ibClose.setOnClickListener{
+            ibClose.setOnClickListener {
                 hideKeyboardFrom((activity as GoalsActivity), requireView())
                 (activity as GoalsActivity).closeFragments()
                 //parentFragmentManager.popBackStack()
             }
         }
     }
-    fun observeSelectGoal(){
+
+    private fun observeSelectGoal() {
         goalViewModel.selectedGoal.observe(viewLifecycleOwner) { goal ->
             binding.apply {
                 etTitle.setText(goal.titleOfGoal)
@@ -88,19 +96,20 @@ class EditGoalFragment : Fragment() {
             }
         }
     }
+
     fun editGoal() {
         binding.apply {
             val title = etTitle.text.toString()
-            val sum: Long = etSum.text.toString().toLong()
+            val sum = formattedSum(etSum.text.toString()).toDouble()
             val category = spinnerCategory?.selectedItem.toString()
             val comment = etMultyLineComment.text.toString()
             val date: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
             //val date = editTextDate.text.toString()
 
-            if (title.isNotEmpty() && sum != 0L && category.isNotEmpty()/* && date.isNotEmpty() */) {
+            if (title.isNotEmpty() && sum != 0.0 && category.isNotEmpty()/* && date.isNotEmpty() */) {
                 val newGoalData = mapOf(
                     "goalId" to selectGoal.goalId,
-                    "titleOfGoal" to  title,
+                    "titleOfGoal" to title,
                     "moneyGoal" to sum,
                     "progressOfMoneyGoal" to selectGoal.progressOfMoneyGoal,
                     "date" to selectGoal.date,
@@ -124,7 +133,31 @@ class EditGoalFragment : Fragment() {
             }
         }
     }
-    fun hideKeyboardFrom(context: Context, view: View){
+
+    private fun formattedSum(sum: String): String {
+        val cleanString = sum
+            .replace(",", ".")
+            .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
+
+        // Обрабатываем ввод
+        val formattedValue = when {
+            cleanString.contains(".") -> {
+                // Если есть точка, ограничиваем до 2 знаков после запятой
+                val parts = cleanString.split(".")
+                when {
+                    parts.size > 2 -> parts[0] + "." + parts[1].take(2) // Если несколько точек
+                    parts[1].length > 2 -> parts[0] + "." + parts[1].take(2) // Если больше 2 знаков
+                    else -> cleanString
+                }
+            }
+
+            else -> cleanString
+        }
+
+        return formattedValue
+    }
+
+    fun hideKeyboardFrom(context: Context, view: View) {
         val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view?.windowToken, 0)
     }

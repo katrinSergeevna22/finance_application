@@ -165,7 +165,7 @@ class DataRepository {
                     }
                     val goalActiveList = items.filter { it.status == "Active" }
                     if (goalActiveList.isEmpty()) {
-                        oneGoalLiveData.value = Goal("0", "Добавьте цель", 0L, 0L, "", "", "")
+                        oneGoalLiveData.value = Goal("0", "Добавьте цель", 0.0, 0.0, "", "", "")
                     } else {
                         oneGoalLiveData.value = goalActiveList.random()
                     }

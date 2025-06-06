@@ -3,6 +3,8 @@ package com.example.myfinanceapplication.viewModel
 import androidx.lifecycle.ViewModel
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.DataRepository
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class EditGoalViewModel : ViewModel() {
     private val dataRepository = DataRepository()
@@ -26,7 +28,7 @@ class EditGoalViewModel : ViewModel() {
                 exception = "Слишком длинное название!"
                 return false
             }
-            val sum = sumCost.toLong()
+            val sum = getInputValue(sumCost)
             if (sum > 1000000000000L){
                 exception = "Укажите реальную сумму"
                 return false
@@ -77,10 +79,18 @@ class EditGoalViewModel : ViewModel() {
     fun getGoalsList() : List<String>{
         return viewModel.getGoalsLiveData().value?.map { it.titleOfGoal!! } ?: listOf()
     }
-    fun checkIsNumber(sum : String) : Boolean{
-        return sum.matches(Regex("[0-9]+"))
+    private fun checkIsNumber(sum : String) : Boolean{
+        return sum.matches(Regex("[0-9.]+"))
     }
     fun checkIsTitle(sum : String) : Boolean{
         return sum.matches(Regex("[a-zA-Zа-яА-Я0-9.,\\s]+"))
+    }
+    // Функция для получения значения как Double
+    private fun getInputValue(text: String): Double = try {
+        val value = text.replace(",", ".").toDouble()
+        // Округляем до 2 знаков после запятой
+        BigDecimal(value).setScale(2, RoundingMode.HALF_UP).toDouble()
+    } catch (e: NumberFormatException) {
+        0.00
     }
 }

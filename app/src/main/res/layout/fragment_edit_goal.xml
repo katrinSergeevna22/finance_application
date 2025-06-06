@@ -72,6 +72,7 @@
                 android:ems="10"
                 android:hint="Сумма,которую нужно накопить"
                 android:inputType="numberDecimal"
+                android:digits="0123456789.,"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.059"
                 app:layout_constraintStart_toStartOf="parent"

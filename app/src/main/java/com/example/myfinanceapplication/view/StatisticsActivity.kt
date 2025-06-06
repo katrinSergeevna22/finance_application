@@ -176,7 +176,7 @@ class StatisticsActivity : AppCompatActivity() {
                 if (goalsList.isNotEmpty()) {
                     val goalsListOfPair =
                         goalsList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyGoal }) ?: mapOf()
+                            ?.associateBy({ it.category ?: "" }, { it.moneyGoal.toLong() }) ?: mapOf()
                     Log.d("katrin_stat_map", goalsListOfPair.toString())
                     updateChart(goalsListOfPair, pieChart = binding.pieChartGoals)
 

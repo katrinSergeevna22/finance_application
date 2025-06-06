@@ -232,7 +232,7 @@ class CostViewModel : ViewModel() {
     fun addProgressGoal(goal: Goal, sum: Double) {
         val newSumProgress = goal.progressOfMoneyGoal + sum
         var status = goal.status
-        if (newSumProgress.toLong() == goal.moneyGoal) status = "Achieved"
+        if (newSumProgress == goal.moneyGoal) status = "Achieved"
         val newGoalData = mapOf(
             "goalId" to goal.goalId,
             "titleOfGoal" to goal.titleOfGoal.toString(),

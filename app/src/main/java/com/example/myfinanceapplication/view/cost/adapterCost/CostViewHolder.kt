@@ -48,7 +48,6 @@ class CostViewHolder(
             // Если дробное - показываем 2 знака после запятой
             "%.2f".format(Locale.US, value).replace(",", ".")
         }
-        Log.d("katrin_format_balance", h)
         return h
     }
 }
