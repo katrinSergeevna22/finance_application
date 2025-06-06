@@ -6,7 +6,6 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -143,7 +142,7 @@ class StatisticsActivity : AppCompatActivity() {
                 if (incomesList.isNotEmpty()) {
                     val incomesListOfPair =
                         incomesList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyCost }) ?: mapOf()
+                            ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() }) ?: mapOf()
                     Log.d("katrin_stat_map", incomesListOfPair.toString())
                     updateChart(incomesListOfPair, pieChart = binding.pieChartIncome)
                 }
@@ -160,7 +159,7 @@ class StatisticsActivity : AppCompatActivity() {
                 if (expensesList.isNotEmpty()) {
                     val expensesListOfPair =
                         expensesList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyCost }) ?: mapOf()
+                            ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() }) ?: mapOf()
                     Log.d("katrin_stat_map", expensesListOfPair.toString())
                     updateChart(expensesListOfPair, pieChart = binding.pieChartExpense)
                 }

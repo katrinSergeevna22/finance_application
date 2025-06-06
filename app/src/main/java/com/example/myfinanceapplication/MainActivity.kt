@@ -12,6 +12,7 @@ import com.example.myfinanceapplication.model.Tip
 import com.example.myfinanceapplication.utils.NavigationTitle
 import com.example.myfinanceapplication.utils.getIntentForNavigation
 import com.example.myfinanceapplication.utils.navigationForNavigationView
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     fun observeViewModel() {
         binding.apply {
             viewModel.getBalance().observe(this@MainActivity) { balance ->
-                tvBalance.text = balance.toString()
+                tvBalance.text = formatBalance(balance)
             }
             viewModel.getOneRandomGoal().observe(this@MainActivity) { goal ->
 
@@ -105,13 +106,16 @@ class MainActivity : AppCompatActivity() {
                 mainTip = tip
             }
             viewModel.getSumIncome().observe(this@MainActivity) { sumIncome ->
-                tvBalanceIncome.text = "+ " + String.format("%.2f", sumIncome)
+                tvBalanceIncome.text = "+ " + formatBalance(sumIncome)
             }
             viewModel.getSumExpense().observe(this@MainActivity) { sumExpense ->
-                tvBalanceExpense.text = "- " + String.format("%.2f", sumExpense)
+                tvBalanceExpense.text = "- " + formatBalance(sumExpense)
             }
         }
     }
+
+    private fun formatBalance(value: Double) = "%.2f".format(Locale.US, value)
+        .replace(",", ".")
 
     private fun navigateTo(nameActivity: NavigationTitle, titleOfGoalsOrTips: String = "") {
         startActivity(

@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.adapter.CostAdapter
+import com.example.myfinanceapplication.view.cost.adapterCost.CostAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityExpensesBinding
 import com.example.myfinanceapplication.model.Goal
@@ -32,6 +32,7 @@ import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class ExpensesActivity : AppCompatActivity() {
     lateinit var binding: ActivityExpensesBinding
@@ -309,7 +310,7 @@ class ExpensesActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
         viewModel.balanceLiveData.observe(this) { balance ->
-            binding.tvBalanceExpense.text = balance.toString()
+            binding.tvBalanceExpense.text = formatBalance(balance)
         }
         viewModel.getExpenseLiveData().observe(this) { expenseList ->
             categoriesList = expenseList.mapNotNull { it.category }
@@ -337,6 +338,18 @@ class ExpensesActivity : AppCompatActivity() {
             mainTip = tip
             binding.tvTitleTip.text = tip.title
         }
+    }
+
+    // Функция для форматированного отображения числа
+    private fun formatBalance(value: Double): String {
+        val balance = if (value == value.toInt().toDouble()) {
+            // Если число целое - показываем без десятичной части
+            value.toInt().toString()
+        } else {
+            // Если дробное - показываем 2 знака после запятой
+            "%.2f".format(Locale.US, value).replace(",", ".")
+        }
+        return balance
     }
 
     fun closeFragments() {

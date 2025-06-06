@@ -64,7 +64,7 @@ class CostViewModel : ViewModel() {
 
         updateBalance(newBalance)
         selectIncome.titleOfCost = newIncome["titleOfCost"].toString()
-        selectIncome.moneyCost = newIncome["moneyCost"].toString().toLong()
+        selectIncome.moneyCost = newIncome["moneyCost"].toString().toDouble()
         selectIncome.category = newIncome["category"].toString()
         selectIncome.comment = newIncome["comment"].toString()
         setSelectedCost(selectIncome)
@@ -207,7 +207,7 @@ class CostViewModel : ViewModel() {
             dataRepository.updateUserBalance(getBalance() + diff)
         }
         selectIncome.titleOfCost = newIncome["titleOfCost"].toString()
-        selectIncome.moneyCost = newIncome["moneyCost"].toString().toLong()
+        selectIncome.moneyCost = newIncome["moneyCost"].toString().toDouble()
         selectIncome.category = newIncome["category"].toString()
         selectIncome.comment = newIncome["comment"].toString()
         setSelectedCost(selectIncome)
@@ -229,10 +229,10 @@ class CostViewModel : ViewModel() {
         dataRepository.updateUserBalance(getBalance() - newCost.moneyCost.toDouble())
     }
 
-    fun addProgressGoal(goal: Goal, sum: Long) {
+    fun addProgressGoal(goal: Goal, sum: Double) {
         val newSumProgress = goal.progressOfMoneyGoal + sum
         var status = goal.status
-        if (newSumProgress == goal.moneyGoal) status = "Achieved"
+        if (newSumProgress.toLong() == goal.moneyGoal) status = "Achieved"
         val newGoalData = mapOf(
             "goalId" to goal.goalId,
             "titleOfGoal" to goal.titleOfGoal.toString(),
@@ -246,7 +246,7 @@ class CostViewModel : ViewModel() {
         dataRepository.editGoalToBase(newGoalData, goal)
     }
 
-    fun minusProgressGoal(goal: Goal, sum: Long) {
+    fun minusProgressGoal(goal: Goal, sum: Double) {
         val newSumProgress = goal.progressOfMoneyGoal - sum
         var status = goal.status
         //if (newSumProgress == goal.moneyGoal) status = "Achived"

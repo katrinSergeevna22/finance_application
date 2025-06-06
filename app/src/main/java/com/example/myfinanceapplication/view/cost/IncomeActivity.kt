@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.adapter.CostAdapter
+import com.example.myfinanceapplication.view.cost.adapterCost.CostAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityIncomeBinding
 import com.example.myfinanceapplication.model.Goal
@@ -32,6 +32,7 @@ import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 class IncomeActivity : AppCompatActivity() {
@@ -326,7 +327,7 @@ class IncomeActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.apply {
             balanceLiveData.observe(this@IncomeActivity, Observer { balance ->
-                binding.tvBalanceIncome.text = balance.toString()
+                binding.tvBalanceIncome.text = formatBalance(balance)
             })
             getIncomeLiveData().observe(this@IncomeActivity) { incomeList ->
                 categoriesList = incomeList.mapNotNull { it.category }
@@ -355,6 +356,17 @@ class IncomeActivity : AppCompatActivity() {
                 binding.tvTitleTip.text = tip.title
             }
         }
+    }
+
+    private fun formatBalance(value: Double): String {
+        val balance = if (value == value.toInt().toDouble()) {
+            // Если число целое - показываем без десятичной части
+            value.toInt().toString()
+        } else {
+            // Если дробное - показываем 2 знака после запятой
+            "%.2f".format(Locale.US, value).replace(",", ".")
+        }
+        return balance
     }
 
     fun closeFragments() {

@@ -141,7 +141,7 @@ class AddExpenseFragment : Fragment() {
 
             if (addViewModel.checkDataExpense(
                     title,
-                    sum,
+                    formattedSum(sum),
                     category,
                     comment,
                     selectGoal,
@@ -164,6 +164,29 @@ class AddExpenseFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun formattedSum(sum: String): String{
+        val cleanString = sum
+            .replace(",", ".")
+            .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
+
+        // Обрабатываем ввод
+        val formattedValue = when {
+            cleanString.contains(".") -> {
+                // Если есть точка, ограничиваем до 2 знаков после запятой
+                val parts = cleanString.split(".")
+                when {
+                    parts.size > 2 -> parts[0] + "." + parts[1].take(2) // Если несколько точек
+                    parts[1].length > 2 -> parts[0] + "." + parts[1].take(2) // Если больше 2 знаков
+                    else -> cleanString
+                }
+            }
+            else -> cleanString
+        }
+
+        Log.d("katrin_formatted", formattedValue)
+        return formattedValue
     }
 
     fun receiveData(data: String) {

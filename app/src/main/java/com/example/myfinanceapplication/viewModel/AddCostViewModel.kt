@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -36,7 +38,7 @@ class AddCostViewModel : ViewModel() {
                 answerException = "Некорректный ввод суммы!"
                 return false
             }
-            val sum = sumCost.toLong()
+            val sum = getInputValue(sumCost)
             if (title.length > 25) {
                 answerException = "Слишком длинное название!"
                 return false
@@ -84,7 +86,7 @@ class AddCostViewModel : ViewModel() {
                 answerException = "Слишком длинное название!"
                 return false
             }
-            val sumCost = sum.toLong()
+            val sumCost = getInputValue(sum)
             if (sumCost > 1000000000000L) {
                 answerException = "Укажите реальную сумму"
                 return false
@@ -133,6 +135,15 @@ class AddCostViewModel : ViewModel() {
         }
     }
 
+    // Функция для получения значения как Double
+    private fun getInputValue(text: String): Double = try {
+        val value = text.replace(",", ".").toDouble()
+        // Округляем до 2 знаков после запятой
+        BigDecimal(value).setScale(2, RoundingMode.HALF_UP).toDouble()
+    } catch (e: NumberFormatException) {
+        0.00
+    }
+
     private fun saveExpenseToBase(newCost: Cost) {
         val balance = viewModel.getBalance()
         dataRepository.updateUserBalance(balance - newCost.moneyCost.toDouble())
@@ -140,7 +151,7 @@ class AddCostViewModel : ViewModel() {
     }
 
     private fun checkIsNumber(sum: String): Boolean {
-        return sum.matches(Regex("[0-9]+"))
+        return sum.matches(Regex("[0-9.]+"))
     }
 
     private fun checkIsTitle(sum: String): Boolean {

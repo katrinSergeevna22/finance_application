@@ -238,16 +238,11 @@ class EditExpenseFragment : Fragment() {
         binding.apply {
             val title = etTitle.text.toString().trim()
             val sum = etSum.text.toString().replace(" ", "")
-            //spinnerCategory.selectedItem.toString()
             val comment = etMultyLineComment.text.toString()
-            //val date: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-            Log.d("goalList1", goalList.toString())
-            Log.d("goalList2", selectExpense.goal)
-            Log.d("goalList3", titleOfGoal)
 
             if (editViewModel.checkExpenseData(
                     title,
-                    sum,
+                    formattedSum(sum),
                     category.ifBlank { selectingCategory ?: "" },
                     comment,
                     titleOfGoal,
@@ -269,5 +264,27 @@ class EditExpenseFragment : Fragment() {
                 }
             }
         }
+    }
+    private fun formattedSum(sum: String): String{
+        val cleanString = sum
+            .replace(",", ".")
+            .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
+
+        // Обрабатываем ввод
+        val formattedValue = when {
+            cleanString.contains(".") -> {
+                // Если есть точка, ограничиваем до 2 знаков после запятой
+                val parts = cleanString.split(".")
+                when {
+                    parts.size > 2 -> parts[0] + "." + parts[1].take(2) // Если несколько точек
+                    parts[1].length > 2 -> parts[0] + "." + parts[1].take(2) // Если больше 2 знаков
+                    else -> cleanString
+                }
+            }
+            else -> cleanString
+        }
+
+        Log.d("katrin_formatted", formattedValue)
+        return formattedValue
     }
 }

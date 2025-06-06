@@ -29,7 +29,7 @@ class AuthActivity : AppCompatActivity() {
         setupUI()
     }
 
-    private val isForTesting = false
+    private val isForTesting = true
     fun setupUI() {
         binding.apply {
             ibRegister.setOnClickListener {
