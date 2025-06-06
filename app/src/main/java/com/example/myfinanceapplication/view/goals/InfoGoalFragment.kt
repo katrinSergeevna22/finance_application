@@ -24,7 +24,7 @@ class InfoGoalFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentInfoGoalBinding.inflate(inflater)
 
         viewModel = ViewModelProvider(requireActivity()).get(GoalViewModel::class.java)

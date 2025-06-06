@@ -1,7 +1,6 @@
 package com.example.myfinanceapplication.view.cost
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -115,7 +114,7 @@ class EditIncomeFragment : Fragment() {
         }
     }
 
-    private fun formattedSum(sum: String): String{
+    private fun formattedSum(sum: String): String {
         val cleanString = sum
             .replace(",", ".")
             .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
@@ -131,6 +130,7 @@ class EditIncomeFragment : Fragment() {
                     else -> cleanString
                 }
             }
+
             else -> cleanString
         }
 

@@ -1,12 +1,11 @@
 package com.example.myfinanceapplication.view.cost.adapterCost
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.CostItemBinding
+import com.example.myfinanceapplication.model.Cost
 import java.util.Locale
 
 class CostViewHolder(
@@ -41,7 +40,7 @@ class CostViewHolder(
     }
 
     private fun formatSum(value: Double): String {
-        val h  = if (value == value.toInt().toDouble()) {
+        val h = if (value == value.toInt().toDouble()) {
             // Если число целое - показываем без десятичной части
             value.toInt().toString()
         } else {
