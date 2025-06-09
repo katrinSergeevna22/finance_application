@@ -20,13 +20,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="280dp"
+        android:fadeScrollbars="true"
+        android:fillViewport="true">
 
         <!-- Сетка категорий -->
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:columnCount="2"
             android:rowCount="2">
 
@@ -330,9 +331,15 @@
         android:hint="Напишите собственную категорию"
         android:visibility="invisible" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:layout_marginTop="8dp">
 
         <ImageButton
