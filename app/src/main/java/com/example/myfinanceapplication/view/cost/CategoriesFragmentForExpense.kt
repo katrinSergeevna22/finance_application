@@ -19,19 +19,22 @@ class CategoriesFragmentForExpense : Fragment() {
 
     lateinit var binding: FragmentCategoriesForExpenseBinding
     lateinit var viewModel: AddCostViewModel
+    private var selectingCategory: String? = null
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCategoriesForExpenseBinding.inflate(inflater)
         viewModel = ViewModelProvider(requireActivity())[AddCostViewModel::class.java]
         binding.apply {
             val categoriesArray = resources.getStringArray(R.array.categoriesExpense)
             fetchNewCategories(categoriesArray)
             selectedCategory()
-            var selectingCategory = categoriesArray[1]
+            if (selectingCategory.isNullOrBlank()) {
+                selectingCategory = categoriesArray[1]
+            }
             llHome.setOnClickListener {
                 etNewCategory.visibility = View.INVISIBLE
                 llHome.background = resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
@@ -279,22 +282,25 @@ class CategoriesFragmentForExpense : Fragment() {
                     resources.getDrawable(R.drawable.shape_rectangle_all_white)
             }
             ibSave.setOnClickListener {
-                Log.d("btnSave", selectingCategory)
                 val newCategory = etNewCategory.text.toString()
 //                viewModel.category.value =
 //                    if (selectingCategory == categoriesArray[1])
 //                        newCategory
 //                    else selectingCategory
-                (targetFragment as? AddExpenseFragment)?.receiveData(
-                    if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
-                        newCategory
-                    else selectingCategory
-                )
-                (targetFragment as? EditExpenseFragment)?.receiveData(
-                    if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
-                        newCategory
-                    else selectingCategory
-                )
+                (if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
+                    newCategory
+                else selectingCategory)?.let { category ->
+                    (targetFragment as? AddExpenseFragment)?.receiveData(
+                        category
+                    )
+                }
+                (if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
+                    newCategory
+                else selectingCategory)?.let { category ->
+                    (targetFragment as? EditExpenseFragment)?.receiveData(
+                        category
+                    )
+                }
                 (activity as ExpensesActivity).closeFragments()
                 //requireActivity().supportFragmentManager.popBackStack()
             }
@@ -313,55 +319,73 @@ class CategoriesFragmentForExpense : Fragment() {
     }
 
     private fun selectedCategory() {
-        val selectingCategory = (targetFragment as? EditExpenseFragment)?.selectingCategory
-        Log.d("katrin_selectedCategory", selectingCategory.toString())
-        Log.d("katrin_selectedCategory_tv1", binding.tvCategoryText1.text.toString())
-        binding.apply {
-            when (selectingCategory) {
-                tvCategoryText1.text -> llHome.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+        selectingCategory =
+            when (targetFragment) {
+                is EditExpenseFragment -> {
+                    (targetFragment as? EditExpenseFragment)?.selectingCategory
+                }
 
-                tvCategoryText2.text -> llTransport.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvCategoryText3.text -> llFood.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvCategoryText4.text -> llHobby.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvCategoryText5.text -> llTecnic.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvCategoryText6.text -> llEducation.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvCategoryText7.text -> llShopping.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvCategoryText8.text -> llOther.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvNewCategory1.text -> llNewCategory1.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvNewCategory2.text -> llNewCategory2.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvNewCategory3.text -> llNewCategory3.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                tvNewCategory4.text -> llNewCategory4.background =
-                    resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-
-                "Цель" -> {
-//                    ibSelectGoal.background =
-//                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-//                    tvSelectGoal.setTextColor(resources.getColor(R.color.dark_violet))
+                is AddExpenseFragment -> {
+                    (targetFragment as? AddExpenseFragment)?.category
                 }
 
                 else -> {
-                    etNewCategory.setText(selectingCategory)
+                    ""
+                }
+            }
+        Log.d("katrin_selectedCategory", selectingCategory.toString())
+        Log.d("katrin_selectedCategory_tv1", binding.tvCategoryText1.text.toString())
+        if (!selectingCategory.isNullOrBlank()) {
+            binding.apply {
+                when (selectingCategory) {
+                    tvCategoryText1.text -> llHome.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvCategoryText2.text -> llTransport.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvCategoryText3.text -> llFood.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvCategoryText4.text -> llHobby.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvCategoryText5.text -> llTecnic.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvCategoryText6.text -> llEducation.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvCategoryText7.text -> llShopping.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvCategoryText8.text -> llOther.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvNewCategory1.text -> llNewCategory1.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvNewCategory2.text -> llNewCategory2.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvNewCategory3.text -> llNewCategory3.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    tvNewCategory4.text -> llNewCategory4.background =
+                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+
+                    "Цель" -> {
+//                    ibSelectGoal.background =
+//                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+//                    tvSelectGoal.setTextColor(resources.getColor(R.color.dark_violet))
+                    }
+
+                    else -> {
+                        llOther.background =
+                            resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+                        etNewCategory.visibility = View.VISIBLE
+                        etNewCategory.setText(selectingCategory)
+                    }
                 }
             }
         }

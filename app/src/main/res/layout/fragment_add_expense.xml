@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_rectangle_contur_violet"
     tools:context=".view.cost.AddExpenseFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:id="@+id/sv_add_expense"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="520dp"
+        android:fadeScrollbars="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_rectangle_contur_violet">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -71,14 +71,14 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
+                android:digits="0123456789.,"
                 android:ems="10"
                 android:hint="@string/edit_expense_title_sum_of_expense"
                 android:inputType="numberDecimal"
-                android:digits="0123456789.,"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_sum" />
-            
+
             <TextView
                 android:id="@+id/tv_category"
                 android:layout_width="wrap_content"
@@ -125,12 +125,12 @@
                 android:id="@+id/tv_btn_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/open_sans_bold"
-                android:textColor="@color/dark_violet"
-                android:textSize="20sp"
                 android:ellipsize="end"
+                android:fontFamily="@font/open_sans_bold"
                 android:maxWidth="330dp"
                 android:maxLines="1"
+                android:textColor="@color/dark_violet"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@+id/ibtnCategory"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
@@ -153,7 +153,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ibtnCategory" />
-
 
             <Spinner
                 android:id="@+id/spinnerGoal"
@@ -244,14 +243,5 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <FrameLayout
-        android:id="@+id/categoryFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 
 </FrameLayout>

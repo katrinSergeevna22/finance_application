@@ -32,7 +32,7 @@ class AddExpenseFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddExpenseBinding.inflate(inflater)
         viewModel = ViewModelProvider(this)[CostViewModel::class.java]
         addViewModel = ViewModelProvider(this)[AddCostViewModel::class.java]

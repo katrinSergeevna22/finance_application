@@ -20,13 +20,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="210dp"
+        android:fadeScrollbars="true"
+        android:fillViewport="true">
 
         <!-- Сетка категорий -->
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:columnCount="2"
             android:rowCount="2">
 
@@ -230,8 +231,8 @@
                 android:layout_columnWeight="1"
                 android:layout_marginBottom="6dp"
                 android:gravity="center"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_new_category_1"
@@ -254,8 +255,8 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:gravity="center"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_new_category_2"
@@ -279,8 +280,8 @@
                 android:layout_columnWeight="1"
                 android:layout_marginBottom="6dp"
                 android:gravity="center"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_new_category_3"
@@ -303,8 +304,8 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:gravity="center"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_new_category_4"
@@ -332,9 +333,15 @@
         android:hint="Напишите собственную категорию"
         android:visibility="invisible" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:layout_marginTop="8dp">
 
         <ImageButton
@@ -369,7 +376,6 @@
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
             android:background="@drawable/shape_rectangle_violet"
             android:foregroundGravity="center"
             android:src="@drawable/shape_rectangle_violet"
