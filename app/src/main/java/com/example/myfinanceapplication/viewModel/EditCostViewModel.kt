@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.model.DataRepository
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class EditCostViewModel : ViewModel() {
     private val dataRepository = DataRepository()
@@ -32,7 +34,7 @@ class EditCostViewModel : ViewModel() {
                 answerException = "Слишком длинное название!"
                 return false
             }
-            val sum = sumCost.toLong()
+            val sum = getInputValue(sumCost)
             if (sum > 1000000000000) {
                 answerException = "Укажите реальную сумму"
                 return false
@@ -117,7 +119,8 @@ class EditCostViewModel : ViewModel() {
                 answerException = "Слишком длинное название!"
                 return false
             }
-            if (sumCost.toDouble() > 1000000000000L) {
+            val sum = getInputValue(sumCost)
+            if (sum > 1000000000000L) {
                 answerException = "Укажите реальную сумму"
                 return false
             }
@@ -126,7 +129,7 @@ class EditCostViewModel : ViewModel() {
                 return false
             }
 
-            if (sumCost.toDouble() > selectCost.moneyCost && sumCost.toDouble() - selectCost.moneyCost > balance) {
+            if (sum > selectCost.moneyCost && sum - selectCost.moneyCost > balance) {
                 answerException = "Недостаочно средст на балансе"
                 return false
                 //Toast.makeText((activity as ExpensesActivity), "Недостаочно средст", Toast.LENGTH_SHORT).show()
@@ -143,16 +146,16 @@ class EditCostViewModel : ViewModel() {
                         )
                         viewModel.addProgressGoal(
                             goalNew,
-                            sumCost.toDouble()
+                            sum
                         )
                     } else {
-                        if (selectCost.moneyCost > sumCost.toDouble()) {
+                        if (selectCost.moneyCost > sum) {
                             viewModel.minusProgressGoal(
                                 goalNew,
-                                selectCost.moneyCost - sumCost.toDouble()
+                                selectCost.moneyCost - sum
                             )
-                        } else if (selectCost.moneyCost < sumCost.toDouble()) {
-                            if (goalNew.moneyGoal < sumCost.toDouble()
+                        } else if (selectCost.moneyCost < sum) {
+                            if (goalNew.moneyGoal < sum
                                 + goalNew.progressOfMoneyGoal - selectCost.moneyCost
                             ) {
                                 answerException = "Сумма больше, чем нужно для достижения цели"
@@ -162,7 +165,7 @@ class EditCostViewModel : ViewModel() {
                             }
                             viewModel.addProgressGoal(
                                 goalNew,
-                                sumCost.toDouble() - selectCost.moneyCost
+                                sum - selectCost.moneyCost
                             )
                         }
                     }
@@ -176,13 +179,13 @@ class EditCostViewModel : ViewModel() {
                 val goalNew = goalsMutableList.filter { it.titleOfGoal == titleOfGoal }[0]
                 viewModel.addProgressGoal(
                     goalNew,
-                    sumCost.toDouble()
+                    sum
                 )
             }
             val newExpense = mapOf(
                 "costId" to selectCost.costId,
                 "titleOfCost" to title,
-                "moneyCost" to sumCost.toDouble(),
+                "moneyCost" to sum,
                 "date" to selectCost.date,
                 "category" to category,
                 "goal" to titleOfGoal,
@@ -220,5 +223,13 @@ class EditCostViewModel : ViewModel() {
         if (selectExpense.category == "Цель") selectExpense.goal = newExpense["goal"].toString()
 
         dataRepository.editExpenseToBase(newExpense, selectExpense)
+    }
+
+    private fun getInputValue(text: String): Double = try {
+        val value = text.replace(",", ".").toDouble()
+        // Округляем до 2 знаков после запятой
+        BigDecimal(value).setScale(2, RoundingMode.HALF_UP).toDouble()
+    } catch (e: NumberFormatException) {
+        0.00
     }
 }

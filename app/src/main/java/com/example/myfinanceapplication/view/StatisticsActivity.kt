@@ -6,8 +6,8 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.toColorInt
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
@@ -18,7 +18,6 @@ import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.viewModel.StatisticsViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -31,8 +30,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -40,6 +37,7 @@ import java.util.Locale
 class StatisticsActivity : AppCompatActivity() {
     lateinit var binding: ActivityStatisticsBinding
     lateinit var viewModel: StatisticsViewModel
+    lateinit var periods: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +45,7 @@ class StatisticsActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[StatisticsViewModel::class.java]
 
+        periods = resources.getStringArray(R.array.categoriesTimeForDiagram)
         lifecycle.coroutineScope.launch {
             setupUI()
         }
@@ -61,12 +60,6 @@ class StatisticsActivity : AppCompatActivity() {
             initEditOfIncome()
             initEditOfExpenses()
             initEditOfProgressOfGoal()
-
-//            val periods = arrayOf("За последний год", "За последний месяц", "За последнюю неделю")
-//            val spinnerAdapter = ArrayAdapter(this@StatisticsActivity, android.R.layout.simple_spinner_item, periods)
-//            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//            spinnerLineChartIncome.adapter = spinnerAdapter
-
 
             toolbar.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
@@ -84,66 +77,16 @@ class StatisticsActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterData(selectedPeriod: String, originalList: List<Cost>): MutableList<Cost> {
-        val calendar = Calendar.getInstance()
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val currentDate = Date()
-
-        val filteredList = mutableListOf<Cost>()
-
-        when (selectedPeriod) {
-            "За последний год" -> {
-                calendar.add(Calendar.YEAR, -1)
-                val yearAgo = calendar.time
-                originalList.forEach {
-                    val itemDate = sdf.parse(it.date)
-                    if (itemDate != null && itemDate in yearAgo..currentDate) {
-                        filteredList.add(it)
-                    }
-                }
-            }
-
-            "За последний месяц" -> {
-                calendar.add(Calendar.MONTH, -1)
-                val monthAgo = calendar.time
-                originalList.forEach {
-                    val itemDate = sdf.parse(it.date)
-                    if (itemDate != null && itemDate in monthAgo..currentDate) {
-                        filteredList.add(it)
-                    }
-                }
-                Log.d("katrin_filter", filteredList.toString())
-            }
-
-            "За последнюю неделю" -> {
-                calendar.add(Calendar.WEEK_OF_YEAR, -1)
-                val weekAgo = calendar.time
-                originalList.forEach {
-                    val itemDate = sdf.parse(it.date)
-                    if (itemDate != null && itemDate in weekAgo..currentDate) {
-                        filteredList.add(it)
-                    }
-                }
-            }
-
-            else -> filteredList.addAll(originalList)
-        }
-
-        Toast.makeText(this, "Отображаются данные: $selectedPeriod", Toast.LENGTH_SHORT).show()
-        return filteredList
-    }
-
     private fun initIncomeStatistics() {
         setupPieChart(binding.pieChartIncome)
 
         lifecycle.coroutineScope.launch {
             viewModel.incomesLiveData.observeForever { incomesList ->
-                Log.d("katrin_stat", incomesList.toString())
                 if (incomesList.isNotEmpty()) {
                     val incomesListOfPair =
                         incomesList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() }) ?: mapOf()
-                    Log.d("katrin_stat_map", incomesListOfPair.toString())
+                            ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() })
+                            ?: mapOf()
                     updateChart(incomesListOfPair, pieChart = binding.pieChartIncome)
                 }
             }
@@ -152,15 +95,13 @@ class StatisticsActivity : AppCompatActivity() {
 
     private fun initExpenseStatistics() {
         setupPieChart(binding.pieChartExpense)
-
         lifecycle.coroutineScope.launch {
             viewModel.expensesLiveData.observeForever { expensesList ->
-                Log.d("katrin_stat", expensesList.toString())
                 if (expensesList.isNotEmpty()) {
                     val expensesListOfPair =
                         expensesList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() }) ?: mapOf()
-                    Log.d("katrin_stat_map", expensesListOfPair.toString())
+                            ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() })
+                            ?: mapOf()
                     updateChart(expensesListOfPair, pieChart = binding.pieChartExpense)
                 }
             }
@@ -169,14 +110,14 @@ class StatisticsActivity : AppCompatActivity() {
 
     private fun initGoalsStatistics() {
         setupPieChart(binding.pieChartGoals)
-
         lifecycle.coroutineScope.launch {
             viewModel.goalsLiveData.observeForever { goalsList ->
                 Log.d("katrin_stat", goalsList.toString())
                 if (goalsList.isNotEmpty()) {
                     val goalsListOfPair =
                         goalsList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyGoal.toLong() }) ?: mapOf()
+                            ?.associateBy({ it.category ?: "" }, { it.moneyGoal.toLong() })
+                            ?: mapOf()
                     Log.d("katrin_stat_map", goalsListOfPair.toString())
                     updateChart(goalsListOfPair, pieChart = binding.pieChartGoals)
 
@@ -191,68 +132,390 @@ class StatisticsActivity : AppCompatActivity() {
         updateChart(viewModel.getProgressOfGoals(), pieChart = binding.pieChartProgressOfGoals)
     }
 
+    private fun filterData(
+        selectedPeriod: String,
+        originalList: List<Cost>,
+    ): MutableList<Cost> {
+        val calendar = Calendar.getInstance()
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val currentDate = Date()
+
+        val filteredList = mutableListOf<Cost>()
+
+        when (selectedPeriod) {
+            periods[0] -> {
+                calendar.add(Calendar.YEAR, -1)
+                val yearAgo = calendar.time
+                originalList.forEach {
+                    val itemDate = sdf.parse(it.date)
+                    if (itemDate != null && itemDate in yearAgo..currentDate) {
+                        filteredList.add(it)
+                    }
+                }
+            }
+
+            periods[1] -> {
+                calendar.add(Calendar.MONTH, -1)
+                val monthAgo = calendar.time
+                originalList.forEach {
+                    val itemDate = sdf.parse(it.date)
+                    if (itemDate != null && itemDate in monthAgo..currentDate) {
+                        filteredList.add(it)
+                    }
+                }
+            }
+
+            periods[2] -> {
+                calendar.add(Calendar.WEEK_OF_YEAR, -1)
+                val weekAgo = calendar.time
+                originalList.forEach {
+                    val itemDate = sdf.parse(it.date)
+                    if (itemDate != null && itemDate in weekAgo..currentDate) {
+                        filteredList.add(it)
+                    }
+                }
+            }
+
+            else -> filteredList.addAll(originalList)
+        }
+        return filteredList
+    }
+
     private fun initEditOfIncome() {
-        val periods = resources.getStringArray(R.array.categoriesTimeForDiagram)
-        viewModel.incomesLiveData.observeForever { incomes ->
-            binding.spinnerLineChartIncome.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        val incomesMap =
-                            filterData(periods[position], incomes).associateBy(
-                                { it.date },
-                                { it.moneyCost.toFloat() })
-                        setupLineChart(
-                            dataMap = incomesMap,
-                            lineChart = binding.lineChartIncome,
-                            label = "Доходы"
-                        )
+        binding.apply {
+            viewModel.incomesLiveData.observeForever { incomes ->
+                spinnerLineChartIncome.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            setupLineChart(
+                                incomes = filterData(periods[position], incomes),
+                                lineChart = lineChartIncome,
+                                period = periods[position],
+                                label = "Доходы"
+                            )
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>?) {}
                     }
 
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-                }
-
-            val incomesMap =
-                filterData(periods[0], incomes).associateBy({ it.date }, { it.moneyCost.toFloat() })
-            setupLineChart(
-                dataMap = incomesMap,
-                lineChart = binding.lineChartIncome,
-                label = "Доходы"
-            )
+                setupLineChart(
+                    incomes = filterData(periods[0], incomes),
+                    lineChart = lineChartIncome,
+                    period = periods[0],
+                    label = "Доходы"
+                )
+            }
         }
     }
 
-    private val dateComparator: Comparator<String> = Comparator { date1, date2 ->
-        val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        val localDate1 = LocalDate.parse(date1, dateFormatter)
-        val localDate2 = LocalDate.parse(date2, dateFormatter)
-        localDate1.compareTo(localDate2)
+    private fun setupLineChart(
+        incomes: List<Cost>,
+        lineChart: LineChart,
+        period: String,
+        label: String
+    ) {
+        lineChart.clear()
+
+        val periods = resources.getStringArray(R.array.categoriesTimeForDiagram)
+        val entries: List<Entry>
+        val xAxisLabels: List<String>
+        val descriptionText: String
+
+        when (period) {
+            periods[0] -> {
+                // 1. Группируем доходы по месяцам (0-based месяц)
+                val monthlyData = incomes.groupBy { cost ->
+                    val calendar = Calendar.getInstance().apply {
+                        time = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(cost.date)
+                            ?: Date()
+                    }
+                    "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH)}" // 0-based
+                }.mapValues { (_, costsInMonth) ->
+                    val totalAmount = costsInMonth.sumOf { it.moneyCost }
+                    val latestDate = costsInMonth.maxByOrNull {
+                        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(it.date)?.time
+                            ?: 0L
+                    }?.date
+                    Pair(totalAmount, latestDate)
+                }
+
+                // 2. Создаем 12 месяцев (от текущего назад)
+                val allMonths = (0..11).map { monthOffset ->
+                    Calendar.getInstance().apply {
+                        add(Calendar.MONTH, -11 + monthOffset)
+                        set(Calendar.DAY_OF_MONTH, 1)
+                    }.time
+                }
+
+                // 3. Подготавливаем данные для графика (используем 0-based месяц)
+                entries = allMonths.mapIndexed { index, monthStart ->
+                    val calendar = Calendar.getInstance().apply { time = monthStart }
+                    val monthKey = "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH)}"
+                    val (totalAmount, latestDate) = monthlyData[monthKey] ?: Pair(0.0, null)
+
+                    Entry(index.toFloat(), totalAmount.toFloat(), latestDate ?: monthStart)
+                }
+
+                xAxisLabels = allMonths.map {
+                    SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(it)
+                }
+
+                descriptionText = "$label за последний год"
+            }
+
+            periods[1] -> {
+                // 1. Получаем текущий месяц и год
+                val currentCalendar = Calendar.getInstance()
+                val currentMonth = currentCalendar.get(Calendar.MONTH)
+                val currentYear = currentCalendar.get(Calendar.YEAR)
+
+                // 2. Фильтруем доходы за текущий месяц
+                val monthIncomes = incomes.filter { cost ->
+                    try {
+                        val costDate =
+                            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(cost.date)
+                        val costCalendar =
+                            Calendar.getInstance().apply { time = costDate ?: Date() }
+                        costCalendar.get(Calendar.MONTH) == currentMonth &&
+                                costCalendar.get(Calendar.YEAR) == currentYear
+                    } catch (e: Exception) {
+                        false
+                    }
+                }.sortedBy {
+                    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(it.date)?.time ?: 0L
+                }
+
+                // 3. Если данных нет, показываем нулевое значение
+                if (monthIncomes.isEmpty()) {
+                    entries = listOf(Entry(0f, 0f, currentCalendar.time))
+                    xAxisLabels = listOf("Нет данных")
+                } else {
+                    // 4. Создаем накопленные суммы по дням
+                    val dailySums = monthIncomes.groupBy { cost ->
+                        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(cost.date)?.time
+                            ?: 0L
+                    }.mapValues { (_, costs) ->
+                        costs.sumOf { it.moneyCost }
+                    }.toSortedMap()
+
+                    // 5. Подготавливаем данные для графика
+                    entries = dailySums.entries.mapIndexed { index, entry ->
+                        Entry(
+                            index.toFloat(),
+                            entry.value.toFloat(),
+                            Date(entry.key)
+                        )
+                    }
+
+                    xAxisLabels = dailySums.keys.map {
+                        SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(it))
+                    }
+                }
+                descriptionText = "$label за текущий месяц"
+            }
+
+            periods[2] -> {
+                // 1. Устанавливаем диапазон дат (последние 7 дней)
+                val calendar = Calendar.getInstance().apply {
+                    time = Date() // Текущая дата
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val endDate = calendar.time
+                calendar.add(Calendar.DAY_OF_YEAR, -6) // 7 дней включая сегодня
+                val startDate = calendar.time
+
+                // 2. Фильтруем и сортируем данные
+                val weeklyIncomes = incomes.filter { cost ->
+                    try {
+                        val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                            .parse(cost.date) ?: return@filter false
+                        date >= startDate && date <= endDate
+                    } catch (e: Exception) {
+                        false
+                    }
+                }.sortedBy {
+                    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(it.date)?.time ?: 0L
+                }
+
+                // 3. Создаем полный диапазон дат (7 дней)
+                val allDays = (0..6).map { dayOffset ->
+                    Calendar.getInstance().apply {
+                        time = endDate
+                        add(Calendar.DAY_OF_YEAR, -dayOffset)
+                    }.time.time
+                }.reversed() // Сортировка от старых к новым
+
+                // 4. Группируем по дням и суммируем (без накопления)
+                val dailySums = allDays.associate { dayTimestamp ->
+                    val sum = weeklyIncomes.filter { cost ->
+                        val costDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                            .parse(cost.date)?.time ?: 0L
+                        costDate == dayTimestamp
+                    }.sumOf { it.moneyCost }
+
+                    dayTimestamp to sum
+                }
+
+                // 5. Подготавливаем данные для графика
+                if (dailySums.isEmpty()) {
+                    entries = listOf(Entry(0f, 0f, endDate))
+                    xAxisLabels = listOf("Нет данных")
+                } else {
+                    entries = allDays.mapIndexed { index, dayTimestamp ->
+                        Entry(
+                            index.toFloat(),
+                            dailySums[dayTimestamp]?.toFloat() ?: 0f,
+                            Date(dayTimestamp)
+                        )
+                    }
+
+                    xAxisLabels = allDays.map { timestamp ->
+                        SimpleDateFormat("E\ndd.MM", Locale.getDefault())
+                            .format(Date(timestamp))
+                    }
+                }
+
+                descriptionText = "$label за последнюю неделю"
+            }
+
+            else -> {
+                entries = emptyList()
+                xAxisLabels = emptyList()
+                descriptionText = ""
+            }
+        }
+
+        // Настройка оси X
+        val xAxis = lineChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.granularity = 1f
+        xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return xAxisLabels.getOrNull(value.toInt()) ?: ""
+            }
+        }
+
+        // Настройка оси Y
+        lineChart.axisRight.isEnabled = false
+
+        // Создаем DataSet
+        val dataSet = LineDataSet(entries, label).apply {
+            color = resources.getColor(R.color.dark_violet)
+            valueTextColor = resources.getColor(R.color.color_of_text)
+            valueTextSize = 14f
+            setDrawValues(true)
+            lineWidth = 2f
+            setDrawCircles(true)
+            circleRadius = 4f
+            circleHoleRadius = 2f
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return value.toInt().toString()
+                }
+            }
+        }
+
+        lineChart.apply {
+            // Устанавливаем данные и обновляем график
+            data = LineData(dataSet)
+            description.text = descriptionText
+
+            val extraOffset = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                16f,
+                resources.displayMetrics
+            )
+
+            // Рассчитываем отступы в зависимости от количества точек
+            val xOffset = if (entries.size > 1) extraOffset else 0f
+            setExtraOffsets(0f, 0f, xOffset, 0f)
+
+            xAxis.apply {
+                textSize = 12f
+            }
+            legend.textSize = 12f
+
+            setPinchZoom(true)
+
+            // Настройка анимации
+            animateX(1000)
+
+            invalidate()
+        }
     }
 
     private fun initEditOfExpenses() {
-        viewModel.expensesLiveData.observeForever { expenses ->
-            val expensesMap = expenses.associateBy({ it.date }, { it.moneyCost.toFloat() })
-            setupLineChart(
-                dataMap = expensesMap,
-                lineChart = binding.lineChartExpense,
-                label = "Расходы"
-            )
+        binding.apply {
+            viewModel.expensesLiveData.observeForever { expenses ->
+                spinnerLineChartExpense.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            setupLineChart(
+                                incomes = filterData(periods[position], expenses),
+                                lineChart = lineChartExpense,
+                                period = periods[position],
+                                label = "Расходы"
+                            )
+                        }
+
+                        override fun onNothingSelected(p0: AdapterView<*>?) {}
+                    }
+
+                setupLineChart(
+                    incomes = filterData(periods[0], expenses),
+                    lineChart = lineChartExpense,
+                    period = periods[0],
+                    label = "Расходы"
+                )
+            }
         }
     }
 
     private fun initEditOfProgressOfGoal() {
-        viewModel.expensesLiveData.observeForever { expenses ->
-            val expensesMap = expenses.filter { it.goal != "" }
-                .associateBy({ it.date }, { it.moneyCost.toFloat() })
-            setupLineChart(
-                dataMap = expensesMap,
-                lineChart = binding.lineChartProgressOfGoals,
-                label = "Отложено на достижение целей",
-            )
+        binding.apply {
+            viewModel.expensesLiveData.observeForever { expenses ->
+                spinnerLineChartGoals.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>?,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+
+                            setupLineChart(
+                                incomes = filterData(
+                                    periods[position],
+                                    expenses.filter { it.goal != "" }),
+                                lineChart = lineChartProgressOfGoals,
+                                period = periods[position],
+                                label = "Отложено на достижение целей",
+                            )
+                        }
+
+                        override fun onNothingSelected(p0: AdapterView<*>?) {}
+                    }
+
+                setupLineChart(
+                    incomes = filterData(periods[0], expenses.filter { it.goal != "" }),
+                    lineChart = lineChartProgressOfGoals,
+                    period = periods[0],
+                    label = "Отложено на достижение целей"
+                )
+            }
         }
     }
 
@@ -296,102 +559,6 @@ class StatisticsActivity : AppCompatActivity() {
         pieChart.setDrawEntryLabels(false) // Отключаем подписи категорий на диаграмме
     }
 
-    private fun setupLineChart(
-        dataMap: Map<String, Float>,
-        lineChart: LineChart,
-        label: String,
-    ) {
-        if (dataMap.isNotEmpty()) {
-            // Сортируем данные по дате
-            val sortedDates = dataMap.keys.sortedWith(dateComparator)
-            val entries = mutableListOf<Entry>()
-
-            // Создаем точки данных с индексами от 0 до size-1
-            sortedDates.forEachIndexed { index, date ->
-                entries.add(Entry(index.toFloat(), dataMap[date] ?: 0f))
-            }
-
-            val dataSet = LineDataSet(entries, label).apply {
-                color = resources.getColor(R.color.dark_violet)
-                valueTextColor = resources.getColor(R.color.color_of_text)
-                valueTextSize = 14f
-                setDrawValues(true)
-                lineWidth = 2f
-                setDrawCircles(true)
-                circleRadius = 4f
-                circleHoleRadius = 2f
-                valueFormatter = object : ValueFormatter() {
-                    override fun getPointLabel(entry: Entry?): String {
-                        return entry?.y?.toInt().toString()
-                    }
-                }
-            }
-
-            lineChart.apply {
-                // Настройка отступов для крайних точек
-                val extraOffset = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    16f,
-                    resources.displayMetrics
-                )
-
-                // Рассчитываем отступы в зависимости от количества точек
-                val xOffset = if (entries.size > 1) extraOffset else 0f
-                setExtraOffsets(0f, 0f, xOffset, 0f)
-
-                data = LineData(dataSet)
-
-                xAxis.apply {
-                    valueFormatter = object : ValueFormatter() {
-                        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                            val index = value.toInt()
-                            return if (index >= 0 && index < sortedDates.size) {
-                                sortedDates[index]
-                            } else {
-                                ""
-                            }
-                        }
-                    }
-                    position = XAxis.XAxisPosition.BOTTOM
-                    granularity = 1f // Одна метка на точку
-                    setAvoidFirstLastClipping(true) // Предотвращаем обрезание меток
-                    labelCount = entries.size // Устанавливаем точное количество меток
-                    textSize = 14f
-                    setDrawGridLines(false)
-                }
-
-                axisLeft.apply {
-                    textSize = 14f
-                    axisMinimum = 0f
-                    granularity = 1f
-                }
-
-                axisRight.isEnabled = false
-
-                legend.apply {
-                    setDrawInside(false)
-                    textSize = 14f
-                }
-
-                // Дополнительные настройки для лучшего отображения
-                setTouchEnabled(true)
-                isDragEnabled = true
-                setScaleEnabled(true)
-                setPinchZoom(true)
-                description.isEnabled = false
-
-                // Автоматическое масштабирование по оси X
-                setVisibleXRangeMaximum(entries.size.toFloat())
-                moveViewToX(entries.last().x)
-
-                // Настройка анимации
-                animateX(1000)
-
-                invalidate()
-            }
-        }
-    }
-
     private fun updateChart(mapOfEntities: Map<String, Long>, pieChart: PieChart) {
         val entries = ArrayList<PieEntry>()
 
@@ -405,11 +572,11 @@ class StatisticsActivity : AppCompatActivity() {
 
         // Цвета для разных категорий
         val colors = listOf(
-            Color.parseColor("#FF6384"),
-            Color.parseColor("#36A2EB"),
-            Color.parseColor("#FFCE56"),
-            Color.parseColor("#4BC0C0"),
-            Color.parseColor("#9966FF")
+            "#FF6384".toColorInt(),
+            "#36A2EB".toColorInt(),
+            "#FFCE56".toColorInt(),
+            "#4BC0C0".toColorInt(),
+            "#9966FF".toColorInt(),
         )
         dataSet.colors = colors
 
