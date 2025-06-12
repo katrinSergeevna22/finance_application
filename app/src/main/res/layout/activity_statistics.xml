@@ -53,12 +53,12 @@
                     android:id="@+id/pieChart_income"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="200dp"
-                    android:maxHeight="1000dp"
                     android:layout_margin="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="16dp"
+                    android:maxHeight="1000dp"
+                    android:minHeight="200dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="parent" />
@@ -76,12 +76,12 @@
                     android:id="@+id/pieChart_expense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="200dp"
-                    android:maxHeight="1000dp"
                     android:layout_margin="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="16dp"
+                    android:maxHeight="1000dp"
+                    android:minHeight="200dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/pieChart_income" />
@@ -99,12 +99,12 @@
                     android:id="@+id/pieChart_goals"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="200dp"
-                    android:maxHeight="1000dp"
                     android:layout_margin="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="16dp"
+                    android:maxHeight="1000dp"
+                    android:minHeight="200dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/pieChart_expense" />
@@ -122,9 +122,9 @@
                     android:id="@+id/pieChart_progress_of_goals"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="150dp"
+                    android:layout_margin="16dp"
                     android:maxHeight="1000dp"
-                    android:layout_margin="16dp" />
+                    android:minHeight="150dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -140,7 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:entries="@array/categoriesTimeForDiagram"/>
+                    android:entries="@array/categoriesTimeForDiagram" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -154,11 +154,11 @@
                             android:id="@+id/lineChart_income"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:minWidth="400dp"
-                            android:maxWidth="800dp"
-                            android:minHeight="300dp"
+                            android:layout_margin="16dp"
+                            android:maxWidth="1000dp"
                             android:maxHeight="800dp"
-                            android:layout_margin="16dp" />
+                            android:minWidth="500dp"
+                            android:minHeight="300dp" />
                     </FrameLayout>
                 </HorizontalScrollView>
 
@@ -176,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:entries="@array/categoriesTimeForDiagram"/>
+                    android:entries="@array/categoriesTimeForDiagram" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -188,11 +188,13 @@
 
                         <com.github.mikephil.charting.charts.LineChart
                             android:id="@+id/lineChart_expense"
-                            android:layout_width="800dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:minHeight="300dp"
+                            android:layout_margin="16dp"
+                            android:maxWidth="1000dp"
                             android:maxHeight="800dp"
-                            android:layout_margin="16dp" />
+                            android:minWidth="500dp"
+                            android:minHeight="300dp" />
                     </FrameLayout>
                 </HorizontalScrollView>
 
@@ -210,7 +212,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:entries="@array/categoriesTimeForDiagram"/>
+                    android:entries="@array/categoriesTimeForDiagram" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -222,11 +224,13 @@
 
                         <com.github.mikephil.charting.charts.LineChart
                             android:id="@+id/lineChart_progress_of_goals"
-                            android:layout_width="800dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:minHeight="300dp"
+                            android:layout_margin="16dp"
+                            android:maxWidth="1000dp"
                             android:maxHeight="800dp"
-                            android:layout_margin="16dp" />
+                            android:minWidth="500dp"
+                            android:minHeight="300dp" />
                     </FrameLayout>
                 </HorizontalScrollView>
 
