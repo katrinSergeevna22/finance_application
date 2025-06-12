@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:fontFamily="@font/open_sans_bold"
-                android:maxWidth="330dp"
+                android:maxWidth="250dp"
                 android:maxLines="1"
                 android:textColor="@color/dark_violet"
                 android:textSize="20sp"
