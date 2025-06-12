@@ -23,13 +23,13 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
-        viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         setContentView(binding.root)
 
         setupUI()
     }
 
-    private val isForTesting = true
+    private val isForTesting = false
     fun setupUI() {
         binding.apply {
             ibRegister.setOnClickListener {

@@ -27,7 +27,6 @@
             app:title="@string/app_name"
             app:titleTextColor="@color/white" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcView"
             android:layout_width="match_parent"
@@ -85,15 +84,15 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:ellipsize="end"
             android:fontFamily="@font/open_sans_bold"
             android:maxEms="30"
+            android:maxLines="3"
             android:text="Определите финансовые цели"
+            android:textAlignment="center"
             android:textColor="@color/color_of_text"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="@+id/ib_main_tip"
             app:layout_constraintEnd_toEndOf="@+id/ib_main_tip"
             app:layout_constraintHorizontal_bias="0.0"
@@ -196,18 +195,21 @@
 
         <TextView
             android:id="@+id/tv_title_category"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:visibility="gone"
+            android:layout_marginEnd="16dp"
             android:fontFamily="@font/open_sans_bold"
             android:text="Вывести расходы по категории"
             android:textColor="@color/dark_violet"
             android:textSize="20sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.114"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_filter_category"
-            app:layout_constraintVertical_bias="0.229" />
+            app:layout_constraintVertical_bias="0.217" />
 
         <TextView
             android:id="@+id/tv_title_search"
@@ -244,7 +246,6 @@
             android:id="@+id/spinnerCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="4dp"
@@ -254,6 +255,7 @@
             android:spinnerMode="dropdown"
             android:textColor="@color/white"
             android:textSize="24sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_title_category"
@@ -263,11 +265,11 @@
             android:id="@+id/ib_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:background="@android:drawable/ic_delete"
             android:src="@android:drawable/ic_delete"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
             app:layout_constraintEnd_toEndOf="@+id/iv_filter_category"
             app:layout_constraintHorizontal_bias="1.0"
@@ -293,13 +295,13 @@
             android:id="@+id/tv_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_gravity="center_horizontal|center_vertical"
             android:fontFamily="@font/open_sans_bold"
             android:text="@string/done"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/ib_save_category"
             app:layout_constraintEnd_toEndOf="@+id/ib_save_category"
             app:layout_constraintStart_toStartOf="@+id/ib_save_category"
@@ -317,7 +319,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_filter_category"
             app:srcCompat="@drawable/shape_rectangle_contur_white" />
-
 
 
         <TextView

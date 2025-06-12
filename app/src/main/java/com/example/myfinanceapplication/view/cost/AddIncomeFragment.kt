@@ -1,7 +1,6 @@
 package com.example.myfinanceapplication.view.cost
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,10 +22,10 @@ class AddIncomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddIncomeBinding.inflate(inflater)
-        viewModel = ViewModelProvider(this).get(CostViewModel::class.java)
-        addCostViewModel = ViewModelProvider(this).get(AddCostViewModel::class.java)
+        viewModel = ViewModelProvider(this)[CostViewModel::class.java]
+        addCostViewModel = ViewModelProvider(this)[AddCostViewModel::class.java]
         setupUI()
 
         return binding.root
@@ -53,6 +52,10 @@ class AddIncomeFragment : Fragment() {
                         comment
                     )
                 ) {
+                    etTitle.text.clear()
+                    etSum.text.clear()
+                    etMultyLineComment.text.clear()
+
                     (activity as IncomeActivity).closeFragments()
                 } else {
                     // Обработка ошибок
@@ -105,7 +108,6 @@ class AddIncomeFragment : Fragment() {
             else -> cleanString
         }
 
-        Log.d("katrin_formatted", formattedValue)
         return formattedValue
     }
 

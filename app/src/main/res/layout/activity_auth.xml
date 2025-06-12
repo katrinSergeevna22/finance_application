@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".view.AuthActivity">
 
-
     <EditText
         android:id="@+id/etLogin"
         android:layout_width="wrap_content"

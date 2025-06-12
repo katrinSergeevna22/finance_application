@@ -33,6 +33,7 @@ import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
 import java.util.Locale
+import androidx.core.view.get
 
 
 class IncomeActivity : AppCompatActivity() {
@@ -154,7 +155,7 @@ class IncomeActivity : AppCompatActivity() {
             }
 
             ibSaveCategory?.setOnClickListener {
-                if (toolbar.menu.getItem(0).isChecked) {
+                if (toolbar.menu[0].isChecked) {
                     val selectedItem = spinnerCategory?.selectedItem?.toString()
                     if (selectedItem != null) {
                         viewModel.filterByCategoryForIncome(selectedItem)
