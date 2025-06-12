@@ -2,7 +2,6 @@ package com.example.myfinanceapplication.view
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.AdapterView
@@ -112,13 +111,12 @@ class StatisticsActivity : AppCompatActivity() {
         setupPieChart(binding.pieChartGoals)
         lifecycle.coroutineScope.launch {
             viewModel.goalsLiveData.observeForever { goalsList ->
-                Log.d("katrin_stat", goalsList.toString())
                 if (goalsList.isNotEmpty()) {
                     val goalsListOfPair =
                         goalsList?.filter { it.category != null }
                             ?.associateBy({ it.category ?: "" }, { it.moneyGoal.toLong() })
                             ?: mapOf()
-                    Log.d("katrin_stat_map", goalsListOfPair.toString())
+
                     updateChart(goalsListOfPair, pieChart = binding.pieChartGoals)
 
                     initGoalsProgressStatistics()
@@ -337,7 +335,7 @@ class StatisticsActivity : AppCompatActivity() {
                     try {
                         val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                             .parse(cost.date) ?: return@filter false
-                        date >= startDate && date <= endDate
+                        date in startDate..endDate
                     } catch (e: Exception) {
                         false
                     }
@@ -354,14 +352,14 @@ class StatisticsActivity : AppCompatActivity() {
                 }.reversed() // Сортировка от старых к новым
 
                 // 4. Группируем по дням и суммируем (без накопления)
-                val dailySums = allDays.associate { dayTimestamp ->
+                val dailySums = allDays.associateWith { dayTimestamp ->
                     val sum = weeklyIncomes.filter { cost ->
                         val costDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                             .parse(cost.date)?.time ?: 0L
                         costDate == dayTimestamp
                     }.sumOf { it.moneyCost }
 
-                    dayTimestamp to sum
+                    sum
                 }
 
                 // 5. Подготавливаем данные для графика
@@ -415,6 +413,7 @@ class StatisticsActivity : AppCompatActivity() {
             lineWidth = 2f
             setDrawCircles(true)
             circleRadius = 4f
+            circleColors = listOf(resources.getColor(R.color.violet))
             circleHoleRadius = 2f
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
