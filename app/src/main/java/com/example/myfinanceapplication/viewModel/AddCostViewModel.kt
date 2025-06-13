@@ -1,6 +1,5 @@
 package com.example.myfinanceapplication.viewModel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.model.DataRepository
@@ -15,13 +14,6 @@ class AddCostViewModel : ViewModel() {
     private val dataRepository = DataRepository()
     var answerException = ""
     val viewModel = CostViewModel()
-    val goalsListLiveData = MutableLiveData<List<Goal>>()
-    var goalsList = listOf<Goal>()
-    var sumNeedToGoal = 0L
-
-    init {
-        //loadActiveGoals()
-    }
 
     fun checkDataIncome(
         title: String,
@@ -53,7 +45,6 @@ class AddCostViewModel : ViewModel() {
             }
             val date: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
             val cost = Cost("", title, sum, date, category, comment, false)
-            //balance = balanceNow
             saveIncomeToBase(cost)
             return true
         }
@@ -62,7 +53,7 @@ class AddCostViewModel : ViewModel() {
 
     private fun saveIncomeToBase(newCost: Cost) {
         val balance = viewModel.balanceLiveData.value?.toDouble() ?: 0.0
-        dataRepository.updateUserBalance(newCost.moneyCost.toDouble() + balance)
+        dataRepository.updateUserBalance(newCost.moneyCost + balance)
         dataRepository.writeIncomeData(newCost)
     }
 
@@ -96,25 +87,21 @@ class AddCostViewModel : ViewModel() {
                 return false
             }
             val date: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-            val titleOfGoal = selectGoal.titleOfGoal!!
+            val titleOfGoal = selectGoal.titleOfGoal ?: ""
             val balance = viewModel.getBalance()
             if (sumCost > balance) {
                 answerException = "Недостаочно средст на балансе"
                 return false
-                //Toast.makeText((activity as ExpensesActivity), "Недостаочно средст", Toast.LENGTH_SHORT).show()
             } else {
                 if (category == "Цель") {
                     if (selectGoal != Goal()) {
                         val cost = Cost("", title, sumCost, date, category, titleOfGoal, comment)
                         if (selectGoal.moneyGoal < sumCost + selectGoal.progressOfMoneyGoal) {
                             answerException = "Сумма больше, чем нужно для достижения цели"
-
-                            //etSum.setText((selectGoal.moneyGoal - selectGoal.progressOfMoneyGoal).toString())
                             return false
                         } else {
                             viewModel.addProgressGoal(selectGoal, sumCost)
                             saveExpenseToBase(cost)
-                            //parentFragmentManager.popBackStack()
                             return true
                         }
                     } else {
@@ -124,7 +111,6 @@ class AddCostViewModel : ViewModel() {
                 } else {
                     val cost = Cost("", title, sumCost, date, category, comment)
                     saveExpenseToBase(cost)
-                    //parentFragmentManager.popBackStack()
                     return true
                 }
             }
@@ -146,7 +132,7 @@ class AddCostViewModel : ViewModel() {
 
     private fun saveExpenseToBase(newCost: Cost) {
         val balance = viewModel.getBalance()
-        dataRepository.updateUserBalance(balance - newCost.moneyCost.toDouble())
+        dataRepository.updateUserBalance(balance - newCost.moneyCost)
         dataRepository.writeExpenseData(newCost)
     }
 

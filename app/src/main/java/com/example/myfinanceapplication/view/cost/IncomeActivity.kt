@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -15,12 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
-import androidx.lifecycle.Observer
+import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myfinanceapplication.view.cost.adapterCost.CostAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityIncomeBinding
 import com.example.myfinanceapplication.model.Goal
@@ -29,12 +27,11 @@ import com.example.myfinanceapplication.utils.NavigationTitle
 import com.example.myfinanceapplication.utils.getIntentForNavigation
 import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
+import com.example.myfinanceapplication.view.cost.adapterCost.CostAdapter
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
 import java.util.Locale
-import androidx.core.view.get
-
 
 class IncomeActivity : AppCompatActivity() {
     lateinit var binding: ActivityIncomeBinding
@@ -75,13 +72,6 @@ class IncomeActivity : AppCompatActivity() {
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.item_filter_category -> {
-                            //item.isChecked = !item.isChecked
-//                            val menuItemSearchIsChecked = toolbar.menu.getItem(4).isChecked
-//                            if (menuItemSearchIsChecked) {
-//                                toolbar.menu.getItem(4).isChecked = false
-//                                visibilitySearch(View.GONE)
-//                            }
-                            Log.d("katrin_menu_id", item.isChecked.toString())
                             if (item.isChecked) {
                                 visibilityFilter(View.GONE)
                             } else {
@@ -92,11 +82,6 @@ class IncomeActivity : AppCompatActivity() {
                         }
 
                         R.id.item_filter_ascending_sum -> {
-//                            val menuItemSearchIsChecked = toolbar.menu.getItem(2).isChecked
-//                            if (menuItemSearchIsChecked) {
-//                                toolbar.menu.getItem(2).isChecked = false
-//                                visibilitySearch(View.GONE)
-//                            }
                             if (item.isChecked) {
                                 viewModel.resetFilters()
                             } else {
@@ -107,11 +92,6 @@ class IncomeActivity : AppCompatActivity() {
                         }
 
                         R.id.item_filter_descending_sum -> {
-//                            val menuItemSearchIsChecked = toolbar.menu.getItem(1).isChecked
-//                            if (menuItemSearchIsChecked) {
-//                                toolbar.menu.getItem(1).isChecked = false
-//                                visibilitySearch(View.GONE)
-//                            }
                             if (item.isChecked) {
                                 viewModel.resetFilters()
                             } else {
@@ -132,11 +112,6 @@ class IncomeActivity : AppCompatActivity() {
                         }
 
                         R.id.item_search -> {
-//                            val menuItemSearchIsChecked = toolbar.menu.getItem(0).isChecked
-//                            if (menuItemSearchIsChecked) {
-//                                toolbar.menu.getItem(0).isChecked = false
-//                                visibilityFilter(View.GONE)
-//                            }
                             if (item.isChecked) {
                                 visibilitySearch(View.GONE)
                             } else {
@@ -182,8 +157,7 @@ class IncomeActivity : AppCompatActivity() {
 
             adapter = CostAdapter {
                 viewModel.setSelectedCost(it)
-                visibilityFilter(View.GONE)
-                visibilitySearch(View.GONE)
+                unselectedMenuItem()
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -209,8 +183,7 @@ class IncomeActivity : AppCompatActivity() {
             rcView.addItemDecoration(itemDecoration)
 
             ibAddIncome.setOnClickListener {
-                visibilityFilter(View.GONE)
-                visibilitySearch(View.GONE)
+                unselectedMenuItem()
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -262,7 +235,6 @@ class IncomeActivity : AppCompatActivity() {
             } ?: listOf()
         )
 
-        Log.d("katrin_category", categoriesList.toString())
         val adapter =
             ArrayAdapter(
                 this@IncomeActivity,
@@ -278,9 +250,9 @@ class IncomeActivity : AppCompatActivity() {
 
             if (visibility == View.GONE) {
                 viewModel.resetFilters()
-                toolbar.menu.getItem(4).isChecked = false
+                toolbar.menu[4].isChecked = false
             } else {
-                toolbar.menu.getItem(4).isChecked = true
+                toolbar.menu[4].isChecked = true
             }
 
             ivFilterCategory?.visibility = visibility
@@ -298,9 +270,9 @@ class IncomeActivity : AppCompatActivity() {
 
             if (visibility == View.GONE) {
                 viewModel.resetFilters()
-                toolbar.menu.getItem(0).isChecked = false
+                toolbar.menu[0].isChecked = false
             } else {
-                toolbar.menu.getItem(0).isChecked = true
+                toolbar.menu[0].isChecked = true
             }
             ivFilterCategory?.visibility = visibility
             tvTitleCategory?.visibility = visibility
@@ -327,9 +299,9 @@ class IncomeActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
         viewModel.apply {
-            balanceLiveData.observe(this@IncomeActivity, Observer { balance ->
+            balanceLiveData.observe(this@IncomeActivity) { balance ->
                 binding.tvBalanceIncome.text = formatBalance(balance)
-            })
+            }
             getIncomeLiveData().observe(this@IncomeActivity) { incomeList ->
                 categoriesList = incomeList.mapNotNull { it.category }
                 adapter.submitList(incomeList)

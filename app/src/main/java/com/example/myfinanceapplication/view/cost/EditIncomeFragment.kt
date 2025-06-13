@@ -66,7 +66,7 @@ class EditIncomeFragment : Fragment() {
         }
     }
 
-    var selectingCategory = ""
+    private var selectingCategory = ""
     private fun observeSelectCost() {
         viewModel.selectedCost.observe(viewLifecycleOwner) { cost ->
             binding.apply {
@@ -88,7 +88,6 @@ class EditIncomeFragment : Fragment() {
         binding.apply {
             val title = etTitle.text.toString().trim()
             val sum = etSum.text.toString().replace(" ", "")
-            //val category = spinnerCategory?.selectedItem.toString()
             val comment = etMultyLineComment.text.toString()
 
             val resultChecking = editViewModel.checkIncomeData(
@@ -99,10 +98,8 @@ class EditIncomeFragment : Fragment() {
             )
             if (resultChecking) {
 
-                //viewModel.editIncomeToBase(newIncome, selectIncome!!)
                 viewModel.setSelectedCost(editViewModel.selectCost)
                 (activity as IncomeActivity).closeFragments()
-                //fragmentManager?.popBackStack()
             } else {
                 Toast.makeText(
                     (activity as IncomeActivity),

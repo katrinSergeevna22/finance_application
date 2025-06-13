@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.adapter.GoalAdapter
+import com.example.myfinanceapplication.view.goals.adapterGoals.GoalAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityGoalsBinding
 import com.example.myfinanceapplication.model.Tip
@@ -86,7 +86,8 @@ class GoalsActivity : AppCompatActivity() {
 
             rcView.layoutManager = LinearLayoutManager(this@GoalsActivity)
             rcView.adapter = adapter
-            val itemDecoration = DividerItemDecoration(this@GoalsActivity, LinearLayoutManager.VERTICAL)
+            val itemDecoration =
+                DividerItemDecoration(this@GoalsActivity, LinearLayoutManager.VERTICAL)
             itemDecoration.setDrawable(
                 ContextCompat.getDrawable(
                     this@GoalsActivity,
@@ -146,21 +147,6 @@ class GoalsActivity : AppCompatActivity() {
                 true
             }
         }
-        /*
-    binding.placeHolderInfoFragment.setOnTouchListener { _, event ->
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            val rect = Rect()
-            newInfoGoalFragment.view?.getGlobalVisibleRect(rect)
-            if (!rect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                // Касание произошло за пределами фрагмента
-                supportFragmentManager.beginTransaction().remove(newInfoGoalFragment).commit()
-
-            }
-        }
-        true
-    }
-
-         */
     }
 
     fun closeFragments() {
@@ -170,14 +156,6 @@ class GoalsActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeViewModel() {
-        /*
-                viewModel.getGoalsLiveData().observe(this) { goalList ->
-                    adapter.submitList(goalList)
-                    binding.tvCount.text = goalList.size.toString()
-                    adapter.notifyDataSetChanged()
-                }
-
-         */
 
         viewModel.getGoalsCategoryLiveData().observe(this) { goalList ->
             binding.tvCount.text = goalList.size.toString()

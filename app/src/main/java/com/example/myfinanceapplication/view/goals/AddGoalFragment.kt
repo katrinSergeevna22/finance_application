@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.databinding.FragmentAddGoalBinding
 import com.example.myfinanceapplication.viewModel.AddGoalViewModel
@@ -24,7 +23,7 @@ class AddGoalFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddGoalBinding.inflate(inflater)
         viewModel = ViewModelProvider(this).get(AddGoalViewModel::class.java)
 
@@ -38,7 +37,7 @@ class AddGoalFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupUI(){
+    private fun setupUI() {
         view?.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 // Закрываем клавиатуру и фрагмент при нажатии вне области фрагмента
@@ -51,7 +50,6 @@ class AddGoalFragment : Fragment() {
         binding.apply {
             ibClose.setOnClickListener {
                 (activity as GoalsActivity).closeFragments()
-                //parentFragmentManager.popBackStack()
             }
             ibSave.setOnClickListener {
                 val title = etTitle.text.toString().trim()
@@ -60,8 +58,10 @@ class AddGoalFragment : Fragment() {
                 val comment = etMultyLineComment.text.toString().trim()
 
                 if (viewModel.checkData(title, formattedSum(sum), category, comment)) {
+                    etTitle.text.clear()
+                    etSum.text.clear()
+                    etMultyLineComment.text.clear()
                     (activity as GoalsActivity).closeFragments()
-                    //parentFragmentManager.popBackStack()
                 } else {
                     Toast.makeText(
                         (activity as GoalsActivity),
@@ -74,31 +74,29 @@ class AddGoalFragment : Fragment() {
         }
     }
 
-    private fun hideKeyboardFrom(context: Context, view: View){
+    private fun hideKeyboardFrom(context: Context, view: View) {
         val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view?.windowToken, 0)
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    private fun formattedSum(sum: String): String{
+    private fun formattedSum(sum: String): String {
         val cleanString = sum
             .replace(",", ".")
-            .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
+            .replace(Regex("[^\\d.]"), "")
 
-        // Обрабатываем ввод
         val formattedValue = when {
             cleanString.contains(".") -> {
-                // Если есть точка, ограничиваем до 2 знаков после запятой
                 val parts = cleanString.split(".")
                 when {
-                    parts.size > 2 -> parts[0] + "." + parts[1].take(2) // Если несколько точек
-                    parts[1].length > 2 -> parts[0] + "." + parts[1].take(2) // Если больше 2 знаков
+                    parts.size > 2 -> parts[0] + "." + parts[1].take(2)
+                    parts[1].length > 2 -> parts[0] + "." + parts[1].take(2)
                     else -> cleanString
                 }
             }
+
             else -> cleanString
         }
 
-        Log.d("katrin_formatted", formattedValue)
         return formattedValue
     }
 }

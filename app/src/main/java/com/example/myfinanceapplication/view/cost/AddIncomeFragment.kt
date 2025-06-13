@@ -43,7 +43,6 @@ class AddIncomeFragment : Fragment() {
             ibSave.setOnClickListener {
                 val title = etTitle.text.toString().trim()
                 val sum = etSum.text.toString().replace(" ", "")
-                //val category = spinnerCategory?.selectedItem.toString()
                 val comment = etMultyLineComment.text.toString()
                 if (addCostViewModel.checkDataIncome(
                         title,
@@ -72,7 +71,6 @@ class AddIncomeFragment : Fragment() {
             }
 
             ibtnCategory.setOnClickListener {
-                //parentFragment?.view?.visibility = View.INVISIBLE
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, BackgroundFragment())
                     .addToBackStack(null)

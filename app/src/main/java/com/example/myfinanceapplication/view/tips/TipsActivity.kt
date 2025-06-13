@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.adapter.TipAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityTipsBinding
 import com.example.myfinanceapplication.utils.navigationForNavigationView
+import com.example.myfinanceapplication.view.tips.adapterTips.TipAdapter
 import com.example.myfinanceapplication.viewModel.TipViewModel
 import kotlinx.coroutines.launch
 
@@ -26,10 +26,12 @@ class TipsActivity : AppCompatActivity() {
         binding = ActivityTipsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(
-            TipViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        )[TipViewModel::class.java]
 
-        lifecycle.coroutineScope.launch{
+        lifecycle.coroutineScope.launch {
             viewModel.loadFinancialAdvices()
         }
         setupUI()
@@ -46,7 +48,8 @@ class TipsActivity : AppCompatActivity() {
             adapter = TipAdapter()
             rcView.layoutManager = LinearLayoutManager(this@TipsActivity)
             rcView.adapter = adapter
-            val itemDecoration = DividerItemDecoration(this@TipsActivity, LinearLayoutManager.VERTICAL)
+            val itemDecoration =
+                DividerItemDecoration(this@TipsActivity, LinearLayoutManager.VERTICAL)
             ContextCompat.getDrawable(
                 this@TipsActivity,
                 R.drawable.shape_indent_rcview
@@ -77,8 +80,8 @@ class TipsActivity : AppCompatActivity() {
 
             val selectedItem = intent.getStringExtra("selectedItem")
             var selectPosition = 0
-            for ((index, item) in tipsList.withIndex()){
-                if (item.title == selectedItem){
+            for ((index, item) in tipsList.withIndex()) {
+                if (item.title == selectedItem) {
                     selectPosition = index
                     break
                 }

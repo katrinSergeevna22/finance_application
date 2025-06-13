@@ -1,9 +1,9 @@
 package com.example.myfinanceapplication.viewModel
 
 import androidx.lifecycle.ViewModel
-import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.model.Cost
 import com.example.myfinanceapplication.model.DataRepository
+import com.example.myfinanceapplication.model.Goal
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -69,7 +69,7 @@ class EditCostViewModel : ViewModel() {
     private fun editIncomeToBase(newIncome: Map<String, Any>, selectIncome: Cost) {
         val balance = viewModel.getBalance()
 
-        val newSum = newIncome.get("moneyCost")
+        val newSum = newIncome["moneyCost"]
         if (newSum != selectIncome.moneyCost) {
             if (newSum.toString().toDouble() > selectIncome.moneyCost.toString().toDouble()) {
                 val diff =
@@ -85,7 +85,6 @@ class EditCostViewModel : ViewModel() {
         selectIncome.moneyCost = newIncome["moneyCost"].toString().toDouble()
         selectIncome.category = newIncome["category"].toString()
         selectIncome.comment = newIncome["comment"].toString()
-        //setSelectedCost(selectIncome)
         dataRepository.editIncomeToBase(newIncome, selectIncome)
     }
 
@@ -132,7 +131,6 @@ class EditCostViewModel : ViewModel() {
             if (sum > selectCost.moneyCost && sum - selectCost.moneyCost > balance) {
                 answerException = "Недостаочно средст на балансе"
                 return false
-                //Toast.makeText((activity as ExpensesActivity), "Недостаочно средст", Toast.LENGTH_SHORT).show()
             }
             if (selectCost.category == "Цель") {
                 val goalOld = goalsMutableList.filter { it.titleOfGoal == selectCost.goal }[0]
@@ -159,8 +157,6 @@ class EditCostViewModel : ViewModel() {
                                 + goalNew.progressOfMoneyGoal - selectCost.moneyCost
                             ) {
                                 answerException = "Сумма больше, чем нужно для достижения цели"
-
-                                //etSum.setText((selectGoal.moneyGoal - selectGoal.progressOfMoneyGoal).toString())
                                 return false
                             }
                             viewModel.addProgressGoal(
@@ -191,10 +187,6 @@ class EditCostViewModel : ViewModel() {
                 "goal" to titleOfGoal,
                 "comment" to comment,
             )
-            //selectIncome!!.titleOfCost = title
-            //selectIncome!!.moneyCost = sum
-            //selectIncome!!.category = category
-            //viewModel.setSelectedCost(selectIncome!!)
 
             editExpenseToBase(newExpense, selectCost)
             return true

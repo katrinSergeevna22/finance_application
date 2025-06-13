@@ -49,6 +49,18 @@
                     android:text="@string/statistics_title_diagramm_category_income"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:id="@+id/tv_empty_pieChart_income"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"
+                    android:text="Отсутствуют данные для отображения"/>
+
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart_income"
                     android:layout_width="match_parent"
@@ -71,6 +83,18 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:text="@string/statistics_title_diagramm_category_expense"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_empty_pieChart_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"
+                    android:text="Отсутствуют данные для отображения"/>
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart_expense"
@@ -95,6 +119,18 @@
                     android:text="@string/statistics_title_diagramm_category_goals"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:id="@+id/tv_empty_pieChart_goals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"
+                    android:text="Отсутствуют данные для отображения"/>
+
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart_goals"
                     android:layout_width="match_parent"
@@ -117,6 +153,18 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:text="@string/statistics_title_diagramm_progress_goals"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_empty_pieChart_progress_of_goals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"
+                    android:text="Отсутствуют данные для отображения"/>
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart_progress_of_goals"

@@ -1,11 +1,11 @@
-package com.example.myapplication.adapter
+package com.example.myfinanceapplication.view.tips.adapterTips
 
+//import com.example.myapplication.databinding.GoalItemBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-//import com.example.myapplication.databinding.GoalItemBinding
-import com.example.myfinanceapplication.model.Tip
 import com.example.myfinanceapplication.databinding.TipItemBinding
+import com.example.myfinanceapplication.model.Tip
 
 class TipAdapter() : ListAdapter<Tip, TipViewHolder>(TipDiffUtilCallback()) {
 
@@ -15,7 +15,6 @@ class TipAdapter() : ListAdapter<Tip, TipViewHolder>(TipDiffUtilCallback()) {
 
         return TipViewHolder(binding)
     }
-
 
     override fun onBindViewHolder(holder: TipViewHolder, position: Int) {
         holder.onBind(getItem(position))

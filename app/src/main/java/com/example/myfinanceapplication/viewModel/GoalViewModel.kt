@@ -1,12 +1,11 @@
 package com.example.myfinanceapplication.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myfinanceapplication.model.Tip
 import com.example.myfinanceapplication.model.DataRepository
 import com.example.myfinanceapplication.model.Goal
+import com.example.myfinanceapplication.model.Tip
 
 class GoalViewModel : ViewModel() {
     private val dataRepository = DataRepository()
@@ -20,14 +19,6 @@ class GoalViewModel : ViewModel() {
     private val selectedCategory = MutableLiveData<String>()
     var fragmentIsOpen = false
 
-    init {
-        /*
-        loadGoal()
-        loadGoalByCategory()
-        loadOneRandomTipLiveData()
-
-         */
-    }
     fun setSelectedCategory(category: String) {
         selectedCategory.value = category
         categoryGoal = category
@@ -40,12 +31,15 @@ class GoalViewModel : ViewModel() {
     fun getGoalsLiveData(): LiveData<List<Goal>> {
         return goalsLiveData
     }
+
     fun getGoalsCategoryLiveData(): LiveData<List<Goal>> {
         return goalsCategoryLiveData
     }
+
     fun getOneRandomTipLiveData(): LiveData<Tip> {
         return oneRandomTipLiveData
     }
+
     fun loadGoal() {
         dataRepository.getGoals().observeForever() { goals ->
             goalsList.clear()
@@ -60,32 +54,31 @@ class GoalViewModel : ViewModel() {
         }
     }
 
-    fun loadGoalByCategory(){
-        getSelectedCategory().observeForever() { category ->
+    fun loadGoalByCategory() {
+        getSelectedCategory().observeForever { category ->
             // Фильтрация данных по категории и обновление RecyclerView
-            goalsCategoryList = goalsList.filter { it.status == category}.toMutableList()
-            Log.d("vmLoadCategory", category)
-            Log.d("vmLoadCategory", goalsCategoryList.toString())
-
+            goalsCategoryList = goalsList.filter { it.status == category }.toMutableList()
             goalsCategoryLiveData.value = goalsCategoryList
         }
     }
+
     fun loadOneRandomTipLiveData() {
         dataRepository.getOneTip("Goal").observeForever() { tip ->
             oneRandomTipLiveData.value = tip
         }
     }
 
-    fun getTitleOfCategory() : String{
+    fun getTitleOfCategory(): String {
         categoryGoal = selectedCategory.value ?: "Active"
-        when (categoryGoal){
+        when (categoryGoal) {
             "Active" -> return "Активные цели"
             "Deleted" -> return "Архивные цели"
             "Achieved" -> return "Достигнутые цели"
         }
         return "Цели"
     }
-    fun deleteGoal(){
+
+    fun deleteGoal() {
         dataRepository.deleteGoal(selectedGoal.value!!)
     }
 

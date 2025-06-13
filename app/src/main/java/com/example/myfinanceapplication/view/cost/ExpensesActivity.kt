@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -20,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myfinanceapplication.view.cost.adapterCost.CostAdapter
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.ActivityExpensesBinding
 import com.example.myfinanceapplication.model.Goal
@@ -29,6 +27,7 @@ import com.example.myfinanceapplication.utils.NavigationTitle
 import com.example.myfinanceapplication.utils.getIntentForNavigation
 import com.example.myfinanceapplication.utils.navigationForNavigationView
 import com.example.myfinanceapplication.view.BackgroundFragment
+import com.example.myfinanceapplication.view.cost.adapterCost.CostAdapter
 import com.example.myfinanceapplication.viewModel.CostViewModel
 import com.example.myfinanceapplication.viewModel.ModeSorter
 import kotlinx.coroutines.launch
@@ -74,8 +73,7 @@ class ExpensesActivity : AppCompatActivity() {
             }
             adapter = CostAdapter {
                 viewModel.setSelectedCost(it)
-                visibilityFilter(View.GONE)
-                visibilitySearch(View.GONE)
+                unselectedMenuItem()
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -103,8 +101,7 @@ class ExpensesActivity : AppCompatActivity() {
             rcView.addItemDecoration(itemDecoration)
 
             ibAddExpense.setOnClickListener {
-                visibilityFilter(View.GONE)
-                visibilitySearch(View.GONE)
+                unselectedMenuItem()
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, newBackgroundFragment)
                     .addToBackStack(null)
@@ -153,7 +150,7 @@ class ExpensesActivity : AppCompatActivity() {
                             viewModel.resetFilters()
                         } else {
                             if (isCheckedMenuItem()) unselectedMenuItem()
-                            viewModel.sorter(ModeSorter.AscendingIncome)
+                            viewModel.sorter(ModeSorter.AscendingExpense)
                         }
                         item.isChecked = !item.isChecked
                     }
@@ -163,7 +160,7 @@ class ExpensesActivity : AppCompatActivity() {
                             viewModel.resetFilters()
                         } else {
                             if (isCheckedMenuItem()) unselectedMenuItem()
-                            viewModel.sorter(ModeSorter.DescendingIncome)
+                            viewModel.sorter(ModeSorter.DescendingExpense)
                         }
                         item.isChecked = !item.isChecked
                     }
@@ -173,7 +170,7 @@ class ExpensesActivity : AppCompatActivity() {
                             viewModel.resetFilters()
                         } else {
                             if (isCheckedMenuItem()) unselectedMenuItem()
-                            viewModel.sorter(ModeSorter.DateIncome)
+                            viewModel.sorter(ModeSorter.DateExpense)
                         }
                         item.isChecked = !item.isChecked
                     }
@@ -246,7 +243,6 @@ class ExpensesActivity : AppCompatActivity() {
             } ?: listOf()
         )
 
-        Log.d("katrin_category", categoriesList.toString())
         val adapter =
             ArrayAdapter(
                 this@ExpensesActivity,

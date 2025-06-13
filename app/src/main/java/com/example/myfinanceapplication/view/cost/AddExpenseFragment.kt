@@ -1,22 +1,20 @@
 package com.example.myfinanceapplication.view.cost
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.myfinanceapplication.viewModel.CostViewModel
-import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentAddExpenseBinding
+import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.view.BackgroundFragment
 import com.example.myfinanceapplication.viewModel.AddCostViewModel
+import com.example.myfinanceapplication.viewModel.CostViewModel
 
 class AddExpenseFragment : Fragment() {
     lateinit var binding: FragmentAddExpenseBinding
@@ -37,7 +35,6 @@ class AddExpenseFragment : Fragment() {
         viewModel = ViewModelProvider(this)[CostViewModel::class.java]
         addViewModel = ViewModelProvider(this)[AddCostViewModel::class.java]
         viewModel.loadGoals()
-        //CoroutineScope(Dispatchers.Main).launch { addViewModel.loadActiveGoals() }
 
         observeViewModel()
         setupUI()
@@ -51,19 +48,11 @@ class AddExpenseFragment : Fragment() {
 
     fun setupUI() {
         binding.apply {
-            val categoriesArray =
-                resources.getStringArray(R.array.categoriesExpense)
             tvGoalExpense.visibility = View.GONE
             spinnerGoal.visibility = View.GONE
             tvBtnCategory?.text = "Выберите категорию"
-//            addViewModel.category.observe(requireActivity()) {
-//                Log.d("Выбрана", it)
-//                if (it != "") tvBtnCategory?.text = "Выбрана:$it" else tvBtnCategory?.text =
-//                    "Выберите категорию"
-//            }
 
             ibtnCategory.setOnClickListener {
-                //parentFragment?.view?.visibility = View.INVISIBLE
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, BackgroundFragment())
                     .addToBackStack(null)
@@ -77,30 +66,6 @@ class AddExpenseFragment : Fragment() {
                     .addToBackStack(null)
                     .commit()
             }
-//            spinnerCategory.onItemSelectedListener =
-//                object : AdapterView.OnItemSelectedListener {
-//                    override fun onItemSelected(
-//                        parent: AdapterView<*>?,
-//                        view: View?,
-//                        position: Int,
-//                        id: Long
-//                    ) {
-//                        //val selectedGoal = goalsList[position]
-//
-//                        if (spinnerCategory.selectedItem == "Цель") {
-//                            spinnerGoal.visibility = View.VISIBLE
-//                            tvGoalExpense.visibility = View.VISIBLE
-//                        } else {
-//                            spinnerGoal.visibility = View.GONE
-//                            tvGoalExpense.visibility = View.GONE
-//                        }
-//                    }
-//
-//                    override fun onNothingSelected(parent: AdapterView<*>?) {
-//                        spinnerGoal.visibility = View.VISIBLE
-//                        tvGoalExpense.visibility = View.VISIBLE
-//                    }
-//                }
             binding.spinnerGoal.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
@@ -166,7 +131,7 @@ class AddExpenseFragment : Fragment() {
         }
     }
 
-    private fun formattedSum(sum: String): String{
+    private fun formattedSum(sum: String): String {
         val cleanString = sum
             .replace(",", ".")
             .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
@@ -182,10 +147,9 @@ class AddExpenseFragment : Fragment() {
                     else -> cleanString
                 }
             }
+
             else -> cleanString
         }
-
-        Log.d("katrin_formatted", formattedValue)
         return formattedValue
     }
 
@@ -208,20 +172,16 @@ class AddExpenseFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.getGoalsLivaData().observe(viewLifecycleOwner, Observer { goals ->
+        viewModel.getGoalsLivaData().observe(viewLifecycleOwner) { goals ->
             goalForSpinner = goals.map { it.titleOfGoal!! }
             adapter =
                 ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, goalForSpinner)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            Log.d("goalForSpinner3", adapter.toString())
             binding.spinnerGoal.adapter = adapter
 
             goalList = goals
-            Log.d("goalForSpinner1", goalList.toString())
-
-            Log.d("goalForSpinner4", binding.spinnerGoal.adapter.toString())
             adapter.notifyDataSetChanged()
 
-        })
+        }
     }
 }
