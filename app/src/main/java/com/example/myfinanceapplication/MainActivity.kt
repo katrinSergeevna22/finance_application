@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainViewModel
     private lateinit var mainTip: Tip
-    private lateinit var mainGoal: Goal
+    private var mainGoal = Goal()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

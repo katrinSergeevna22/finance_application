@@ -98,7 +98,6 @@
             app:layout_constraintStart_toStartOf="@+id/ib_main_tip"
             app:layout_constraintTop_toTopOf="@+id/ib_main_tip" />
 
-
         <ImageButton
             android:id="@+id/ib_main_goal"
             android:layout_width="0dp"
@@ -196,18 +195,21 @@
 
         <TextView
             android:id="@+id/tv_title_category"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_marginEnd="16dp"
             android:visibility="gone"
             android:fontFamily="@font/open_sans_bold"
             android:text="Вывести доходы по категории"
             android:textColor="@color/dark_violet"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.114"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_filter_category"
-            app:layout_constraintVertical_bias="0.229" />
+            app:layout_constraintVertical_bias="0.217" />
 
         <TextView
             android:id="@+id/tv_title_search"
