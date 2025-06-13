@@ -1,4 +1,4 @@
-package com.example.myapplication.adapter
+package com.example.myfinanceapplication.view.goals.adapterGoals
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.myfinanceapplication.model.Goal

@@ -124,7 +124,6 @@ class DataRepository {
         return expenseLiveData
     }
 
-
     fun getGoals(): MutableLiveData<List<Goal>> {
         val financeItemsLiveData = MutableLiveData<List<Goal>>()
         if (userId != null) {
@@ -228,15 +227,6 @@ class DataRepository {
         }
         return oneTipLiveData
     }
-    /*
-        fun writeUser(login: String, password: String) {
-            //val userId = database.child("users").push().key
-            val newUser = User(login, password)
-            userId = login
-            val q = database.child("users").child(login).setValue(newUser)
-            Log.d("BaseUser", q.isSuccessful.toString())
-        }
-        */
 
     fun writeIncomeData(newCost: Cost) {
         if (userId != null) {
@@ -251,13 +241,8 @@ class DataRepository {
         if (userId != null) {
             database.getReference("users").child(userId).child("income").child(selectIncome.costId)
                 .updateChildren(newIncome)
-                .addOnSuccessListener {
-                    //Toast.makeText(this, "Данные обновлены", Toast.LENGTH_SHORT).show()
-
-                }
-                .addOnFailureListener {
-                    //Toast.makeText(this, "Ошибка обновления данных", Toast.LENGTH_SHORT).show()
-                }
+                .addOnSuccessListener {}
+                .addOnFailureListener { }
         }
     }
 
@@ -284,13 +269,8 @@ class DataRepository {
             database.getReference("users").child(userId).child("expense")
                 .child(selectExpense.costId)
                 .updateChildren(newExpense)
-                .addOnSuccessListener {
-                    //Toast.makeText(this, "Данные обновлены", Toast.LENGTH_SHORT).show()
-
-                }
-                .addOnFailureListener {
-                    //Toast.makeText(this, "Ошибка обновления данных", Toast.LENGTH_SHORT).show()
-                }
+                .addOnSuccessListener { }
+                .addOnFailureListener {}
         }
     }
 
@@ -316,12 +296,8 @@ class DataRepository {
         if (userId != null) {
             database.getReference("users").child(userId).child("goals").child(selectGoal.goalId)
                 .updateChildren(newGoal)
-                .addOnSuccessListener {
-                    //Toast.makeText(, "Данные обновлены", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener {
-                    //Toast.makeText(this, "Ошибка обновления данных", Toast.LENGTH_SHORT).show()
-                }
+                .addOnSuccessListener {}
+                .addOnFailureListener { }
         }
     }
 
@@ -333,11 +309,4 @@ class DataRepository {
                 .removeValue()
         }
     }
-    /*
-        fun writeFinancialAdviceData(advice: Tip) {
-            val adviceId = database.child("users").child("financial_advices").push().key
-            database.child("financial_advices").child(adviceId!!).setValue(advice)
-        }
-
-         */
 }

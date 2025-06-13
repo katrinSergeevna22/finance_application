@@ -1,10 +1,9 @@
-package com.example.myapplication.adapter
+package com.example.myfinanceapplication.view.goals.adapterGoals
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myfinanceapplication.model.Goal
 import com.example.myfinanceapplication.databinding.GoalItemBinding
+import com.example.myfinanceapplication.model.Goal
 import java.util.Locale
 
 class GoalViewHolder(
@@ -22,16 +21,8 @@ class GoalViewHolder(
         with(binding) {
 
             root.setOnClickListener {
-                Log.d("My log: click", goal.goalId.toString())
                 onInfoClicked(goal)
             }
-
-            /*root.setOnLongClickListener{
-                Log.d("My log: long click", goal.goalId.toString())
-                onLongClicked(goal)
-                true
-            }*/
-
 
             tvTitle.text = goal.titleOfGoal
             tvMoneyGoal.text = formatSum(goal.moneyGoal)
@@ -45,8 +36,6 @@ class GoalViewHolder(
             val progress =
                 (currentAmountSaved.toFloat() / totalAmountToSave.toFloat() * 100).toInt()
             progressBar.progress = progress
-            //progressBar.max = goal.moneyGoal.toString().toInt()
-            //progressBar.progress = goal.progressOfMoneyGoal.toString().toInt()
 
         }
     }

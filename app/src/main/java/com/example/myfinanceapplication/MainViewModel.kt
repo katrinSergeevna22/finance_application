@@ -1,6 +1,5 @@
 package com.example.myfinanceapplication
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myfinanceapplication.model.DataRepository
@@ -66,7 +65,6 @@ class MainViewModel : ViewModel() {
                     }
                 }
                 sumIncomeLiveData.value = balanceIncome
-                //binding.tvBalanceIncome.text = "+ " + String.format("%.2f", balanceIncome)
             }
         }
         return sumIncomeLiveData
@@ -85,18 +83,13 @@ class MainViewModel : ViewModel() {
                 calendar.time = currentDate
                 calendar.add(Calendar.DAY_OF_YEAR, -7)
                 val lastWeekDate = calendar.time
-                Log.d("DateLastWeek", lastWeekDate.toString())
                 for (income in listCost) {
                     val incomeDate = sdf.parse(income.date)
-                    if (incomeDate != null) {
-                        Log.d("DateIncomeDate", incomeDate.toString())
-                    }
                     if (incomeDate in lastWeekDate..currentDate) {
                         balanceExpense += income.moneyCost
                     }
                 }
                 sumExpenseLiveData.value = balanceExpense
-                //binding.tvBalanceExpense.text = "- " + String.format("%.2f", balanceExpense)
             }
         }
         return sumExpenseLiveData

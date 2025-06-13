@@ -360,11 +360,7 @@ class CategoriesFragmentForIncome : Fragment() {
                     tvNewCategory4.text -> llNewCategory4.background =
                         resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
 
-                    "Цель" -> {
-//                    ibSelectGoal.background =
-//                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-//                    tvSelectGoal.setTextColor(resources.getColor(R.color.dark_violet))
-                    }
+                    "Цель" -> {}
 
                     else -> {
                         llOther.background =

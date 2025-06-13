@@ -1,12 +1,10 @@
 package com.example.myfinanceapplication.view.cost
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentInfoExpenseBinding
@@ -19,18 +17,18 @@ class InfoExpenseFragment : Fragment() {
     lateinit var binding: FragmentInfoExpenseBinding
     lateinit var viewModel: CostViewModel
     private val dataRepository = DataRepository()
-    var goalMutableList = mutableListOf<Goal>()
-    val newBackgroundFragment = BackgroundFragment.newInstance()
+    private var goalMutableList = mutableListOf<Goal>()
+    private val newBackgroundFragment = BackgroundFragment.newInstance()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentInfoExpenseBinding.inflate(inflater)
 
-        Log.d("Fragment", "InfoIncome")
-        viewModel = ViewModelProvider(requireActivity()).get(CostViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity())[CostViewModel::class.java]
 
-        viewModel.selectedCost.observe(viewLifecycleOwner, Observer { cost ->
+        viewModel.selectedCost.observe(viewLifecycleOwner) { cost ->
             binding.apply {
                 tvTitleInfo.text = cost.titleOfCost
                 tvMoneyExpenseInfo.text = cost.moneyCost.toString()
@@ -40,8 +38,7 @@ class InfoExpenseFragment : Fragment() {
                     tvCategoryGoal.visibility = View.VISIBLE
                     tvExpenseCategoryGoal.visibility = View.VISIBLE
                     tvExpenseCategoryGoal.text = cost.goal
-                }
-                else {
+                } else {
                     tvCategoryGoal.visibility = View.GONE
                     tvExpenseCategoryGoal.visibility = View.GONE
                 }
@@ -49,15 +46,13 @@ class InfoExpenseFragment : Fragment() {
                 tvExpenseComment.text = cost.comment
 
             }
-        })
+        }
 
         val goalLiveData = dataRepository.getGoals()
-        goalLiveData.observe((activity as ExpensesActivity), Observer { goalsItem ->
+        goalLiveData.observe((activity as ExpensesActivity)) { goalsItem ->
             goalMutableList.clear()
             goalMutableList.addAll(goalsItem)
-            Log.d("DeleteInfoObserveItem", goalsItem.toString())
-            Log.d("DeleteInfoObserve", goalMutableList.toString())
-        })
+        }
 
         binding.ibEdit.setOnClickListener {
             requireFragmentManager().beginTransaction()
@@ -72,8 +67,7 @@ class InfoExpenseFragment : Fragment() {
 
         binding.ibDelete.setOnClickListener {
             val selectExpense = viewModel.selectedCost.value!!
-            Log.d("DeleteInfo", selectExpense.goal)
-            if (selectExpense.category == "Цель"){
+            if (selectExpense.category == "Цель") {
                 val goalList =
                     goalMutableList.filter { it.titleOfGoal == selectExpense.goal }
                 if (goalList.isNotEmpty()) {
@@ -88,7 +82,7 @@ class InfoExpenseFragment : Fragment() {
             (activity as ExpensesActivity).closeFragments()
         }
 
-        binding.ibClose.setOnClickListener{
+        binding.ibClose.setOnClickListener {
             (activity as ExpensesActivity).closeFragments()
         }
         return binding.root

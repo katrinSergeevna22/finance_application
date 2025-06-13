@@ -2,7 +2,6 @@ package com.example.myfinanceapplication.view.cost
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -283,10 +282,7 @@ class CategoriesFragmentForExpense : Fragment() {
             }
             ibSave.setOnClickListener {
                 val newCategory = etNewCategory.text.toString()
-//                viewModel.category.value =
-//                    if (selectingCategory == categoriesArray[1])
-//                        newCategory
-//                    else selectingCategory
+
                 (if (selectingCategory == categoriesArray[1] && newCategory.isNotEmpty())
                     newCategory
                 else selectingCategory)?.let { category ->
@@ -302,7 +298,6 @@ class CategoriesFragmentForExpense : Fragment() {
                     )
                 }
                 (activity as ExpensesActivity).closeFragments()
-                //requireActivity().supportFragmentManager.popBackStack()
             }
             ibSelectGoal.setOnClickListener {
                 (targetFragment as? AddExpenseFragment)?.receiveData(
@@ -318,6 +313,7 @@ class CategoriesFragmentForExpense : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun selectedCategory() {
         selectingCategory =
             when (targetFragment) {
@@ -333,8 +329,7 @@ class CategoriesFragmentForExpense : Fragment() {
                     ""
                 }
             }
-        Log.d("katrin_selectedCategory", selectingCategory.toString())
-        Log.d("katrin_selectedCategory_tv1", binding.tvCategoryText1.text.toString())
+
         if (!selectingCategory.isNullOrBlank()) {
             binding.apply {
                 when (selectingCategory) {
@@ -375,9 +370,9 @@ class CategoriesFragmentForExpense : Fragment() {
                         resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
 
                     "Цель" -> {
-//                    ibSelectGoal.background =
-//                        resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
-//                    tvSelectGoal.setTextColor(resources.getColor(R.color.dark_violet))
+//                        ibSelectGoal.background =
+//                            resources.getDrawable(R.drawable.shape_rectangle_contur_violet)
+//                        tvSelectGoal.setTextColor(resources.getColor(R.color.dark_violet))
                     }
 
                     else -> {

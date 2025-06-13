@@ -77,49 +77,77 @@ class StatisticsActivity : AppCompatActivity() {
     }
 
     private fun initIncomeStatistics() {
-        setupPieChart(binding.pieChartIncome)
+        binding.apply {
+            setupPieChart(pieChartIncome)
 
-        lifecycle.coroutineScope.launch {
-            viewModel.incomesLiveData.observeForever { incomesList ->
-                if (incomesList.isNotEmpty()) {
-                    val incomesListOfPair =
-                        incomesList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() })
-                            ?: mapOf()
-                    updateChart(incomesListOfPair, pieChart = binding.pieChartIncome)
+            lifecycle.coroutineScope.launch {
+                viewModel.incomesLiveData.observeForever { incomesList ->
+                    pieChartIncome.visibility = View.VISIBLE
+                    tvEmptyPieChartIncome.visibility = View.GONE
+                    if (incomesList.isNotEmpty()) {
+                        val incomesListOfPair =
+                            incomesList?.filter { it.category != null }
+                                ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() })
+                                ?: mapOf()
+                        updateChart(incomesListOfPair, pieChart = pieChartIncome)
+                    } else {
+                        pieChartIncome.visibility = View.GONE
+                        tvEmptyPieChartIncome.visibility = View.VISIBLE
+                    }
                 }
             }
         }
     }
 
     private fun initExpenseStatistics() {
-        setupPieChart(binding.pieChartExpense)
-        lifecycle.coroutineScope.launch {
-            viewModel.expensesLiveData.observeForever { expensesList ->
-                if (expensesList.isNotEmpty()) {
-                    val expensesListOfPair =
-                        expensesList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() })
-                            ?: mapOf()
-                    updateChart(expensesListOfPair, pieChart = binding.pieChartExpense)
+        binding.apply {
+            setupPieChart(pieChartExpense)
+            lifecycle.coroutineScope.launch {
+                viewModel.expensesLiveData.observeForever { expensesList ->
+                    if (expensesList.isNotEmpty()) {
+                        pieChartExpense.visibility = View.VISIBLE
+                        tvEmptyPieChartExpense.visibility = View.GONE
+                        val expensesListOfPair =
+                            expensesList?.filter { it.category != null }
+                                ?.associateBy({ it.category ?: "" }, { it.moneyCost.toLong() })
+                                ?: mapOf()
+                        updateChart(expensesListOfPair, pieChart = pieChartExpense)
+                    } else {
+                        pieChartExpense.visibility = View.GONE
+                        tvEmptyPieChartExpense.visibility = View.VISIBLE
+                    }
                 }
             }
         }
     }
 
     private fun initGoalsStatistics() {
-        setupPieChart(binding.pieChartGoals)
-        lifecycle.coroutineScope.launch {
-            viewModel.goalsLiveData.observeForever { goalsList ->
-                if (goalsList.isNotEmpty()) {
-                    val goalsListOfPair =
-                        goalsList?.filter { it.category != null }
-                            ?.associateBy({ it.category ?: "" }, { it.moneyGoal.toLong() })
-                            ?: mapOf()
+        binding.apply {
+            setupPieChart(pieChartGoals)
+            lifecycle.coroutineScope.launch {
+                viewModel.goalsLiveData.observeForever { goalsList ->
+                    if (goalsList.isNotEmpty()) {
+                        pieChartGoals.visibility = View.VISIBLE
+                        tvEmptyPieChartGoals.visibility = View.GONE
 
-                    updateChart(goalsListOfPair, pieChart = binding.pieChartGoals)
+                        pieChartProgressOfGoals.visibility = View.VISIBLE
+                        tvEmptyPieChartProgressOfGoals.visibility = View.GONE
 
-                    initGoalsProgressStatistics()
+                        val goalsListOfPair =
+                            goalsList?.filter { it.category != null }
+                                ?.associateBy({ it.category ?: "" }, { it.moneyGoal.toLong() })
+                                ?: mapOf()
+
+                        updateChart(goalsListOfPair, pieChart = pieChartGoals)
+
+                        initGoalsProgressStatistics()
+                    } else {
+                        pieChartGoals.visibility = View.GONE
+                        tvEmptyPieChartGoals.visibility = View.VISIBLE
+
+                        pieChartProgressOfGoals.visibility = View.GONE
+                        tvEmptyPieChartProgressOfGoals.visibility = View.VISIBLE
+                    }
                 }
             }
         }

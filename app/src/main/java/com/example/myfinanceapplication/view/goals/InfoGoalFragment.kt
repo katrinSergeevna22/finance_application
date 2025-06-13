@@ -2,11 +2,11 @@ package com.example.myfinanceapplication.view.goals
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfinanceapplication.R
 import com.example.myfinanceapplication.databinding.FragmentInfoGoalBinding
@@ -56,7 +56,6 @@ class InfoGoalFragment : Fragment() {
                 "Deleted" -> {
                     ibAddMoney.visibility = View.GONE
                     tvAddMoney.visibility = View.GONE
-                    //tvDelete.text = "Восстановить"
                     tvDelete.text = "Восстановить"
                     tvEdit.text = "Удалить"
                 }
@@ -64,10 +63,6 @@ class InfoGoalFragment : Fragment() {
                 "Achieved" -> {
                     ibAddMoney.visibility = View.GONE
                     tvAddMoney.visibility = View.GONE
-                    //ibEdit.visibility = View.GONE
-                    //tvEdit.visibility = View.GONE
-                    //ibDelete.visibility = View.GONE
-                    //tvDelete.visibility = View.GONE
                 }
             }
 
@@ -97,7 +92,7 @@ class InfoGoalFragment : Fragment() {
 
             ibDelete.setOnClickListener {
                 val selectGoal = viewModel.selectedGoal.value
-                var newStatus = ""
+                var newStatus: String
                 if (viewModel.getSelectedCategory().value == "Deleted") {
                     if (selectGoal?.moneyGoal == selectGoal?.progressOfMoneyGoal) {
                         newStatus = "Achieved"
@@ -130,10 +125,6 @@ class InfoGoalFragment : Fragment() {
 
         return binding.root
 
-    }
-
-    fun closeInfoFragment() {
-        this.parentFragmentManager.popBackStack()
     }
 
     companion object {
