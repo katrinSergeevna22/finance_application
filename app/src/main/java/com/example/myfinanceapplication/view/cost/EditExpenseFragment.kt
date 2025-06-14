@@ -80,7 +80,7 @@ class EditExpenseFragment : Fragment() {
                 }
             tvGoalExpense.visibility = View.GONE
             spinnerGoal.visibility = View.GONE
-            tvBtnCategory?.text = "Выберите категорию"
+            tvBtnCategory.text = "Выберите категорию"
             ibtnCategory.setOnClickListener {
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.backgroundFragment, BackgroundFragment())
@@ -102,7 +102,7 @@ class EditExpenseFragment : Fragment() {
     fun receiveData(data: String) {
         category = data
         binding.apply {
-            binding.tvBtnCategory?.text = if (data != "")
+            binding.tvBtnCategory.text = if (data != "")
                 "Выбрана: $data"
             else
                 "Выберите категорию"
@@ -129,7 +129,7 @@ class EditExpenseFragment : Fragment() {
                 selectExpense = cost
                 editViewModel.selectCost = cost
                 selectingCategory = cost.category
-                tvBtnCategory?.text = if (selectingCategory != "")
+                tvBtnCategory.text = if (selectingCategory != "")
                     "Выбрана: $selectingCategory"
                 else
                     "Выберите категорию"

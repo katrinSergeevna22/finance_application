@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.cost.EditExpenseFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="250dp"
+        android:fadeScrollbars="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -91,18 +92,36 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etSum" />
 
-
-            <Spinner
+            <ImageButton
                 android:id="@+id/ibtnCategory"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginEnd="16dp"
-                android:entries="@array/categoriesExpense"
-                android:spinnerMode="dropdown"
-                app:layout_constraintEnd_toStartOf="@+id/spinnerGoal"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:background="@color/white"
+                android:foregroundGravity="center"
+                android:src="@drawable/shape_rectangle_contur_violet"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_category" />
+
+            <TextView
+                android:id="@+id/tv_btn_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/open_sans_bold"
+                android:maxWidth="250dp"
+                android:maxLines="1"
+                android:textColor="@color/dark_violet"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/ibtnCategory"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ibtnCategory"
+                tools:text="Выберите категорию" />
 
             <TextView
                 android:id="@+id/tv_goalExpense"
@@ -184,6 +203,7 @@
                 app:layout_constraintStart_toEndOf="@+id/etMultyLineComment"
                 app:layout_constraintTop_toBottomOf="@+id/tv_comment"
                 app:layout_constraintVertical_bias="0.158" />
+
             <TextView
                 android:id="@+id/tv_save"
                 android:layout_width="wrap_content"

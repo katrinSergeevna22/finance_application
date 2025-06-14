@@ -21,10 +21,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/filter_menu"
             app:navigationIcon="@drawable/ic_menu"
             app:title="@string/app_name"
             app:titleTextColor="@color/white" />
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcView"
@@ -39,7 +39,6 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_balance" />
-
 
         <ImageButton
             android:id="@+id/ibAddIncome"
@@ -95,7 +94,6 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/ib_main_tip"
             app:layout_constraintTop_toTopOf="@+id/ib_main_tip" />
-
 
         <ImageButton
             android:id="@+id/ib_main_goal"
@@ -218,6 +216,137 @@
             app:layout_constraintBottom_toBottomOf="@+id/iv_balance"
             app:layout_constraintEnd_toEndOf="@+id/iv_balance"
             app:layout_constraintTop_toTopOf="@+id/iv_balance" />
+
+        <ImageView
+            android:id="@+id/iv_filter_category"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:minHeight="100dp"
+            android:maxHeight="225dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:srcCompat="@drawable/shape_rectangle_contur_violet" />
+
+        <TextView
+            android:id="@+id/tv_title_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="Вывести доходы по категории"
+            android:textColor="@color/dark_violet"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.114"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_filter_category"
+            app:layout_constraintVertical_bias="0.217" />
+
+        <TextView
+            android:id="@+id/tv_title_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="Поиск по названию"
+            android:textColor="@color/dark_violet"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_filter_category"
+            app:layout_constraintVertical_bias="0.229" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/open_sans_bold"
+            android:hint="Введите название "
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_search"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Spinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/white"
+            android:entries="@array/categoriesExpense"
+            android:fontFamily="@font/open_sans_bold"
+            android:spinnerMode="dropdown"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_category"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageButton
+            android:id="@+id/ib_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:drawable/ic_delete"
+            android:src="@android:drawable/ic_delete"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintEnd_toEndOf="@+id/iv_filter_category"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_filter_category"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageButton
+            android:id="@+id/ib_save_category"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/shape_rectangle_violet"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_filter_category"
+            app:layout_constraintEnd_toEndOf="@+id/iv_filter_category"
+            app:layout_constraintHorizontal_bias="0.489"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_filter_category"
+            app:layout_constraintVertical_bias="0.97" />
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="@string/done"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/ib_save_category"
+            app:layout_constraintEnd_toEndOf="@+id/ib_save_category"
+            app:layout_constraintStart_toStartOf="@+id/ib_save_category"
+            app:layout_constraintTop_toTopOf="@+id/ib_save_category" />
 
         <FrameLayout
             android:id="@+id/backgroundFragment"

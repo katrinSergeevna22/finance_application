@@ -92,7 +92,7 @@ class InfoGoalFragment : Fragment() {
 
             ibDelete.setOnClickListener {
                 val selectGoal = viewModel.selectedGoal.value
-                var newStatus: String
+                val newStatus: String
                 if (viewModel.getSelectedCategory().value == "Deleted") {
                     if (selectGoal?.moneyGoal == selectGoal?.progressOfMoneyGoal) {
                         newStatus = "Achieved"

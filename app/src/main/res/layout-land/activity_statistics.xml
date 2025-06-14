@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerGoal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.StatisticsActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_violet"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_menu"
+            app:title="@string/app_name"
+            app:titleTextColor="@color/white" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="@string/statistics_title_diagramm_category_income"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_empty_pieChart_income"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"
+                    android:text="Отсутствуют данные для отображения"/>
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart_income"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="16dp"
+                    android:maxHeight="1000dp"
+                    android:minHeight="200dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="@string/statistics_title_diagramm_category_expense"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_empty_pieChart_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"
+                    android:text="Отсутствуют данные для отображения"/>
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="16dp"
+                    android:maxHeight="1000dp"
+                    android:minHeight="200dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pieChart_income" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="@string/statistics_title_diagramm_category_goals"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_empty_pieChart_goals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"
+                    android:text="Отсутствуют данные для отображения"/>
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart_goals"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="16dp"
+                    android:maxHeight="1000dp"
+                    android:minHeight="200dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pieChart_expense" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="@string/statistics_title_diagramm_progress_goals"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_empty_pieChart_progress_of_goals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/red"
+                    android:text="Отсутствуют данные для отображения"/>
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart_progress_of_goals"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:maxHeight="1000dp"
+                    android:minHeight="150dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="Внесение нового дохода"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_lineChart_income"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:entries="@array/categoriesTimeForDiagram" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/lineChart_income"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:maxWidth="1000dp"
+                            android:maxHeight="800dp"
+                            android:minWidth="500dp"
+                            android:minHeight="300dp" />
+                    </FrameLayout>
+                </HorizontalScrollView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="Внесение нового расхода"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_lineChart_expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:entries="@array/categoriesTimeForDiagram" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/lineChart_expense"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:maxWidth="1000dp"
+                            android:maxHeight="800dp"
+                            android:minWidth="500dp"
+                            android:minHeight="300dp" />
+                    </FrameLayout>
+                </HorizontalScrollView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="Изменения прогресса достижения целей"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinner_lineChart_goals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:entries="@array/categoriesTimeForDiagram" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/lineChart_progress_of_goals"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:maxWidth="1000dp"
+                            android:maxHeight="800dp"
+                            android:minWidth="500dp"
+                            android:minHeight="300dp" />
+                    </FrameLayout>
+                </HorizontalScrollView>
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/dark_violet"
+        app:headerLayout="@layout/header_navigation_menu"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/nav_menu" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
