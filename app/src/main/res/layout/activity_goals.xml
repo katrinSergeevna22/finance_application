@@ -25,9 +25,7 @@
             app:navigationIcon="@drawable/ic_menu"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="@string/app_name"
-            app:titleTextColor="@color/white"
-            />
-
+            app:titleTextColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcView"
@@ -136,8 +134,6 @@
             </FrameLayout>
         </ScrollView>
 
-
-
         <ImageView
             android:id="@+id/iv_balance"
             android:layout_width="0dp"
@@ -149,14 +145,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:srcCompat="@drawable/shape_rectangle_contur_white" />
+
         <TextView
             android:id="@+id/tv_title_goals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:fontFamily="@font/open_sans_bold"
             android:text="@string/goals"
             android:textColor="@color/white"
-            android:fontFamily="@font/open_sans_bold"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_balance"
             app:layout_constraintStart_toStartOf="parent"
@@ -184,8 +181,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-        </FrameLayout>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <FrameLayout
             android:id="@+id/place_holder_infoFragment"
@@ -201,7 +197,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_balance"
             app:layout_constraintVertical_bias="0.0">
-
         </FrameLayout>
 
         <FrameLayout

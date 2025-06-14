@@ -26,7 +26,6 @@
             app:title="@string/app_name"
             app:titleTextColor="@color/white" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcView"
             android:layout_width="match_parent"

@@ -41,7 +41,7 @@ class ExpensesActivity : AppCompatActivity() {
     private var mainTip = Tip()
     private var mainGoal = Goal()
 
-    lateinit var categoriesList: List<String>
+    var categoriesList: List<String> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

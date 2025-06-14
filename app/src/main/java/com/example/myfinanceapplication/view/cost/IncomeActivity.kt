@@ -124,7 +124,7 @@ class IncomeActivity : AppCompatActivity() {
                 }
             }
 
-            ibClose?.setOnClickListener {
+            ibClose.setOnClickListener {
                 visibilityFilter(View.GONE)
                 visibilitySearch(View.GONE)
             }
