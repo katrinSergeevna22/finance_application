@@ -309,12 +309,12 @@ class CategoriesFragmentForIncome : Fragment() {
     private fun selectedCategory() {
         selectingCategory =
             when (targetFragment) {
-                is EditExpenseFragment -> {
-                    (targetFragment as? EditExpenseFragment)?.selectingCategory
+                is EditIncomeFragment -> {
+                    (targetFragment as? EditIncomeFragment)?.selectingCategory
                 }
 
-                is AddExpenseFragment -> {
-                    (targetFragment as? AddExpenseFragment)?.category
+                is AddIncomeFragment -> {
+                    (targetFragment as? AddIncomeFragment)?.category
                 }
 
                 else -> {

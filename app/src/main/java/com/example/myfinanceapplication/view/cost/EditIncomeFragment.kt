@@ -66,7 +66,7 @@ class EditIncomeFragment : Fragment() {
         }
     }
 
-    private var selectingCategory = ""
+    var selectingCategory = ""
     private fun observeSelectCost() {
         viewModel.selectedCost.observe(viewLifecycleOwner) { cost ->
             binding.apply {
@@ -137,7 +137,7 @@ class EditIncomeFragment : Fragment() {
     fun receiveData(data: String) {
         selectingCategory = data
         binding.apply {
-            tvBtnCategory?.text = if (data != "")
+            tvBtnCategory.text = if (data != "")
                 "Выбрана: $data"
             else
                 "Выберите категорию"

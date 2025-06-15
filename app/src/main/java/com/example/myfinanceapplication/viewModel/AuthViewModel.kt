@@ -13,22 +13,24 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 class AuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
-    private val _registerResult = MutableLiveData<Resource<String>>(Resource.Loading())
+    private val _registerResult = MutableLiveData<Resource<String>>()
     val registerResult: LiveData<Resource<String>> = _registerResult
 
-    private val _loginResult = MutableLiveData<Resource<String>>(Resource.Loading())
+    private val _loginResult = MutableLiveData<Resource<String>>()
     val loginResult: LiveData<Resource<String>> = _loginResult
 
     fun register(email: String, password: String) {
+        _registerResult.value = Resource.Loading() // Показываем состояние загрузки
+
         // Валидация ввода
         when {
             email.isBlank() && password.isBlank() -> {
-                _registerResult.value = Resource.Error("Введите email и пароль")
+                _registerResult.value = Resource.Error("Введите логин и пароль")
                 return
             }
 
             email.isBlank() -> {
-                _registerResult.value = Resource.Error("Введите email")
+                _registerResult.value = Resource.Error("Введите логин")
                 return
             }
 
@@ -37,18 +39,20 @@ class AuthViewModel : ViewModel() {
                 return
             }
 
-            password.length < 6 -> {
-                _registerResult.value = Resource.Error("Пароль должен содержать минимум 6 символов")
-                return
-            }
-
             !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                 _registerResult.value = Resource.Error("Введите корректный email")
                 return
             }
-        }
 
-        _registerResult.value = Resource.Loading() // Показываем состояние загрузки
+            password.length < 8 -> {
+                _registerResult.value = Resource.Error("Пароль должен содержать минимум 8 символов")
+                return
+            }
+
+            !password.matches(Regex("^(?=.*[A-Za-z]+|[\\d]+)[A-Za-z\\d!@#\$%^&*()-+=]{8,}\$")) -> {
+                _registerResult.value = Resource.Error("Ненадежный пароль")
+            }
+        }
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -69,6 +73,8 @@ class AuthViewModel : ViewModel() {
     }
 
     fun logIn(email: String, password: String) {
+        _loginResult.value = Resource.Loading() // Показываем состояние загрузки
+
         // Валидация ввода
         when {
             email.isBlank() && password.isBlank() -> {
@@ -91,9 +97,6 @@ class AuthViewModel : ViewModel() {
                 return
             }
         }
-
-        _loginResult.value = Resource.Loading() // Показываем состояние загрузки
-
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

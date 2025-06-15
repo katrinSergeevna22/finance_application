@@ -59,9 +59,6 @@ class IncomeActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        val newBackgroundFragment = BackgroundFragment.newInstance()
-        val infoIncomeFragment = InfoIncomeFragment.newInstance()
-        val newAddIncomeFragment = AddIncomeFragment.newInstance()
 
         binding.apply {
             toolbar.apply {
@@ -159,12 +156,12 @@ class IncomeActivity : AppCompatActivity() {
                 viewModel.setSelectedCost(it)
                 unselectedMenuItem()
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.backgroundFragment, newBackgroundFragment)
+                    .replace(R.id.backgroundFragment, BackgroundFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.place_holder_infoIncomeFragment, infoIncomeFragment)
+                    .replace(R.id.place_holder_infoIncomeFragment, InfoIncomeFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
             }
@@ -185,13 +182,13 @@ class IncomeActivity : AppCompatActivity() {
             ibAddIncome.setOnClickListener {
                 unselectedMenuItem()
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.backgroundFragment, newBackgroundFragment)
+                    .replace(R.id.backgroundFragment, BackgroundFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
 
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.place_holder_addIncomeFragment, newAddIncomeFragment)
+                    .replace(R.id.place_holder_addIncomeFragment, AddIncomeFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
 

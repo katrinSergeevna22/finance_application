@@ -71,7 +71,7 @@ class InfoGoalFragment : Fragment() {
                     if ((viewModel.selectedGoal.value?.progressOfMoneyGoal ?: 0.0) != 0.0) {
                         Toast.makeText(
                             (activity as GoalsActivity),
-                            "Нельзя удалить цель, по которой у тебя есть прогресс! Продолжайте двигаться к своей цели!",
+                            "Нельзя удалить цель, по достижению, которой у тебя есть прогресс! Продолжайте двигаться к своей цели!",
                             Toast.LENGTH_LONG,
                         ).show()
                     } else {

@@ -27,64 +27,65 @@ class AuthActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupUI()
+        observeByRegisterResult()
+        observeByLoginResult()
     }
 
-    private val isForTesting = false
-    fun setupUI() {
+    private fun observeByRegisterResult() {
+        viewModel.registerResult.observe(this@AuthActivity) { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    hideLoading()
+                    resource.data?.let { text -> showMessage(text) }
+                }
+
+                is Resource.Error -> {
+                    hideLoading()
+                    resource.message?.let { text -> showMessage(text) }
+                }
+
+                is Resource.Loading -> {
+                    showLoading()
+                }
+            }
+        }
+    }
+
+    private fun observeByLoginResult() {
+        viewModel.loginResult.observe(this@AuthActivity) { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    hideLoading()
+                    resource.data?.let { text -> showMessage(text) }
+                    startActivity(Intent(this@AuthActivity, MainActivity::class.java))
+                    finish()
+                }
+
+                is Resource.Error -> {
+                    hideLoading()
+                    resource.message?.let { text -> showMessage(text) }
+                }
+
+                is Resource.Loading -> {
+                    showLoading()
+                }
+            }
+
+        }
+    }
+
+    private fun setupUI() {
         binding.apply {
             ibRegister.setOnClickListener {
-                val email = binding.etLogin.text.toString()
-                val password = binding.etPassword.text.toString()
-
-                if (!password.matches(Regex("^(?=.*[A-Za-z]+|[\\d]+)[A-Za-z\\d!@#\$%^&*()-+=]{8,}\$"))) {
-                    Toast.makeText(this@AuthActivity, "Ненадежный пароль", Toast.LENGTH_LONG).show()
-                } else {
-                    viewModel.register(email, password)
-                    viewModel.registerResult.observe(this@AuthActivity) { resource ->
-                        when (resource) {
-                            is Resource.Success -> {
-                                hideLoading()
-                                resource.data?.let { text -> showMessage(text) }
-                            }
-
-                            is Resource.Error -> {
-                                hideLoading()
-                                resource.message?.let { text -> showMessage(text) }
-                            }
-
-                            is Resource.Loading -> {
-                                showLoading()
-                            }
-                        }
-                    }
-                }
-
+                val email = etLogin.text.toString()
+                val password = etPassword.text.toString()
+                viewModel.register(email, password)
             }
+
             ibLogIn.setOnClickListener {
-                val email = if (isForTesting) "katrin@mail.ru" else binding.etLogin.text.toString()
-                val password = if (isForTesting) "123456789" else binding.etPassword.text.toString()
+                val email = etLogin.text.toString()
+                val password = etPassword.text.toString()
                 viewModel.logIn(email, password)
-
-                viewModel.loginResult.observe(this@AuthActivity) { resource ->
-                    when (resource) {
-                        is Resource.Success -> {
-                            hideLoading()
-                            resource.data?.let { text -> showMessage(text) }
-                            startActivity(Intent(this@AuthActivity, MainActivity::class.java))
-                            finish()
-                        }
-
-                        is Resource.Error -> {
-                            hideLoading()
-                            resource.message?.let { text -> showMessage(text) }
-                        }
-
-                        is Resource.Loading -> {
-                            showLoading()
-                        }
-                    }
-
-                }
             }
         }
     }

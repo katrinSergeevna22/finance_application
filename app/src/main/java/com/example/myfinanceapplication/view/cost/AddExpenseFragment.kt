@@ -50,7 +50,7 @@ class AddExpenseFragment : Fragment() {
         binding.apply {
             tvGoalExpense.visibility = View.GONE
             spinnerGoal.visibility = View.GONE
-            tvBtnCategory?.text = "Выберите категорию"
+            tvBtnCategory.text = "Выберите категорию"
 
             ibtnCategory.setOnClickListener {
                 requireActivity().supportFragmentManager.beginTransaction()
@@ -164,6 +164,14 @@ class AddExpenseFragment : Fragment() {
             if (resources.getStringArray(R.array.categoriesExpense)[0] == data) {
                 tvGoalExpense.visibility = View.VISIBLE
                 spinnerGoal.visibility = View.VISIBLE
+
+                if (goalForSpinner.isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Добавьте активные цели, чтобы откладывать на них",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             } else {
                 tvGoalExpense.visibility = View.GONE
                 spinnerGoal.visibility = View.GONE
@@ -173,13 +181,15 @@ class AddExpenseFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.getGoalsLivaData().observe(viewLifecycleOwner) { goals ->
-            goalForSpinner = goals.map { it.titleOfGoal!! }
+            val activeGoals = goals.filter { it.status == "Active" }
+
+            goalForSpinner = activeGoals.map { it.titleOfGoal ?: "" }
             adapter =
                 ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, goalForSpinner)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerGoal.adapter = adapter
 
-            goalList = goals
+            goalList = activeGoals
             adapter.notifyDataSetChanged()
 
         }

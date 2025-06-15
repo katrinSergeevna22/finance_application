@@ -101,6 +101,7 @@ class EditExpenseFragment : Fragment() {
 
     fun receiveData(data: String) {
         category = data
+        selectingCategory = data
         binding.apply {
             binding.tvBtnCategory.text = if (data != "")
                 "Выбрана: $data"
@@ -110,6 +111,14 @@ class EditExpenseFragment : Fragment() {
             if (resources.getStringArray(R.array.categoriesExpense)[0] == data) {
                 tvGoalExpense.visibility = View.VISIBLE
                 spinnerGoal.visibility = View.VISIBLE
+
+                if (goalForSpinner.isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Добавьте активные цели, чтобы откладывать на них",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             } else {
                 tvGoalExpense.visibility = View.GONE
                 spinnerGoal.visibility = View.GONE
@@ -139,7 +148,8 @@ class EditExpenseFragment : Fragment() {
         viewModel.getGoalsLivaData().observe(viewLifecycleOwner) { goals ->
             val activeGoals =
                 goals.filter { it.status == "Active" || it.titleOfGoal == selectExpense.goal }
-            goalForSpinner = activeGoals.map { it.titleOfGoal!! }.toMutableList()
+
+            goalForSpinner = activeGoals.map { it.titleOfGoal ?: "" }.toMutableList()
 
             adapter =
                 ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, goalForSpinner)
@@ -152,7 +162,10 @@ class EditExpenseFragment : Fragment() {
                 binding.apply {
                     tvGoalExpense.visibility = View.VISIBLE
                     spinnerGoal.visibility = View.VISIBLE
-                    spinnerGoal.setSelection(goalForSpinner.indexOf(selectExpense.goal))
+
+                    if (goalForSpinner.isNotEmpty())  {
+                        spinnerGoal.setSelection(goalForSpinner.indexOf(selectExpense.goal))
+                    }
                 }
             }
             adapter.notifyDataSetChanged()

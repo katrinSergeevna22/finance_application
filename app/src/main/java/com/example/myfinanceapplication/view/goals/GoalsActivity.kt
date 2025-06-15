@@ -61,9 +61,6 @@ class GoalsActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupUI() {
-        val backgroundFragment = BackgroundFragment.newInstance()
-        val infoGoalFragment = InfoGoalFragment.newInstance()
-        val newAddGoalFragment = AddGoalFragment.newInstance()
         binding.apply {
             toolbar.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
@@ -73,13 +70,13 @@ class GoalsActivity : AppCompatActivity() {
                 viewModel.setSelectedGoal(it)
                 viewModel.fragmentIsOpen = true
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.backgroundFragment, backgroundFragment)
+                    .replace(R.id.backgroundFragment, BackgroundFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
 
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.place_holder_infoFragment, infoGoalFragment)
+                    .replace(R.id.place_holder_infoFragment, InfoGoalFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
             }
@@ -100,13 +97,13 @@ class GoalsActivity : AppCompatActivity() {
                 viewModel.fragmentIsOpen = true
 
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.backgroundFragment, backgroundFragment)
+                    .replace(R.id.backgroundFragment, BackgroundFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
 
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.place_holder_addFragment, newAddGoalFragment)
+                    .replace(R.id.place_holder_addFragment, AddGoalFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
             }

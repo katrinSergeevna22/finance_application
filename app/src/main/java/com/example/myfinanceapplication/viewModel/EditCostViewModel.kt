@@ -132,51 +132,65 @@ class EditCostViewModel : ViewModel() {
                 answerException = "Недостаочно средст на балансе"
                 return false
             }
-            if (selectCost.category == "Цель") {
-                val goalOld = goalsMutableList.filter { it.titleOfGoal == selectCost.goal }[0]
-                if (category == "Цель") {
-                    val goalNew = goalsMutableList.filter { it.titleOfGoal == titleOfGoal }[0]
 
-                    if (goalOld != goalNew) {
+            if (category == "Цель" && titleOfGoal.isBlank()) {
+                answerException = "Выберите цель, если список целей пуст - " +
+                        "добавьте новые активные цели"
+                return false
+            }
+
+            if (selectCost.category == "Цель") {
+                val goalOld = goalsMutableList.find { it.titleOfGoal == selectCost.goal }
+                if (goalOld != null) {
+                    if (category == "Цель") {
+                        val goalNew = goalsMutableList.find { it.titleOfGoal == titleOfGoal }
+
+                        if (goalNew != null) {
+                            if (goalOld != goalNew) {
+                                viewModel.minusProgressGoal(
+                                    goalOld,
+                                    selectCost.moneyCost
+                                )
+                                viewModel.addProgressGoal(
+                                    goalNew,
+                                    sum
+                                )
+                            } else {
+                                if (selectCost.moneyCost > sum) {
+                                    viewModel.minusProgressGoal(
+                                        goalNew,
+                                        selectCost.moneyCost - sum
+                                    )
+                                } else if (selectCost.moneyCost < sum) {
+                                    if (goalNew.moneyGoal < sum
+                                        + goalNew.progressOfMoneyGoal - selectCost.moneyCost
+                                    ) {
+                                        answerException =
+                                            "Сумма больше, чем нужно для достижения цели"
+                                        return false
+                                    }
+                                    viewModel.addProgressGoal(
+                                        goalNew,
+                                        sum - selectCost.moneyCost
+                                    )
+                                }
+                            }
+                        }
+                    } else {
                         viewModel.minusProgressGoal(
                             goalOld,
                             selectCost.moneyCost
                         )
-                        viewModel.addProgressGoal(
-                            goalNew,
-                            sum
-                        )
-                    } else {
-                        if (selectCost.moneyCost > sum) {
-                            viewModel.minusProgressGoal(
-                                goalNew,
-                                selectCost.moneyCost - sum
-                            )
-                        } else if (selectCost.moneyCost < sum) {
-                            if (goalNew.moneyGoal < sum
-                                + goalNew.progressOfMoneyGoal - selectCost.moneyCost
-                            ) {
-                                answerException = "Сумма больше, чем нужно для достижения цели"
-                                return false
-                            }
-                            viewModel.addProgressGoal(
-                                goalNew,
-                                sum - selectCost.moneyCost
-                            )
-                        }
                     }
-                } else {
-                    viewModel.minusProgressGoal(
-                        goalOld,
-                        selectCost.moneyCost
-                    )
                 }
             } else if (category == "Цель") {
-                val goalNew = goalsMutableList.filter { it.titleOfGoal == titleOfGoal }[0]
-                viewModel.addProgressGoal(
-                    goalNew,
-                    sum
-                )
+                val goalNew = goalsMutableList.find { it.titleOfGoal == titleOfGoal }
+                if (goalNew != null) {
+                    viewModel.addProgressGoal(
+                        goalNew,
+                        sum
+                    )
+                }
             }
             val newExpense = mapOf(
                 "costId" to selectCost.costId,

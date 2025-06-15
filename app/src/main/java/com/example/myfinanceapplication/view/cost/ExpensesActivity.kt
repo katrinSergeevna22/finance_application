@@ -63,10 +63,6 @@ class ExpensesActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        val newBackgroundFragment = BackgroundFragment()
-        val infoExpenseFragment = InfoExpenseFragment()
-        val newAddExpenseFragment = AddExpenseFragment()
-
         binding.apply {
             toolbar.setNavigationOnClickListener {
                 drawerGoal.openDrawer(GravityCompat.START)
@@ -75,12 +71,15 @@ class ExpensesActivity : AppCompatActivity() {
                 viewModel.setSelectedCost(it)
                 unselectedMenuItem()
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.backgroundFragment, newBackgroundFragment)
+                    .replace(R.id.backgroundFragment, BackgroundFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.place_holder_infoExpenseFragment, infoExpenseFragment)
+                    .replace(
+                        R.id.place_holder_infoExpenseFragment,
+                        InfoExpenseFragment.newInstance()
+                    )
                     .addToBackStack(null)
                     .commit()
             }
@@ -103,12 +102,12 @@ class ExpensesActivity : AppCompatActivity() {
             ibAddExpense.setOnClickListener {
                 unselectedMenuItem()
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.backgroundFragment, newBackgroundFragment)
+                    .replace(R.id.backgroundFragment, BackgroundFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.place_holder_addExpenseFragment, newAddExpenseFragment)
+                    .replace(R.id.place_holder_addExpenseFragment, AddExpenseFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
 

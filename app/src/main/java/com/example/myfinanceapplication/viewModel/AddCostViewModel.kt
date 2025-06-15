@@ -90,7 +90,7 @@ class AddCostViewModel : ViewModel() {
             val titleOfGoal = selectGoal.titleOfGoal ?: ""
             val balance = viewModel.getBalance()
             if (sumCost > balance) {
-                answerException = "Недостаочно средст на балансе"
+                answerException = "Недостаточно средств на балансе"
                 return false
             } else {
                 if (category == "Цель") {
@@ -105,7 +105,8 @@ class AddCostViewModel : ViewModel() {
                             return true
                         }
                     } else {
-                        answerException = "Выберите цель"
+                        answerException = "Выберите цель, если список целей пуст - " +
+                                "добавьте новые активные цели"
                         return false
                     }
                 } else {
@@ -116,7 +117,7 @@ class AddCostViewModel : ViewModel() {
             }
         } else {
             // Обработка ошибок
-            answerException = "Заполние все поля"
+            answerException = "Заполните все поля"
             return false
         }
     }

@@ -38,7 +38,10 @@ class AddIncomeFragment : Fragment() {
 
     fun setupUI() {
         binding.apply {
-            tvBtnCategory?.text = "Выберите категорию"
+            tvBtnCategory.text = if (category != "")
+                "Выбрана: $category"
+            else
+                "Выберите категорию"
 
             ibSave.setOnClickListener {
                 val title = etTitle.text.toString().trim()
@@ -87,7 +90,7 @@ class AddIncomeFragment : Fragment() {
         }
     }
 
-    private fun formattedSum(sum: String): String{
+    private fun formattedSum(sum: String): String {
         val cleanString = sum
             .replace(",", ".")
             .replace(Regex("[^\\d.]"), "") // Удаляем все, кроме цифр и точек
@@ -103,6 +106,7 @@ class AddIncomeFragment : Fragment() {
                     else -> cleanString
                 }
             }
+
             else -> cleanString
         }
 
@@ -118,5 +122,4 @@ class AddIncomeFragment : Fragment() {
                 "Выберите категорию"
         }
     }
-
 }
