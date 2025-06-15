@@ -119,10 +119,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun formatSum(value: Double): String {
         return if (value == value.toInt().toDouble()) {
-            // Если число целое - показываем без десятичной части
             value.toInt().toString()
         } else {
-            // Если дробное - показываем 2 знака после запятой
             "%.2f".format(Locale.US, value).replace(",", ".")
         }
     }
